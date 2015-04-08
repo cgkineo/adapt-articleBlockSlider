@@ -26,13 +26,13 @@ define([
 		_setupEventListeners: function() {
 			this.onResize = _.bind(this._onResize, this);
 			$(window).on("resize", this.onResize);
-			this.listenTo(Adapt, "device:change", this._onResize);
+			this.listenTo(Adapt, "device:changed", this._onDeviceChanged);
 			this.listenToOnce(Adapt, "remove", this._onRemove);
 		},
 
 		_removeEventListeners: function() {
 			$(window).off("resize", this.onResize);
-			this.stopListening(Adapt, "device:change", this._onResize);
+			this.stopListening(Adapt, "device:changed", this._onDeviceChanged);
 		},
 
 		_render: function() {
@@ -47,9 +47,9 @@ define([
             this.addChildren();
 
             _.defer(_.bind(function() {
-            	this._configureControls();
-            	this._onResize();
+            	this._configureControls(false);
                 Adapt.trigger(this.constructor.type + 'View:postRender', this);
+                this._onDeviceChanged();
             }, this));
 
             return this;
@@ -106,9 +106,10 @@ define([
 
 		_animateSlider: function(animate) {
 			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
+			var $blockContainer = this.$el.find(".block-container");
 
 			if (!isEnabledOnMobile && Adapt.device.screenSize == "small") {
-				return;
+				return $blockContainer.css({left: ""});
 			}
 
 			var blocks = this.$el.find(".block");
@@ -118,9 +119,9 @@ define([
 			var duration = this.model.get("_articleBlockSlider")._animationDuration || 200;
 
 			if (animate === false) {
-				this.$el.find(".block-container").css({left: -totalLeft + "px"});
+				$blockContainer.css({left: -totalLeft + "px"});
 			} else {
-				this.$el.find(".block-container").velocity({left: -totalLeft + "px"}, {duration: duration });
+				$blockContainer.velocity({left: -totalLeft + "px"}, {duration: duration });
 			}
 
 		},
@@ -145,7 +146,7 @@ define([
 			this.model.set("_itemButtons", itemButtons);
 		},
 
-		_configureControls: function() {
+		_configureControls: function(animate) {
 
 			var duration = this.model.get("_articleBlockSlider")._animationDuration || 200;
 
@@ -175,7 +176,7 @@ define([
 				var $blocks = this.$el.find(".block");
 				$blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
 				
-			}, this), duration);
+			}, this), animate === false ? 0 : duration);
 
 		},
 
@@ -195,23 +196,25 @@ define([
 
 			var duration = this.model.get("_articleBlockSlider")._animationDuration || 200;
 			
-			if (currentHeight < blockHeight) {
+			_.delay(function() {
+				if (currentHeight <= blockHeight) {
 
-				if (animate === false) {
-					$container.css({"height": blockHeight+"px"});
-				} else {
-					$container.velocity({"height": blockHeight+"px"}, {duration: duration});
+					if (animate === false) {
+						$container.css({"height": blockHeight+"px"});
+					} else {
+						$container.velocity({"height": blockHeight+"px"}, {duration: duration});
+					}
+
+				} else if (currentHeight > blockHeight) {
+
+					if (animate === false) {
+						$container.css({"height": blockHeight+"px"});
+					} else {
+						$container.velocity({"height": blockHeight+"px"}, {duration: duration});
+					}
+
 				}
-
-			} else if (currentHeight > blockHeight) {
-
-				if (animate === false) {
-					$container.css({"height": blockHeight+"px"});
-				} else {
-					$container.velocity({"height": blockHeight+"px"}, {duration: duration});
-				}
-
-			}
+			}, 250);
 		},
 
 		_resizeWidth: function() {
@@ -235,12 +238,19 @@ define([
 		},
 
 		_onResize: function() {
-
-			this.$(".article-block-toolbar, .article-block-slider").removeClass("small medium large").addClass(Adapt.device.screenSize);
-
+			
 			this._resizeWidth(false);
 			this._resizeHeight(false);
 			this._animateSlider(false);
+
+		},
+
+		_onDeviceChanged: function() {
+			this.$(".article-block-toolbar, .article-block-slider").removeClass("small medium large").addClass(Adapt.device.screenSize);
+
+			_.delay(function() {
+				$(window).resize();
+			}, 250);
 		},
 
 		_onRemove: function() {

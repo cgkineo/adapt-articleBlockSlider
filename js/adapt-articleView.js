@@ -24,13 +24,14 @@ define([
 		},
 
 		_setupEventListeners: function() {
-			this.listenTo(Adapt, "device:resize", this._onResize);
+			this.onResize = _.bind(this._onResize, this);
+			$(window).on("resize", this.onResize);
 			this.listenTo(Adapt, "device:change", this._onResize);
 			this.listenToOnce(Adapt, "remove", this._onRemove);
 		},
 
 		_removeEventListeners: function() {
-			this.stopListening(Adapt, "device:resize", this._onResize);
+			$(window).off("resize", this.onResize);
 			this.stopListening(Adapt, "device:change", this._onResize);
 		},
 
@@ -227,7 +228,6 @@ define([
 			$blocks.css("max-width", $container.width()+"px");
 				
 			var blockWidth = $($blocks[0]).outerWidth();
-
 			var totalWidth = $blocks.length * blockWidth;
 
 			$blockContainer.width(totalWidth + "px");

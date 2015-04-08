@@ -195,14 +195,14 @@ define([
 			var currentHeight = $container.height();
 			var blockHeight = $blocks.eq(_currentBlock).height();
 
-			var duration = this.model.get("_articleBlockSlider")._animationDuration || 200;
+			var duration = (this.model.get("_articleBlockSlider")._animationDuration || 200) * 2;
 
 			if (currentHeight <= blockHeight) {
 
 				if (animate === false) {
 					$container.css({"height": blockHeight+"px"});
 				} else {
-					$container.velocity({"height": blockHeight+"px"}, {duration: duration, easing: "ease-in"});
+					$container.velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
 				}
 
 			} else if (currentHeight > blockHeight) {
@@ -210,7 +210,7 @@ define([
 				if (animate === false) {
 					$container.css({"height": blockHeight+"px"});
 				} else {
-					$container.velocity({"height": blockHeight+"px"}, {duration: duration, easing: "ease-in"});
+					$container.velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
 				}
 
 			}

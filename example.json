@@ -2,5 +2,6 @@
 
 "_articleBlockSlider": {
     "_isEnabled": true,
-    "_animationDuration": 1500
+    "_animationDuration": 1500,
+    "_isEnabledOnMobile": false
 }

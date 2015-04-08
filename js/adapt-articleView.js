@@ -104,6 +104,12 @@ define([
 		},
 
 		_animateSlider: function(animate) {
+			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
+
+			if (!isEnabledOnMobile && Adapt.device.screenSize == "small") {
+				return;
+			}
+
 			var blocks = this.$el.find(".block");
 			var blockWidth = $(blocks[0]).outerWidth();
 			var totalLeft = this.model.get("_currentBlock") * blockWidth;
@@ -173,26 +179,28 @@ define([
 		},
 
 		_resizeHeight: function(animate) {
+			var $container = this.$el.find(".article-block-slider");
+			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
+
+			if (!isEnabledOnMobile && Adapt.device.screenSize == "small") {
+				return $container.css({"height": ""});
+			}
+
 			var _currentBlock = this.model.get("_currentBlock");
 			var $blocks = this.$el.find(".block");
-			var $container = this.$el.find(".article-block-slider");
 
 			var currentHeight = $container.height();
 			var blockHeight = $blocks.eq(_currentBlock).height();
 
 			var duration = this.model.get("_articleBlockSlider")._animationDuration || 200;
-
+			
 			if (currentHeight < blockHeight) {
 
-				//_.delay(_.bind(function(){
-					
-					if (animate === false) {
-						$container.css({"height": blockHeight+"px"});
-					} else {
-						$container.velocity({"height": blockHeight+"px"}, {duration: duration});
-					}
-
-				//}, this), duration);
+				if (animate === false) {
+					$container.css({"height": blockHeight+"px"});
+				} else {
+					$container.velocity({"height": blockHeight+"px"}, {duration: duration});
+				}
 
 			} else if (currentHeight > blockHeight) {
 
@@ -206,28 +214,33 @@ define([
 		},
 
 		_resizeWidth: function() {
-			var $blocks = this.$el.find(".block");
+			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
+			var $blockContainer = this.$el.find(".block-container");
+
+			if (!isEnabledOnMobile && Adapt.device.screenSize == "small") {
+				return $blockContainer.css({"width": "100%"});
+			}
+
 			var $container = this.$el.find(".article-block-slider");
 
+			var $blocks = this.$el.find(".block");
 			$blocks.css("max-width", $container.width()+"px");
 				
 			var blockWidth = $($blocks[0]).outerWidth();
 
 			var totalWidth = $blocks.length * blockWidth;
 
-			this.$el.find(".block-container").width(totalWidth + "px");
+			$blockContainer.width(totalWidth + "px");
 
 		},
 
 		_onResize: function() {
-			
+
+			this.$(".article-block-toolbar, .article-block-slider").removeClass("small medium large").addClass(Adapt.device.screenSize);
+
 			this._resizeWidth(false);
 			this._resizeHeight(false);
 			this._animateSlider(false);
-
-			_.delay(function() {
-				$(window).resize();
-			}, 100);
 		},
 
 		_onRemove: function() {

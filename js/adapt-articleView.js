@@ -108,7 +108,7 @@ define([
 			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
 			var $blockContainer = this.$el.find(".block-container");
 
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "small") {
+			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
 				return $blockContainer.css({left: ""});
 			}
 
@@ -184,7 +184,7 @@ define([
 			var $container = this.$el.find(".article-block-slider");
 			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
 
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "small") {
+			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
 				return $container.css({"height": ""});
 			}
 
@@ -221,7 +221,7 @@ define([
 			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
 			var $blockContainer = this.$el.find(".block-container");
 
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "small") {
+			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
 				return $blockContainer.css({"width": "100%"});
 			}
 

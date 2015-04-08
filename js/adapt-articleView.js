@@ -73,8 +73,6 @@ define([
 				break;
 			}
 
-			this._resizeHeight();
-
 		},
 
 		_moveLeft: function() {
@@ -82,6 +80,7 @@ define([
 
 			this.model.set("_currentBlock", this.model.get("_currentBlock")-1);
 
+			this._resizeHeight();
 			this._animateSlider();
 			this._configureControls();
 		},
@@ -91,6 +90,7 @@ define([
 
 			this.model.set("_currentBlock", index);
 
+			this._resizeHeight();
 			this._animateSlider();
 			this._configureControls();
 		},
@@ -100,6 +100,7 @@ define([
 
 			this.model.set("_currentBlock", this.model.get("_currentBlock")+1);
 
+			this._resizeHeight();
 			this._animateSlider();
 			this._configureControls();
 		},
@@ -121,7 +122,7 @@ define([
 			if (animate === false) {
 				$blockContainer.css({left: -totalLeft + "px"});
 			} else {
-				$blockContainer.velocity({left: -totalLeft + "px"}, {duration: duration });
+				$blockContainer.velocity({left: -totalLeft + "px"}, {duration: duration, easing: "ease-in" });
 			}
 
 		},
@@ -195,26 +196,24 @@ define([
 			var blockHeight = $blocks.eq(_currentBlock).height();
 
 			var duration = this.model.get("_articleBlockSlider")._animationDuration || 200;
-			
-			_.delay(function() {
-				if (currentHeight <= blockHeight) {
 
-					if (animate === false) {
-						$container.css({"height": blockHeight+"px"});
-					} else {
-						$container.velocity({"height": blockHeight+"px"}, {duration: duration});
-					}
+			if (currentHeight <= blockHeight) {
 
-				} else if (currentHeight > blockHeight) {
-
-					if (animate === false) {
-						$container.css({"height": blockHeight+"px"});
-					} else {
-						$container.velocity({"height": blockHeight+"px"}, {duration: duration});
-					}
-
+				if (animate === false) {
+					$container.css({"height": blockHeight+"px"});
+				} else {
+					$container.velocity({"height": blockHeight+"px"}, {duration: duration, easing: "ease-in"});
 				}
-			}, 250);
+
+			} else if (currentHeight > blockHeight) {
+
+				if (animate === false) {
+					$container.css({"height": blockHeight+"px"});
+				} else {
+					$container.velocity({"height": blockHeight+"px"}, {duration: duration, easing: "ease-in"});
+				}
+
+			}
 		},
 
 		_resizeWidth: function() {
@@ -246,7 +245,7 @@ define([
 		},
 
 		_onDeviceChanged: function() {
-			this.$(".article-block-toolbar, .article-block-slider").removeClass("small medium large").addClass(Adapt.device.screenSize);
+			this.$(".article-block-toolbar, .article-block-slider, .article-block-bottombar").removeClass("small medium large").addClass(Adapt.device.screenSize);
 
 			_.delay(function() {
 				$(window).resize();

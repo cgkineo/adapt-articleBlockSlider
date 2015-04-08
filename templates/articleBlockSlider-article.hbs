@@ -1,0 +1,34 @@
+{{! Maintainers - Daryl Hedley}}
+{{! .block-container: Adapt will place the articles blocks inside this class}}
+<div class="article-inner">
+    {{! Check if a page title exist and render it}}
+    {{#if displayTitle}}
+    <div class="article-title">
+        <div role="heading" tabindex="0" class="article-title-inner h2"  aria-level="2">
+            {{{displayTitle}}}
+        </div>
+    </div>
+    {{/if}}
+    {{! Check if page body exists and render it}}
+    {{#if body}}
+    <div class="article-body">
+        <div class="article-body-inner">
+            {{{a11y_text body}}}
+        </div>
+    </div>
+    {{/if}}
+</div>
+<div class="article-block-toolbar clearfix">
+    <a class="left icon icon-controls-small-left" href="#" data-block-slider="left"></a>
+    <a class="right icon icon-controls-small-right" href="#" data-block-slider="right"></a>
+    <div class="middle item-button-container">
+        {{#each _itemButtons}}
+            <a class="left icon {{this._className}}" href="#" data-block-slider="index" data-block-slider-index="{{this._index}}"><span>{{#if this._includeNumber}}{{this._index}}{{/if}}</span></a>
+        {{/each}}
+    </div>
+</div>
+<div class="article-block-slider clearfix">
+    <div class="block-container clearfix">
+
+    </div>
+</div>

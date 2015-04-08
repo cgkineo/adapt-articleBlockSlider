@@ -1,0 +1,15 @@
+{
+  "name": "adapt-articleBlockSlider",
+  "version": "2.0.0",
+  "description": "A simple left and right slider for an article's blocks",
+  "main": "/js/adapt-contrib-assessment.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cgkineo/adapt-articleBlockSlider.git"
+  },
+  "author": "AdaptLearning",
+  "license": "GPL v3",
+  "bugs": {
+    "url": "https://github.com/cgkineo/adapt-articleBlockSlider/issues"
+  }
+}

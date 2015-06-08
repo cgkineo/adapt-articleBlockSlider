@@ -27,12 +27,14 @@ define([
 			this.onResize = _.bind(this._onResize, this);
 			$(window).on("resize", this.onResize);
 			this.listenTo(Adapt, "device:changed", this._onDeviceChanged);
+			this.listenTo(Adapt, "page:scrollTo", this._onPageScrollTo);
 			this.listenToOnce(Adapt, "remove", this._onRemove);
 		},
 
 		_removeEventListeners: function() {
 			$(window).off("resize", this.onResize);
 			this.stopListening(Adapt, "device:changed", this._onDeviceChanged);
+			this.stopListening(Adapt, "page:scrollTo", this._onPageScrollTo);
 		},
 
 		_render: function() {
@@ -90,15 +92,15 @@ define([
 
 			this.model.set("_currentBlock", index);
 
-			this._resizeHeight();
-			this._animateSlider();
+			this._resizeHeight(false);
+			this._animateSlider(false);
 			this._configureControls();
 		},
 
 		_moveRight: function() {
-			if (this.model.get("_currentBlock") == this.model.get("_totalBlocks") - 1 ) return;
+			if (this.model.get("_currentBlock") == this.model.get("_totalBlocks") - 1) return;
 
-			this.model.set("_currentBlock", this.model.get("_currentBlock")+1);
+			this.model.set("_currentBlock", this.model.get("_currentBlock") + 1);
 
 			this._resizeHeight();
 			this._animateSlider();
@@ -109,7 +111,7 @@ define([
 			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
 			var $blockContainer = this.$el.find(".block-container");
 
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
+			if (!isEnabledOnMobile && Adapt.device.screenSize != "large") {
 				return $blockContainer.css({left: ""});
 			}
 
@@ -185,7 +187,7 @@ define([
 			var $container = this.$el.find(".article-block-slider");
 			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
 
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
+			if (!isEnabledOnMobile && Adapt.device.screenSize != "large") {
 				return $container.css({"height": ""});
 			}
 
@@ -200,17 +202,17 @@ define([
 			if (currentHeight <= blockHeight) {
 
 				if (animate === false) {
-					$container.css({"height": blockHeight+"px"});
+					$container.css({"height": blockHeight + "px"});
 				} else {
-					$container.velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
+					$container.velocity({"height": blockHeight + "px"}, {duration: duration });//, easing: "ease-in"});
 				}
 
 			} else if (currentHeight > blockHeight) {
 
 				if (animate === false) {
-					$container.css({"height": blockHeight+"px"});
+					$container.css({"height": blockHeight + "px"});
 				} else {
-					$container.velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
+					$container.velocity({"height": blockHeight + "px"}, {duration: duration });//, easing: "ease-in"});
 				}
 
 			}
@@ -220,7 +222,7 @@ define([
 			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
 			var $blockContainer = this.$el.find(".block-container");
 
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
+			if (!isEnabledOnMobile && Adapt.device.screenSize != "large") {
 				return $blockContainer.css({"width": "100%"});
 			}
 
@@ -237,11 +239,9 @@ define([
 		},
 
 		_onResize: function() {
-			
 			this._resizeWidth(false);
 			this._resizeHeight(false);
 			this._animateSlider(false);
-
 		},
 
 		_onDeviceChanged: function() {
@@ -250,6 +250,33 @@ define([
 			_.delay(function() {
 				$(window).resize();
 			}, 250);
+		},
+
+		_onPageScrollTo: function(selector) {
+			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
+
+			if (!isEnabledOnMobile && (Adapt.device.screenSize == "medium" || Adapt.device.screenSize == "small")) {
+				return;
+			}
+
+			if (this.$el.find(selector)) {
+				var id = selector.substr(1);
+				var model = Adapt.findById(id);
+				if (!model) return;
+
+				var block;
+				if (model.get("_type") == "block") block = model;
+				else block = model.getParent();
+				if (!block) return;
+
+				var blockId = block.get("_id");
+				var children = this.model.getChildren();
+				for (var i = 0, item; item = children.models[i++];) {
+					if (item.get("_id") == blockId) {
+						return this._moveIndex(i - 1);
+					}
+				}
+			}
 		},
 
 		_onRemove: function() {

@@ -6,6 +6,7 @@ define([
 	var BlockSliderView = {
 
 		_disableAnimationOnce: false,
+		_disableAnimations: false,
 
 		events: {
 			"click [data-block-slider]": "_onBlockSliderClick"
@@ -19,7 +20,7 @@ define([
         },
 
         _blockSliderPreRender: function() {
-
+        	this._disableAnimations = $('html').is(".ie8") || $('html').is(".iPhone.version-7\\.0");
         	this._blockSliderSetupEventListeners();
 		},
 
@@ -98,6 +99,7 @@ define([
 			var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
 			if (this._disableAnimationOnce) animate = false;
+			if (this._disableAnimations) animate = false;
 
 			var _currentBlock = this.model.get("_currentBlock");
 			var _totalBlocks = this.model.get("_totalBlocks");
@@ -242,6 +244,7 @@ define([
 			var $currentBlock = $(blocks[currentBlock]);
 
 			if (this._disableAnimationOnce) animate = false;
+			if (this._disableAnimations) animate = false;
 			
 			if (animate === false) {
 				_.defer(_.bind(function(){
@@ -261,7 +264,7 @@ define([
 			var isEnabledOnScreenSizes = this.model.get("_articleBlockSlider")._isEnabledOnScreenSizes;
 
 			var sizes = isEnabledOnScreenSizes.split(" ");
-			if (sizes.indexOf(Adapt.device.screenSize) > -1) {
+			if (_.indexOf(sizes, Adapt.device.screenSize) > -1) {
 				return true;
 			}
 			return false;
@@ -324,6 +327,7 @@ define([
 			var duration = (this.model.get("_articleBlockSlider")._heightAnimationDuration || 200) * 2;
 
 			if (this._disableAnimationOnce) animate = false;
+			if (this._disableAnimations) animate = false;
 
 			if (currentHeight <= blockHeight) {
 

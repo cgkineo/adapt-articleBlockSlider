@@ -5,10 +5,7 @@
   "authors": [
     "Oliver Foster <oliver.foster@kineo.com>"
   ],
-  "displayName" : "Assessment",
-  "extension" : "assessment",
-  "description": "",
-  "main": "/js/adapt-articleBlockSlider.js",
+  "main": "/js/articleBlockSlider.js",
   "keywords": [
     "adapt-plugin",
     "adapt-extension"

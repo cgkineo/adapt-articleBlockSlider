@@ -1,74 +1,98 @@
+.responsive-layout-no-margin {
+    max-width: @device-width-large;
+
+	@media all and (max-width: (@device-width-large + 20px)) {
+		max-width: @device-width-medium;
+	}
+
+	@media all and (max-width: (@device-width-medium)) {
+		max-width: @device-width-small;
+	}
+
+	@media all and (max-width: (@device-width-small)) {
+		max-width: 100%;
+	}
+	@media all and (max-width: (321px)) {
+		max-width: 100%;
+	}
+}
+
+
+.article-block-organise {
+	position: relative;
+	width: 100%;
+	margin: 0 auto;
+}
+
+.has-tabs { 
+	.article-block-toolbar {
+		top:20px;
+	}
+}
+
 .article-block-toolbar {
-	.responsive-layout;
-	.left {
-		float:left;
-	}
-	.middle {
-		float:right;
-	}
-	.right {
-		float:right;
+	position: absolute;
+	width:100%;
+	top: 0px;
+
+	.item-button-container {
+		.responsive-layout-no-margin;
+		margin: 0 auto;
 	}
 
-	.icon {
-		margin: 5px;
-		color: #3eb4e4;
+	.item-button {
+		float: left;
 	}
 
-	.icon.disabled {
-		color: #C7C7C7;
-		cursor: default;
-	}
-
-	.icon-circle {
-		color: white;
-		font-size: 15px;
-		text-align: center;
-		border-radius: 47px;
-		background-color: #3eb4c4;
-		&.disabled {
-			color: white;
-			background-color: #c7c7c7;		
+	.item-button-arrow {
+		position: absolute;
+		display: block;
+	    width: 60px;
+	    height: 60px;
+	    margin-top: -48px;
+	    z-index: 10;
+	    text-decoration: none;
+	    background-color: #3d6fd4;
+		top: 200px;
+		div.icon {
+			font-size: 30px;
+		    font-weight: bold;
+		    margin: 16px;
+		    height:25px;
+		    width:25px;
+		    color: #ffffff;
+		    text-align: center;
 		}
-		font-weight: bold;
+		&[disabled="disabled"] {
+			background-color: #E2E1E1;
+		}
+		&[data-block-slider='left'] {
+		    left: 0px;
+		}
+		&[data-block-slider='right'] {
+			right:0px;
+		}
 	}
 
-	.icon-circle span {
-		font-family: 'Open Sans', sans-serif;
-		position: relative;
-		top: 3px;
-		left: 0px;
-	}
-
-	&.medium {
+	&.display-none {
 		display: none;
 	}
 
-	.horizontal-rule {
-		border-bottom: 1px solid #3eb4e4;
-		margin-bottom: 16px;
-	  	padding-bottom: 42px;
-	}
 }
+
 .article-block-slider {
 	overflow:hidden;
-	.responsive-layout;
 	.block-container {
 		position:relative;
 	}
 	.block {
 		float:left;
+		width:100%;
 	}
 
 }
 .article-block-bottombar {
-	.responsive-layout;
-	.horizontal-rule {
-		border-bottom: 1px solid #3eb4e4;
-		margin-bottom: 16px;
-	  	padding-bottom: 0px;
-	}
-	&.medium {
+	&.display-none {
 		display: none;
 	}
 }

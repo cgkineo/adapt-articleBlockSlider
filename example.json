@@ -2,6 +2,9 @@
 
 "_articleBlockSlider": {
     "_isEnabled": true,
-    "_animationDuration": 1500,
-    "_isEnabledOnMobile": false
+    "_slideAnimationDuration": 600,
+    "_heightAnimationDuration": 300,
+    "_isEnabledOnScreenSizes": "large",
+    "_hasTabs": false,
+    "_hasArrows": true
 }

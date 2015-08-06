@@ -1,4 +1,4 @@
 adapt-articleBlockSlider
 ========================
 
-A simple left and right slider for an article's blocks
+A simple left and right or tabbing slider for an article's blocks

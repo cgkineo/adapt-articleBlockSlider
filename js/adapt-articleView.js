@@ -5,40 +5,54 @@ define([
 
 	var BlockSliderView = {
 
+		_disableAnimationOnce: false,
+
 		events: {
-			"click [data-block-slider]": "_onClick"
+			"click [data-block-slider]": "_onBlockSliderClick"
 		},
 
 		preRender: function() {
+
             AdaptArticleView.prototype.preRender.call(this);
-            if (this.model.isBlockSliderEnabled()) this._preRender();
+            if (this.model.isBlockSliderEnabled()) this._blockSliderPreRender();
+
         },
 
-        render: function() {
-			if (this.model.isBlockSliderEnabled()) this._render();
-			else AdaptArticleView.prototype.render.call(this);
+        _blockSliderPreRender: function() {
+
+        	this._blockSliderSetupEventListeners();
 		},
 
-        _preRender: function() {
-        	this._setupEventListeners();
+		_blockSliderSetupEventListeners: function() {
+
+			this._onBlockSliderResize = _.bind(this._onBlockSliderResize, this);
+			this._blockSliderResizeHeight = _.bind(this._blockSliderResizeHeight, this);
+
+			this.listenTo(Adapt, "device:resize", this._onBlockSliderResize);
+			this.listenTo(Adapt, "device:changed", this._onBlockSliderDeviceChanged);
+			
+			this.listenToOnce(Adapt, "remove", this._onBlockSliderRemove);
+			this.listenToOnce(this.model, "change:_isReady", this._onBlockSliderReady);
+
+			this.listenTo(Adapt, "page:scrollTo", this._onBlockSliderPageScrollTo);
+			this.listenTo(Adapt, "page:scrolledTo", this._onBlockSliderPageScrolledTo);
+
 		},
 
-		_setupEventListeners: function() {
-			this.onResize = _.bind(this._onResize, this);
-			$(window).on("resize", this.onResize);
-			this.listenTo(Adapt, "device:changed", this._onDeviceChanged);
-			this.listenToOnce(Adapt, "remove", this._onRemove);
+		render: function() {
+
+			if (this.model.isBlockSliderEnabled()) {
+
+				this._blockSliderRender();
+
+			} else AdaptArticleView.prototype.render.call(this);
+		
 		},
 
-		_removeEventListeners: function() {
-			$(window).off("resize", this.onResize);
-			this.stopListening(Adapt, "device:changed", this._onDeviceChanged);
-		},
-
-		_render: function() {
+		_blockSliderRender: function() {
             Adapt.trigger(this.constructor.type + 'View:preRender', this);
           
-            this._configureVariables();
+            this._blockSliderConfigureVariables();
 
             var data = this.model.toJSON();
             var template = Handlebars.templates['articleBlockSlider-article'];
@@ -47,89 +61,20 @@ define([
             this.addChildren();
 
             _.defer(_.bind(function() {
-            	this._configureControls(false);
-                Adapt.trigger(this.constructor.type + 'View:postRender', this);
-                this._onDeviceChanged();
+            	this._blockSliderPostRender();
+
             }, this));
+
+            this.$el.addClass('article-block-slider-enabled');
+
+            this.delegateEvents();
 
             return this;
 		},
 
-		_onClick: function(event) {
-			event.preventDefault();
-
-			var id = $(event.currentTarget).attr("data-block-slider");
-
-			switch(id) {
-			case "left":
-				this._moveLeft();
-				break;
-			case "index":
-				var index = parseInt($(event.currentTarget).attr("data-block-slider-index"));
-				this._moveIndex(index);
-				break;
-			case "right":
-				this._moveRight();
-				break;
-			}
-
-		},
-
-		_moveLeft: function() {
-			if (this.model.get("_currentBlock") === 0) return;
-
-			this.model.set("_currentBlock", this.model.get("_currentBlock")-1);
-
-			this._resizeHeight();
-			this._animateSlider();
-			this._configureControls();
-		},
-
-		_moveIndex: function(index) {
-			if (this.model.get("_currentBlock") == index) return;
-
-			this.model.set("_currentBlock", index);
-
-			this._resizeHeight();
-			this._animateSlider();
-			this._configureControls();
-		},
-
-		_moveRight: function() {
-			if (this.model.get("_currentBlock") == this.model.get("_totalBlocks") - 1 ) return;
-
-			this.model.set("_currentBlock", this.model.get("_currentBlock")+1);
-
-			this._resizeHeight();
-			this._animateSlider();
-			this._configureControls();
-		},
-
-		_animateSlider: function(animate) {
-			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
-			var $blockContainer = this.$el.find(".block-container");
-
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
-				return $blockContainer.css({left: ""});
-			}
-
-			var blocks = this.$el.find(".block");
-			var blockWidth = $(blocks[0]).outerWidth();
-			var totalLeft = this.model.get("_currentBlock") * blockWidth;
-
-			var duration = this.model.get("_articleBlockSlider")._animationDuration || 200;
-
-			if (animate === false) {
-				$blockContainer.css({left: -totalLeft + "px"});
-			} else {
-				$blockContainer.velocity({left: -totalLeft + "px"}, {duration: duration, easing: "ease-in" });
-			}
-
-		},
-
-		_configureVariables: function() {
-
-			var totalBlocks = this.model.getChildren().models.length;
+		_blockSliderConfigureVariables: function() {
+			var blocks = this.model.getChildren().models;
+            var totalBlocks = blocks.length;
 
 			this.model.set("_currentBlock", 0);
 			this.model.set("_totalBlocks", totalBlocks);
@@ -138,71 +83,254 @@ define([
 
 			for (var i = 0, l = totalBlocks; i < l; i++) {
 				itemButtons.push({
-					_className: i === 0 ? "icon-home" : "icon-circle",
+					_className: (i === 0 ? "home" : "not-home") + (" i"+i),
 					_index: i,
-					_includeNumber: i != 0
+					_includeNumber: i != 0,
+					_title: blocks[i].get('title')
 				});
 			}
 
 			this.model.set("_itemButtons", itemButtons);
 		},
 
-		_configureControls: function(animate) {
+		_blockSliderConfigureControls: function(animate) {
 
-			var duration = this.model.get("_articleBlockSlider")._animationDuration || 200;
+			var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
-			_.delay(_.bind(function() {
+			if (this._disableAnimationOnce) animate = false;
 
-				var _currentBlock = this.model.get("_currentBlock");
-				var _totalBlocks = this.model.get("_totalBlocks");
+			var _currentBlock = this.model.get("_currentBlock");
+			var _totalBlocks = this.model.get("_totalBlocks");
 
-				var $left = this.$el.find("[data-block-slider='left']");
-				var $right = this.$el.find("[data-block-slider='right']");
+			var $left = this.$el.find("[data-block-slider='left']");
+			var $right = this.$el.find("[data-block-slider='right']");
 
-				if (_currentBlock === 0) {
-					$left.a11y_cntrl_enabled(false);
-					$right.a11y_cntrl_enabled(true);
-				} else if (_currentBlock == _totalBlocks - 1 ) {
-					$left.a11y_cntrl_enabled(true);
-					$right.a11y_cntrl_enabled(false);
-				} else {
-					$left.a11y_cntrl_enabled(true);
-					$right.a11y_cntrl_enabled(true);
-				}
+			if (_currentBlock === 0) {
+				$left.a11y_cntrl_enabled(false);
+				$right.a11y_cntrl_enabled(true);
+			} else if (_currentBlock == _totalBlocks - 1 ) {
+				$left.a11y_cntrl_enabled(true);
+				$right.a11y_cntrl_enabled(false);
+			} else {
+				$left.a11y_cntrl_enabled(true);
+				$right.a11y_cntrl_enabled(true);
+			}
 
-				var $indexes = this.$el.find("[data-block-slider='index']");
-				$indexes.a11y_cntrl_enabled(true).removeClass("selected");
-				$indexes.eq(_currentBlock).a11y_cntrl_enabled(false).addClass("selected");
+			var $indexes = this.$el.find("[data-block-slider='index']");
+			$indexes.a11y_cntrl_enabled(true).removeClass("selected");
+			$indexes.eq(_currentBlock).a11y_cntrl_enabled(false).addClass("selected visited");
 
-				var $blocks = this.$el.find(".block");
-				$blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
-				
-			}, this), animate === false ? 0 : duration);
+			var $blocks = this.$el.find(".block");
+
+			$blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
+			
+			_.delay(function() {
+				if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
+			}, duration);
 
 		},
 
-		_resizeHeight: function(animate) {
-			var $container = this.$el.find(".article-block-slider");
-			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
+		_blockSliderSetButtonLayout: function() {
+			var buttonsLength = this.model.get('_itemButtons').length;
+			var itemwidth = 100 / buttonsLength;
+			this.$('.item-button').css({
+				width: itemwidth + '%'
+			});
+		},
 
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
-				return $container.css({"height": ""});
+		_blockSliderPostRender: function() {
+			this._blockSliderConfigureControls(false);
+
+            Adapt.trigger(this.constructor.type + 'View:postRender', this);
+
+            if (this.model.get("_articleBlockSlider")._hasTabs) {
+	            var parentHeight = this.$('.item-button').parent().height();
+	            this.$('.item-button').css({
+	            	height: parentHeight + 'px'
+	            });
+
+	            var toolbarHeight = this.$('.article-block-toolbar').height();
+	            this.$('.article-block-toolbar').css({
+	            	top: '-' + toolbarHeight + 'px'
+	            });
+
+	            var additionalMargin = '30';
+	            var toolbarMargin = parseFloat(toolbarHeight) + parseFloat(additionalMargin);
+	            this.$('.article-block-slider').css({
+	            	marginTop: toolbarMargin + 'px'
+	            });
+	            this._blockSliderSetButtonLayout();
+	        }
+
+            this._onBlockSliderDeviceChanged();
+            
+
+        },
+
+		_onBlockSliderReady: function() {
+			this._blockSliderHideOthers();
+			_.delay(_.bind(function(){
+				this._blockSliderConfigureControls(false);
+			},this),250);
+			this.$(".component").on("resize", this._blockSliderResizeHeight);
+		},
+
+		_onBlockSliderClick: function(event) {
+			event.preventDefault();
+
+			var id = $(event.currentTarget).attr("data-block-slider");
+
+			switch(id) {
+			case "left":
+				this._blockSliderMoveLeft();
+				break;
+			case "index":
+				var index = parseInt($(event.currentTarget).attr("data-block-slider-index"));
+				this._blockSliderMoveIndex(index);
+				break;
+			case "right":
+				this._blockSliderMoveRight();
+				break;
 			}
 
-			var _currentBlock = this.model.get("_currentBlock");
+		},
+
+		_blockSliderMoveLeft: function() {
+			if (this.model.get("_currentBlock") === 0) return;
+
+			var index = this.model.get("_currentBlock");
+			index--;
+			this._blockSliderMoveIndex(index);
+		},
+
+		_blockSliderMoveIndex: function(index, animate) {
+			if (this.model.get("_currentBlock") == index) return;
+
+			this.model.set("_currentBlock", index);
+			this._blockSliderSetVisible(this.model.getChildren().models[index], true);
+
+			this._blockSliderResizeHeight(animate);
+			this._blockSliderScrollToCurrent(animate);
+			this._blockSliderConfigureControls(animate);
+		},
+
+		_blockSliderMoveRight: function() {
+			if (this.model.get("_currentBlock") == this.model.get("_totalBlocks") - 1 ) return;
+
+			var index = this.model.get("_currentBlock");
+			index++;
+			this._blockSliderMoveIndex(index);
+		},
+
+		_blockSliderScrollToCurrent: function(animate) {
+			var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
+			var $container = this.$el.find(".article-block-slider");
+
+			if (!isEnabled) {
+				return $container.scrollLeft(0);
+			}
+
+			var blocks = this.$el.find(".block");
+			var blockWidth = $(blocks[0]).outerWidth();
+			var totalLeft = this.model.get("_currentBlock") * blockWidth;
+
+			this._blockSliderShowAll();
+
+			var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
+
+			var currentBlock = this.model.get("_currentBlock")
+			var $currentBlock = $(blocks[currentBlock]);
+
+			if (this._disableAnimationOnce) animate = false;
+			
+			if (animate === false) {
+				_.defer(_.bind(function(){
+					$container.scrollLeft(totalLeft );
+					this._blockSliderHideOthers();
+				}, this));
+			} else {
+				$container.stop(true).animate({scrollLeft:totalLeft}, duration, _.bind(function() {
+					$container.scrollLeft(totalLeft );
+					this._blockSliderHideOthers();
+				}, this));
+			}
+
+		},
+
+		_blockSliderIsEnabledOnScreenSizes: function() {
+			var isEnabledOnScreenSizes = this.model.get("_articleBlockSlider")._isEnabledOnScreenSizes;
+
+			var sizes = isEnabledOnScreenSizes.split(" ");
+			if (sizes.indexOf(Adapt.device.screenSize) > -1) {
+				return true;
+			}
+			return false;
+		},
+
+		_blockSliderShowAll: function() {
+			var blocks = this.model.getChildren().models;
+			var currentIndex = this.model.get("_currentBlock");
+
+            for (var i = 0, l = blocks.length; i < l; i++) {
+            	this._blockSliderSetVisible(blocks[i], true);
+            }
+		},
+		
+		_blockSliderHideOthers: function() {
+			console.log("hiding");
+			var blocks = this.model.getChildren().models;
+			var currentIndex = this.model.get("_currentBlock");
+
+            for (var i = 0, l = blocks.length; i < l; i++) {
+            	if (i != currentIndex) {
+            		this._blockSliderSetVisible(blocks[i], false);
+            	} else {
+            		this._blockSliderSetVisible(blocks[i], true);
+            	}
+            }
+
+		},
+
+		_blockSliderSetVisible: function(model, value) {
+			var id = model.get("_id");
+
+			this.$el.find("."+id + " *").css("visibility", value ? "" : "hidden");
+
+		},
+
+		_onBlockSliderResize: function() {
+			
+			this._blockSliderResizeWidth(false);
+			this._blockSliderResizeHeight(false);
+			this._blockSliderScrollToCurrent(false);
+
+		},
+
+		_blockSliderResizeHeight: function(animate) {
+			var $container = this.$el.find(".article-block-slider");
+			var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
+
+			if (!isEnabled) {
+				this._blockSliderShowAll();
+				return $container.velocity("stop").css({"height": ""});
+			}
+
+			var currentBlock = this.model.get("_currentBlock");
 			var $blocks = this.$el.find(".block");
 
 			var currentHeight = $container.height();
-			var blockHeight = $blocks.eq(_currentBlock).height();
+			var blockHeight = $blocks.eq(currentBlock).height();
 
-			var duration = (this.model.get("_articleBlockSlider")._animationDuration || 200) * 2;
+			var duration = (this.model.get("_articleBlockSlider")._heightAnimationDuration || 200) * 2;
+
+			if (this._disableAnimationOnce) animate = false;
 
 			if (currentHeight <= blockHeight) {
 
 				if (animate === false) {
 					$container.css({"height": blockHeight+"px"});
 				} else {
-					$container.velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
+					$container.velocity("stop").velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
 				}
 
 			} else if (currentHeight > blockHeight) {
@@ -210,50 +338,97 @@ define([
 				if (animate === false) {
 					$container.css({"height": blockHeight+"px"});
 				} else {
-					$container.velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
+					$container.velocity("stop").velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
 				}
 
 			}
 		},
 
-		_resizeWidth: function() {
-			var isEnabledOnMobile = this.model.get("_articleBlockSlider").isEnabledOnMobile || false;
+		_blockSliderResizeWidth: function() {
+			var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
 			var $blockContainer = this.$el.find(".block-container");
+			var $blocks = this.$el.find(".block");
 
-			if (!isEnabledOnMobile && Adapt.device.screenSize == "medium") {
+			if (!isEnabled) {
+				$blocks.css("width", "");
 				return $blockContainer.css({"width": "100%"});
 			}
 
 			var $container = this.$el.find(".article-block-slider");
 
-			var $blocks = this.$el.find(".block");
-			$blocks.css("max-width", $container.width()+"px");
+			$blocks.css("width", $container.width()+"px");
 				
 			var blockWidth = $($blocks[0]).outerWidth();
-			var totalWidth = $blocks.length * blockWidth;
+			var totalWidth = $blocks.length * (blockWidth);
 
 			$blockContainer.width(totalWidth + "px");
 
 		},
 
-		_onResize: function() {
-			
-			this._resizeWidth(false);
-			this._resizeHeight(false);
-			this._animateSlider(false);
+		_onBlockSliderDeviceChanged: function() {
+			var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
 
-		},
-
-		_onDeviceChanged: function() {
-			this.$(".article-block-toolbar, .article-block-slider, .article-block-bottombar").removeClass("small medium large").addClass(Adapt.device.screenSize);
+			if (isEnabled) {
+				this.$(".article-block-organise, .article-block-toolbar, .article-block-slider, .article-block-bottombar").removeClass("display-none")
+			} else {
+				this.$(".article-block-organise, .article-block-toolbar, .article-block-slider, .article-block-bottombar").addClass("display-none");
+			}
 
 			_.delay(function() {
 				$(window).resize();
 			}, 250);
 		},
 
-		_onRemove: function() {
-			this._removeEventListeners();
+		_onBlockSliderPageScrollTo: function(selector) {
+			this._disableAnimationOnce = true;
+			_.defer(_.bind(function() {
+				this._disableAnimationOnce = false;
+			}, this));
+
+			if (typeof selector === "object") selector = selector.selector;
+
+			var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
+			if (!isEnabled) {
+				return;
+			}
+
+			if (this.$el.find(selector).length == 0) return;
+			
+			var id = selector.substr(1);
+
+			var model = Adapt.findById(id);
+			if (!model) return;
+
+			var block;
+			if (model.get("_type") == "block") block = model;
+			else block = model.findAncestor("blocks");
+			if (!block) return;
+
+			var children = this.model.getChildren();
+			for (var i = 0, item; item = children.models[i++];) {
+				if (item.get("_id") == block.get("_id")) {
+					_.defer(_.bind(function() {
+						this._blockSliderMoveIndex(i-1, false);
+					}, this));
+					return;
+				}
+			}
+
+		},
+
+		_onBlockSliderPageScrolledTo: function() {
+			_.defer(_.bind(function() {
+				this._blockSliderScrollToCurrent(false);
+			}, this));
+		},
+
+		_onBlockSliderRemove: function() {
+			this._blockSliderRemoveEventListeners();
+		},
+
+		_blockSliderRemoveEventListeners: function() {
+			this.$(".component").off("resize", this._blockSliderResizeHeight);
+			this.stopListening(Adapt, "device:changed", this._onBlockSliderDeviceChanged);
 		}
 	};
 

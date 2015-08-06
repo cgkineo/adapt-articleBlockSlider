@@ -3,7 +3,8 @@ define([
 	'coreViews/articleView',
 	'coreModels/articleModel',
 	'./adapt-articleView',
-	'./adapt-articleModel'
+	'./adapt-articleModel',
+	'./lib/dom-resize-event'
 ], function(Adapt, ArticleView, ArticleModel, ArticleViewExtension, ArticleModelExtension) {
 
 	/*	

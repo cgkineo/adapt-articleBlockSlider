@@ -214,6 +214,15 @@ define([
 			this._blockSliderResizeHeight(animate);
 			this._blockSliderScrollToCurrent(animate);
 			this._blockSliderConfigureControls(animate);
+			
+			var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
+
+			if (this._disableAnimationOnce) animate = false;
+			if (this._disableAnimations) animate = false;
+
+			_.delay(function() {
+				$(window).resize();
+			}, animate !== false ? duration : 0);
 		},
 
 		_blockSliderMoveRight: function() {

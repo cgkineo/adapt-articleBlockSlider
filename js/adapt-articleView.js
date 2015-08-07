@@ -148,7 +148,7 @@ define([
 		_blockSliderPostRender: function() {
 			this._blockSliderConfigureControls(false);
 
-            Adapt.trigger(this.constructor.type + 'View:postRender', this);
+            
 
             if (this.model.get("_articleBlockSlider")._hasTabs) {
 	            var parentHeight = this.$('.item-button').parent().height();
@@ -173,7 +173,9 @@ define([
 
             var startIndex = this.model.get("_articleBlockSlider")._startIndex || 0;
 
-            this._blockSliderMoveIndex(startIndex);
+            this._blockSliderMoveIndex(startIndex, false);
+
+            Adapt.trigger(this.constructor.type + 'View:postRender', this);
             
         },
 
@@ -214,23 +216,28 @@ define([
 		},
 
 		_blockSliderMoveIndex: function(index, animate) {
-			if (this.model.get("_currentBlock") == index) return;
+			if (this.model.get("_currentBlock") != index) {
 
-			this.model.set("_currentBlock", index);
-			this._blockSliderSetVisible(this.model.getChildren().models[index], true);
+				this.model.set("_currentBlock", index);
+				this._blockSliderSetVisible(this.model.getChildren().models[index], true);
 
-			this._blockSliderResizeHeight(animate);
-			this._blockSliderScrollToCurrent(animate);
-			this._blockSliderConfigureControls(animate);
+				this._blockSliderResizeHeight(animate);
+				this._blockSliderScrollToCurrent(animate);
+				this._blockSliderConfigureControls(animate);
+			}
 
 			var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
 			if (this._disableAnimationOnce) animate = false;
 			if (this._disableAnimations) animate = false;
 
-			_.delay(function() {
+			if (animate !== false) {
+				_.delay(function() {
+					$(window).resize();
+				}, duration);
+			} else {
 				$(window).resize();
-			}, animate !== false ? duration : 0);
+			}
 		},
 
 		_blockSliderMoveRight: function() {
@@ -331,13 +338,7 @@ define([
 
 			if (!isEnabled) {
 				this._blockSliderShowAll();
-				return $container.velocity("stop").css({"height": ""});
-			}
-
-			var minHeight = this.model.get("_articleBlockSlider")._minHeight;
-			if (minHeight) {
-				$container.css({"height": minHeight+"px"});
-				return;
+				return $container.velocity("stop").css({"height": "", "min-height": ""});
 			}
 
 			var currentBlock = this.model.get("_currentBlock");
@@ -367,6 +368,11 @@ define([
 					$container.velocity("stop").velocity({"height": blockHeight+"px"}, {duration: duration });//, easing: "ease-in"});
 				}
 
+			}
+
+			var minHeight = this.model.get("_articleBlockSlider")._minHeight;
+			if (minHeight) {
+				$container.css({"min-height": minHeight+"px"});
 			}
 		},
 

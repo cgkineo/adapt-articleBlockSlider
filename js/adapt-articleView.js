@@ -373,9 +373,9 @@ define([
 			var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
 
 			if (isEnabled) {
-				this.$(".article-block-organise, .article-block-toolbar, .article-block-slider, .article-block-bottombar").removeClass("display-none")
+				this.$(".article-block-toolbar, .article-block-bottombar").removeClass("display-none")
 			} else {
-				this.$(".article-block-organise, .article-block-toolbar, .article-block-slider, .article-block-bottombar").addClass("display-none");
+				this.$(".article-block-toolbar, .article-block-bottombar").addClass("display-none");
 			}
 
 			_.delay(function() {

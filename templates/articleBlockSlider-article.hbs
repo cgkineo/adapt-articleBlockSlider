@@ -1,5 +1,6 @@
 {{! Maintainers - Daryl Hedley}}
 {{! .block-container: Adapt will place the articles blocks inside this class}}
+{{#if _articleBackgroundTop}}<div class="article-inner-top" style="background-image:url({{_articleBackgroundTop.src}}); height:{{_articleBackgroundTop.height}}px"></div>{{/if}}
 <div class="article-inner">
     {{! Check if a page title exist and render it}}
     {{#if displayTitle}}
@@ -58,3 +59,4 @@
 <div class="article-block-bottombar clearfix">
 
 </div>
+{{#if _articleBackgroundBottom}}<div class="article-inner-bottom" style="background-image:url({{_articleBackgroundBottom.src}}); height:{{_articleBackgroundBottom.height}}px"></div>{{/if}}

@@ -126,9 +126,14 @@ define([
 
 			$blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
 			
-			_.delay(function() {
+			_.delay(_.bind(function() {
+				if ( this.model.get("_articleBlockSlider")._hasArrows) {
+					var topOffset = (this.$(".article-block-slider").outerHeight() / 2);
+					var arrowHeight = this.$(".item-button-arrow").outerHeight();
+					this.$(".item-button-arrow").css("top", topOffset - (arrowHeight/2));
+				}
 				if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
-			}, duration);
+			}, this), duration);
 
 		},
 
@@ -165,8 +170,11 @@ define([
 	        }
 
             this._onBlockSliderDeviceChanged();
-            
 
+            var startIndex = this.model.get("_articleBlockSlider")._startIndex || 0;
+
+            this._blockSliderMoveIndex(startIndex);
+            
         },
 
 		_onBlockSliderReady: function() {
@@ -214,6 +222,15 @@ define([
 			this._blockSliderResizeHeight(animate);
 			this._blockSliderScrollToCurrent(animate);
 			this._blockSliderConfigureControls(animate);
+
+			var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
+
+			if (this._disableAnimationOnce) animate = false;
+			if (this._disableAnimations) animate = false;
+
+			_.delay(function() {
+				$(window).resize();
+			}, animate !== false ? duration : 0);
 		},
 
 		_blockSliderMoveRight: function() {
@@ -280,7 +297,6 @@ define([
 		},
 		
 		_blockSliderHideOthers: function() {
-			console.log("hiding");
 			var blocks = this.model.getChildren().models;
 			var currentIndex = this.model.get("_currentBlock");
 
@@ -316,6 +332,12 @@ define([
 			if (!isEnabled) {
 				this._blockSliderShowAll();
 				return $container.velocity("stop").css({"height": ""});
+			}
+
+			var minHeight = this.model.get("_articleBlockSlider")._minHeight;
+			if (minHeight) {
+				$container.css({"height": minHeight+"px"});
+				return;
 			}
 
 			var currentBlock = this.model.get("_currentBlock");

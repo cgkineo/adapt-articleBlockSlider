@@ -6,5 +6,6 @@
     "_heightAnimationDuration": 300,
     "_isEnabledOnScreenSizes": "large",
     "_hasTabs": false,
-    "_hasArrows": true
+    "_hasArrows": true,
+    "_startIndex": 0
 }

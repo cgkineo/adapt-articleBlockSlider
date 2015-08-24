@@ -7,5 +7,7 @@
     "_isEnabledOnScreenSizes": "large",
     "_hasTabs": false,
     "_hasArrows": true,
-    "_startIndex": 0
+    "_startIndex": 0,
+    "_hasUniformHeight": true,
+    "_minHeight": null
 }

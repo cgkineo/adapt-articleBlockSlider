@@ -352,7 +352,13 @@ define([
 			if (this._disableAnimationOnce) animate = false;
 			if (this._disableAnimations) animate = false;
 
-			if (currentHeight <= blockHeight) {
+			if (this.model.get("_articleBlockSlider")._hasUniformHeight) {
+				if (animate === false) {
+					$container.css({"height": currentHeight+"px"});
+				} else {
+					$container.velocity("stop").velocity({"height": currentHeight+"px"}, {duration: duration });//, easing: "ease-in"});
+				}
+			} else if (currentHeight <= blockHeight) {
 
 				if (animate === false) {
 					$container.css({"height": blockHeight+"px"});

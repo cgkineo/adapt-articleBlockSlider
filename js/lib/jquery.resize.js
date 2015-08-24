@@ -1,3 +1,5 @@
+//https://github.com/cgkineo/jquery.resize 2015-08-13
+
 (function() {
 
   if ($.fn.off.elementResizeOriginalOff) return;
@@ -7,20 +9,20 @@
   $.fn.on = function () {
     if (arguments[0] !== "resize") return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
     if (this[0] === window) return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
-    var args = arguments;
-    _.each(this, function(item, index) {
-      addResizeListener.call(item, (new Date()).getTime());
-    });
+
+    addResizeListener.call(this, (new Date()).getTime());
+
+    return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
   };
   $.fn.on.elementResizeOriginalOn = orig;
   var orig = $.fn.off;
   $.fn.off = function () {
     if (arguments[0] !== "resize") return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
     if (this[0] === window) return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
-    var args = arguments;
-    _.each(this, function(item, index) {
-      removeResizeListener.call(item, (new Date()).getTime());
-    });
+
+    removeResizeListener.call(this, (new Date()).getTime());
+
+    return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
   };
   $.fn.off.elementResizeOriginalOff = orig;
 
@@ -61,12 +63,12 @@
       //nothing to resize
       stopLoop();
       resizeIntervalDuration = 500;
-      startLoop(undefined, true);
+      repeatLoop();
     } else {
       //something to resize
       stopLoop();
       resizeIntervalDuration = 250;
-      startLoop(undefined, true);
+      repeatLoop();
     }
 
     if  (resizeHandlers.length > 0) {
@@ -107,7 +109,10 @@
     //check if measure has the same values as last
     if (item._resizeData !== undefined && item._resizeData === measure.uniqueMeasurementId) return;
     item._resizeData = measure.uniqueMeasurementId;
-
+    
+    //make sure to keep listening until no more resize changes are found
+    loopData.lastEvent = (new Date()).getTime();
+    
     item.$element.trigger('resize');
   }
 
@@ -121,10 +126,19 @@
   };
 
   //checking loop start and end
-  function startLoop(event, reset) {
-    if (!reset) loopData.lastEvent = (new Date()).getTime();
-    if (loopData.interval !== null) return;
-    loopData.interval = setInterval(resizeLoop, resizeIntervalDuration);
+  function startLoop() {
+    loopData.lastEvent = (new Date()).getTime();
+    if (loopData.interval !== null) {
+      stopLoop();
+    }
+    loopData.interval = setTimeout(resizeLoop, resizeIntervalDuration);
+  }
+
+  function repeatLoop() {
+    if (loopData.interval !== null) {
+      stopLoop();
+    }
+    loopData.interval = setTimeout(resizeLoop, resizeIntervalDuration);
   }
 
   function stopLoop() {

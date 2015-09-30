@@ -1,99 +1,210 @@
-.responsive-layout-no-margin {
-    max-width: @device-width-large;
-
-	@media all and (max-width: (@device-width-large + 20px)) {
-		max-width: @device-width-medium;
+.article-block-slider-enabled {
+	&.article {
+		.article-inner { // Duplicated from Open Source .block-inner
+			margin: auto;
+			max-width: @device-width-large;
+			padding: @block-padding-top 0 @block-padding-bottom;
+			// reduce padding as screen width decreases
+			@media all and (max-width: (@device-width-large + 20px)) {
+				padding: (@block-padding-top / 2) 20px (@block-padding-bottom / 2);
+			}
+			@media all and (max-width: (@device-width-small + 20px)) {
+				padding: (@block-padding-top / 3) 10px (@block-padding-bottom / 3);
+			}
+		}
 	}
 
-	@media all and (max-width: (@device-width-medium)) {
-		max-width: @device-width-small;
+	.article-block-organise {
+		margin: 0 auto;
+		position: relative;
+		width: 100%;
 	}
 
-	@media all and (max-width: (@device-width-small)) {
-		max-width: 100%;
+	.article-block-slider {
+		margin: auto;
+		max-width: @device-width-large;
+		overflow: hidden;
 	}
-	@media all and (max-width: (321px)) {
-		max-width: 100%;
+
+	.block {
+		float: left;
+		width: 100%;
 	}
-}
 
+	.block-container {
+		position: relative;
+	}	
 
-.article-block-organise {
-	position: relative;
-	width: 100%;
-	margin: 0 auto;
-}
-
-.has-tabs { 
 	.article-block-toolbar {
-		top:20px;
+		width: 100%;
 	}
-}
-
-.article-block-toolbar {
-	position: absolute;
-	width:100%;
-	top: 0px;
 
 	.item-button-container {
-		.responsive-layout-no-margin;
 		margin: 0 auto;
+		max-width: @device-width-large;
+
+		@media all and (max-width (@device-width-large + 20px)) {
+			max-width: @device-width-medium;
+		}
 	}
 
+	// Arrows General
+	.has-arrows {
+		.block {
+			.block-inner {
+				// Added padding for arrow navigation
+				@media all and (min-width: @device-width-medium) { 
+					padding: @block-padding-top 70px 0; 
+				}
+
+				.ie8 & {
+					padding: @block-padding-top 70px 0;
+				}
+
+				// Removed arrow navigation padding
+				@media all and (max-width: @device-width-medium) { 
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+
+			// Removed last block inner padding to even the spacing up on smaller resolutions
+			@media all and (max-width: @device-width-medium) { 
+				&:last-child {
+					.block-inner {
+						padding-bottom: 0;
+					}
+				}
+			}
+		}
+	}
+
+	// Arrow Buttons
+	.item-button-arrow {
+		background-color: @button-color;
+		display: block;
+		height: (@icon-size*2.5);
+		margin-top: -(@icon-size*1.25);
+		position: absolute;
+		text-decoration: none;
+		top: 50%;
+		width: (@icon-size*2.5);
+		z-index: 10;
+
+		.icon {
+			color: @button-text-color;
+			font-size: (@icon-size*1.25);
+			font-weight: bold;
+			margin: (@icon-size/1.5);
+		}
+
+		.no-touch &:hover {
+			background-color: @button-color-hover;
+
+			.icon {
+				color: @button-text-color-hover;
+			}
+		}
+
+		&[disabled="disabled"] {
+			background-color: @button-color-disabled;
+			cursor: default;
+
+			.no-touch &:hover {
+				background-color: @button-color-disabled;
+			}
+		}
+
+		&[data-block-slider='left'] {
+			left: 0;
+		}
+
+		&[data-block-slider='right'] {
+			right: 0;
+		}
+	}
+
+	// Tabs General
+	.has-tabs {
+		.article-block-slider {
+			@media all and (max-width: @device-width-medium) {
+				margin-top: 0 !important;
+			}
+		}
+
+		.article-block-toolbar {
+			position: absolute;
+		}
+
+		.block {
+			.block-inner {
+				// Added padding to match .item-button-inner margin
+				@media all and (min-width: @device-width-medium) {
+					padding: 0 5px;
+				}
+
+				.ie8 & {
+					padding: 0 5px;
+				}
+
+				// Removed padding 
+				@media all and (max-width: @device-width-medium) {
+					padding-left: 0;
+					padding-right: 0;
+				}
+			}
+
+			// Removed last block inner padding to even the spacing up on smaller resolutions
+			@media all and (max-width: @device-width-medium) {
+				&:last-child {
+					.block-inner {
+						padding-bottom: 0;
+					}
+				}
+			}
+		}
+	}
+
+	// Tab Buttons
 	.item-button {
 		float: left;
-	}
+		text-align: center;
+		text-decoration: none;
 
-	.item-button-arrow {
-		position: absolute;
-		display: block;
-	    width: 60px;
-	    height: 60px;
-	    margin-top: -48px;
-	    z-index: 10;
-	    text-decoration: none;
-	    background-color: #3d6fd4;
-		top: 200px;
-		div.icon {
-			font-size: 30px;
-		    font-weight: bold;
-		    margin: 16px;
-		    height:25px;
-		    width:25px;
-		    color: #ffffff;
-		    text-align: center;
+		.no-touch &:hover {
+			.item-button-inner {
+				background-color: @button-color-hover;
+			}
 		}
+
 		&[disabled="disabled"] {
-			background-color: #E2E1E1;
+			.item-button-inner {
+				background-color: @button-color-disabled;
+				color: @button-text-color-disabled;
+				cursor: default;
+
+				.no-touch &:hover {
+					background-color: @button-color-disabled;
+					color: @button-text-color-disabled;
+				}
+			}
 		}
-		&[data-block-slider='left'] {
-		    left: 0px;
+	}
+
+	.item-button-inner {
+		background-color: @button-color;
+		color: @button-text-color;
+		display: block;
+		margin: 0 5px;
+		padding: 10px;
+	}
+
+	.article-block-bottombar {
+		&.display-none {
+			display: none;
 		}
-		&[data-block-slider='right'] {
-			right:0px;
-		}
 	}
 
-	&.display-none {
-		display: none;
-	}
-
-}
-
-.article-block-slider {
-	overflow:hidden;
-	max-width: @device-width-large;
-	margin: auto;
-	.block-container {
-		position:relative;
-	}
-	.block {
-		float:left;
-		width:100%;
-	}
-
-}
-.article-block-bottombar {
 	&.display-none {
 		display: none;
 	}

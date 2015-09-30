@@ -1,14 +1,16 @@
 {
-  "name": "adapt-articleBlockSlider",
-  "version": "2.0.0",
-  "homepage": "https://github.com/cgkineo/adapt-articleBlockSlider",
-  "authors": [
-    "Oliver Foster <oliver.foster@kineo.com>"
-  ],
-  "main": "/js/articleBlockSlider.js",
-  "keywords": [
-    "adapt-plugin",
-    "adapt-extension"
-  ],
-  "license": "GPLv3"
+    "name": "adapt-articleBlockSlider",
+    "version": "2.0.0",
+    "framework": "^2.0.0",
+    "homepage": "https://github.com/cgkineo/adapt-articleBlockSlider",
+    "displayName": "Article Block Slider",
+    "extension": "articleBlockSlider",
+    "description": "A simple left and right slider for an article's blocks",
+    "main": "/js/adapt-articleBlockSlider.js",
+    "keywords": [
+        "adapt-plugin",
+        "adapt-extension"
+    ],
+    "license": "GPL-3.0",
+    "targetAttribute": "_articleBlockSlider"
 }

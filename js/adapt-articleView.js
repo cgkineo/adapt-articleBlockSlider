@@ -127,11 +127,6 @@ define([
 			$blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
 			
 			_.delay(_.bind(function() {
-				if ( this.model.get("_articleBlockSlider")._hasArrows) {
-					var topOffset = (this.$(".article-block-slider").outerHeight() / 2);
-					var arrowHeight = this.$(".item-button-arrow").outerHeight();
-					this.$(".item-button-arrow").css("top", topOffset - (arrowHeight/2));
-				}
 				if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
 			}, this), duration);
 
@@ -157,11 +152,11 @@ define([
 	            });
 
 	            var toolbarHeight = this.$('.article-block-toolbar').height();
+	            var additionalMargin = '30';
 	            this.$('.article-block-toolbar').css({
-	            	top: '-' + toolbarHeight + 'px'
+	            	top: '-' + (toolbarHeight + (additionalMargin/2)) + 'px'
 	            });
 
-	            var additionalMargin = '30';
 	            var toolbarMargin = parseFloat(toolbarHeight) + parseFloat(additionalMargin);
 	            this.$('.article-block-slider').css({
 	            	marginTop: toolbarMargin + 'px'
@@ -347,6 +342,13 @@ define([
 			var currentHeight = $container.height();
 			var blockHeight = $blocks.eq(currentBlock).height();
 
+			var maxHeight = -1;
+			$container.find(".block").each(function() { 
+		    
+	    	if ($(this).height() > maxHeight)
+		    	maxHeight = $(this).height();
+			});
+
 			var duration = (this.model.get("_articleBlockSlider")._heightAnimationDuration || 200) * 2;
 
 			if (this._disableAnimationOnce) animate = false;
@@ -354,9 +356,9 @@ define([
 
 			if (this.model.get("_articleBlockSlider")._hasUniformHeight) {
 				if (animate === false) {
-					$container.css({"height": currentHeight+"px"});
+					$container.css({"height": maxHeight+"px"});
 				} else {
-					$container.velocity("stop").velocity({"height": currentHeight+"px"}, {duration: duration });//, easing: "ease-in"});
+					$container.velocity("stop").velocity({"height": maxHeight+"px"}, {duration: duration });//, easing: "ease-in"});
 				}
 			} else if (currentHeight <= blockHeight) {
 

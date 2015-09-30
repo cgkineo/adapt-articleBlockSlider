@@ -6,9 +6,9 @@ The extension changes the presentation of an article's blocks from being vertica
 
 ##Installation
 
-Open the /src/extensions folder in a new terminal window on Mac OSX or right click the folder and select 'Git Bash Here' on Windows.
+Open the */src/extensions* folder in a new terminal window on Mac OSX or right click the folder and select 'Git Bash Here' on Windows.
 
-Git clone the component, making sure to delete the hidden .git folder from the adapt-articleBlockSlider folder.
+Git clone the component, making sure to delete the hidden **.git** folder from the *adapt-articleBlockSlider* folder.
 
 ##Settings  
 
@@ -24,15 +24,15 @@ The attributes listed below are used in *articles.json* to configure **Article B
 
 >**_isEnabledOnScreenSizes** (string): Defines which screen sizes the Article Block Slider displays the navigation elements on. Acceptable values are large, medium and small.
 
->**_hasTabs** (boolean): Turns the tab navigation on and off. If _hasArrows is set to true, you must set _hasTabs to false. Acceptable values are true and false. 
+>**_hasTabs** (boolean): Turns the tab navigation on and off. If *_hasTabs* is set to true, you must set *_hasArrows* to false. Acceptable values are true and false. 
 
->**_hasArrows** (boolean): Turns the arrow navigation on and off. If _hasTabs is set to true, you must set _hasArrows to false. Acceptable values are true and false. 
+>**_hasArrows** (boolean): Turns the arrow navigation on and off. If *_hasArrows* is set to true, you must set *_hasTabs* to false. Acceptable values are true and false. 
 
 >**_startIndex** (number): Sets which block displays on page load.
 
 >**_hasUniformHeight** (boolean): Sets all elements within the Article Block Slider to use the highest blocks height. Acceptable values are true and false.
 
->**_minHeight** (number): Sets a minimum height on the .article-block-slider container class.
+>**_minHeight** (number): Sets a minimum height on the *.article-block-slider* container class.
 
 ## Limitations
  

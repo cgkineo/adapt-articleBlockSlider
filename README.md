@@ -1,18 +1,3 @@
-adapt-articleBlockSlider
-========================
-
-A simple left and right or tabbing slider for an article's blocks
-
-* Not yet authoring tool compatible
-* Not yet for production - testing required
-* Tested in chrome, ff, ie8 and ie11, all working (so far)
-* Is Accessible
-
-
-
-
-
-
 # adapt-articleBlockSlider
 
 **Article Block Slider** is a C&G Kineo *presentation extension*.
@@ -53,6 +38,7 @@ The attributes listed below are used in *articles.json* to configure **Article B
  
 Only one navigation element (Arrows or Tabs) should be active at any one time.
 The **Article Block Slider** and **Quicknav** extensions don't interact well together when the **Article Block Slider** is the last article on a page with an enabled **Quicknav.**
+Not yet authoring tool compatible.
 
 ----------------------------
 **Version number:**  2.0  

@@ -6,7 +6,7 @@
     "displayName": "Article Block Slider",
     "extension": "articleBlockSlider",
     "description": "A simple left and right slider for an article's blocks",
-    "main": "/js/adapt-articleBlockSlider.js",
+    "main": "/js/articleBlockSlider.js",
     "keywords": [
         "adapt-plugin",
         "adapt-extension"

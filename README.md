@@ -36,8 +36,8 @@ The attributes listed below are used in *articles.json* to configure **Article B
 
 ## Limitations
  
-Only one navigation element (Arrows or Tabs) should be active at any one time.
-The **Article Block Slider** and **Quicknav** extensions don't interact well together when the **Article Block Slider** is the last article on a page with an enabled **Quicknav.**
+Only one navigation element (Arrows or Tabs) should be active at any one time.  
+The **Article Block Slider** and **Quicknav** extensions don't interact well together when the **Article Block Slider** is the last article on a page with an enabled **Quicknav.**  
 Not yet authoring tool compatible.
 
 ----------------------------

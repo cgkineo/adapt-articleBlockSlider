@@ -1,2 +1,121 @@
 {
+  "type":"object",
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "id": "http://jsonschema.net",
+  "required":false,
+  "properties":{
+    "pluginLocations": {
+      "type":"object",
+      "required":true,
+      "properties":{
+        "config": {
+          "type":"object"
+        },
+        "course": {
+          "type":"object"
+        },
+        "contentobject": {
+          "type":"object"
+        },
+        "article": {
+          "type":"object",
+          "properties":{
+            "_articleBlockSlider": {
+              "type":"object",
+              "required":false,
+              "legend": "BlockSlider",
+              "properties":{
+                "_isEnabled": {
+                  "type":"boolean",
+                  "required":true,
+                  "title": "Enabled",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": [],
+                  "help": "Turns Article Block Slider on and off. Acceptable values are true and false."
+                },
+                "_slideAnimationDuration": {
+                  "type":"number",
+                  "required":true,
+                  "default":"600",
+                  "title": "Slide Animation Duration",
+                  "inputType":"Number",
+                  "validators": ["required", "number"],
+                  "help": "Sets the slide duration, in milliseconds, of the animation between blocks."
+                },
+                "_heightAnimationDuration": {
+                  "type":"number",
+                  "required":true,
+                  "default":"300",
+                  "title": "Height Animation Duration",
+                  "inputType":"Number",
+                  "validators": ["required", "number"],
+                  "help": "Sets the duration, in milliseconds, of the animation between varying blocks heights."
+                },
+                "_isEnabledOnScreenSizes": {
+                  "type": "string",
+                  "required": true,
+                  "default": "large",
+                  "title": "Enabled On Screen Sizes",
+                  "inputType": "Text",
+                  "validators": [],
+                  "help": "Defines which screen sizes the Article Block Slider displays the navigation elements on. Acceptable values are large, medium and small."
+                },
+                "_hasTabs": {
+                  "type":"boolean",
+                  "required":true,
+                  "default": "false",
+                  "title": "Has Tabs",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": [],
+                  "help": "Turns the tab navigation on and off. If _hasTabs is set to true, you must set _hasArrows to false. Acceptable values are true and false."
+                },
+                "_hasArrows": {
+                  "type":"boolean",
+                  "required":true,
+                  "default": "true",
+                  "title": "Has Arrows",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": [],
+                  "help": "Turns the arrow navigation on and off. If _hasArrows is set to true, you must set _hasTabs to false. Acceptable values are true and false."
+                },
+                "_startIndex": {
+                  "type":"number",
+                  "required":true,
+                  "default": 0,
+                  "title": "Start on what block",
+                  "inputType": "Number",
+                  "validators": ["required", "number"],
+                  "help": "Sets which block displays on page load."
+                },
+                "_hasUniformHeight": {
+                  "type":"boolean",
+                  "required":true,
+                  "default": "true",
+                  "title": "Has a uniform height",
+                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "validators": [],
+                  "help": "Sets all elements within the Article Block Slider to use the highest blocks height. Acceptable values are true and false."
+                },
+                "_minHeight": {
+                  "type":"number",
+                  "required":true,
+                  "default": null,
+                  "title": "Min Height",
+                  "inputType": "Number",
+                  "validators": ["required", "number"],
+                  "help": "Sets a minimum height on the .article-block-slider container class."
+                }
+              }
+            }
+          }
+        },
+        "block": {
+          "type":"object"
+        },
+        "component": {
+          "type":"object"
+        }
+      }
+    }
+  }
 }

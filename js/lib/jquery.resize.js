@@ -27,12 +27,18 @@
   $.fn.off.elementResizeOriginalOff = orig;
 
   var expando = $.expando;
+  var expandoIndex = 0;
+
+  function checkExpando(element) {
+    if (!element[expando]) element[expando] = ++expandoIndex;
+    }
 
   //element + event handler storage
   var resizeObjs = {};
 
   //jQuery element + event handler attachment / removal
   var addResizeListener = function(data) {
+      checkExpando(this);
       resizeObjs[data.guid + "-" + this[expando]] = { 
         data: data, 
         $element: $(this) 
@@ -107,8 +113,11 @@
   function triggerResize(item) {
     var measure = getDimensions(item.$element);
     //check if measure has the same values as last
+    var isFirstRun = false;
+    if (item._resizeData === undefined) isFirstRun = true;
     if (item._resizeData !== undefined && item._resizeData === measure.uniqueMeasurementId) return;
     item._resizeData = measure.uniqueMeasurementId;
+    if (isFirstRun) return;
     
     //make sure to keep listening until no more resize changes are found
     loopData.lastEvent = (new Date()).getTime();

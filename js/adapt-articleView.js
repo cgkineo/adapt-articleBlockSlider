@@ -42,7 +42,7 @@ define([
 
 		render: function() {
 
-			if (this.model.isBlockSliderEnabled() & this._blockSliderIsEnabledOnScreenSizes()) {
+			if (this.model.isBlockSliderEnabled() && this._blockSliderIsEnabledOnScreenSizes()) {
 
 				this._blockSliderRender();
 

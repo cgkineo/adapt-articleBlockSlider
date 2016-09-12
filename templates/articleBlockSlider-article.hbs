@@ -38,18 +38,18 @@
 	        
 	        <div class="item-button-container clearfix">
 	            {{#if _articleBlockSlider._hasArrows}}
-	                <a class="item-button-arrow" href="#" data-block-slider="left">
+	                <button class="base item-button-arrow" data-block-slider="left" aria-label="{{_globals._accessibility._ariaLabels.previous}}">
 	                    <div class="icon icon-controls-left"></div>
-	                </a>
+	                </button>
 	            {{/if}}
 	            {{#if _articleBlockSlider._hasArrows}}
-	                <a class="item-button-arrow" href="#" data-block-slider="right">
+	                <button class="base item-button-arrow" href="#" data-block-slider="right" aria-label="{{_globals._accessibility._ariaLabels.next}}">
 	                    <div class="icon icon-controls-right"></div>
-	                </a>
+	                </button>
 	            {{/if}}
 	            {{#if _articleBlockSlider._hasTabs}}
 	            {{#each _itemButtons}}
-	                <a class="item-button {{_className}}" href="#" role="button" aria-label="{{_title}}" data-block-slider="index" data-block-slider-index="{{this._index}}"><span class="item-button-inner">{{_title}}</span></a>
+	                <button class="base item-button {{_className}}" aria-label="{{_title}}" data-block-slider="index" data-block-slider-index="{{this._index}}"><span class="item-button-inner">{{_title}}</span></button>
 	            {{/each}}
 	            {{/if}}
 	            

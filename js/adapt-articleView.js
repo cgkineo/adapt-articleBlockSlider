@@ -42,7 +42,7 @@ define([
 
         render: function() {
 
-            if (this.model.isBlockSliderEnabled() {
+            if (this.model.isBlockSliderEnabled()) {
 
                 this._blockSliderRender();
 

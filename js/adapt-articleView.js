@@ -21,7 +21,7 @@ define([
 
         _blockSliderPreRender: function() {
             this._disableAnimations = $('html').is(".ie8") || $('html').is(".iPhone.version-7\\.0");
-            if (this._blockSliderIsEnabledOnScreenSizes()) this._blockSliderSetupEventListeners();
+            this._blockSliderSetupEventListeners();
         },
 
         _blockSliderSetupEventListeners: function() {
@@ -42,7 +42,7 @@ define([
 
         render: function() {
 
-            if (this.model.isBlockSliderEnabled() && this._blockSliderIsEnabledOnScreenSizes()) {
+            if (this.model.isBlockSliderEnabled() {
 
                 this._blockSliderRender();
 

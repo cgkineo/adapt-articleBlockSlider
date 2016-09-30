@@ -1,4 +1,4 @@
-//https://github.com/cgkineo/jquery.resize 2015-08-13
+//https://github.com/cgkineo/jquery.resize 2016-02-02
 
 (function() {
 
@@ -39,9 +39,12 @@
   //jQuery element + event handler attachment / removal
   var addResizeListener = function(data) {
       checkExpando(this);
+      var $item = $(this);
+      var measure = getDimensions($item);
       resizeObjs[data.guid + "-" + this[expando]] = { 
         data: data, 
-        $element: $(this) 
+        $element: $item,
+        _resizeData: measure.uniqueMeasurementId
       };
   };
 
@@ -54,7 +57,7 @@
   };
 
   function checkLoopExpired() {
-    if ((new Date()).getTime() - loopData.lastEvent > 500) {
+    if ((new Date()).getTime() - loopData.lastEvent > 1500) {
       stopLoop()
       return true;
     }
@@ -113,11 +116,8 @@
   function triggerResize(item) {
     var measure = getDimensions(item.$element);
     //check if measure has the same values as last
-    var isFirstRun = false;
-    if (item._resizeData === undefined) isFirstRun = true;
     if (item._resizeData !== undefined && item._resizeData === measure.uniqueMeasurementId) return;
     item._resizeData = measure.uniqueMeasurementId;
-    if (isFirstRun) return;
     
     //make sure to keep listening until no more resize changes are found
     loopData.lastEvent = (new Date()).getTime();

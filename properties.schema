@@ -35,7 +35,7 @@
                 },
                 "_slideAnimationDuration": {
                   "type":"number",
-                  "required":true,
+                  "required":false,
                   "default":"600",
                   "title": "Slide Animation Duration",
                   "inputType":"Number",
@@ -44,7 +44,7 @@
                 },
                 "_heightAnimationDuration": {
                   "type":"number",
-                  "required":true,
+                  "required":false,
                   "default":"300",
                   "title": "Height Animation Duration",
                   "inputType":"Number",
@@ -53,7 +53,7 @@
                 },
                 "_isEnabledOnScreenSizes": {
                   "type": "string",
-                  "required": true,
+                  "required": false,
                   "default": "large",
                   "title": "Enabled On Screen Sizes",
                   "inputType": "Text",
@@ -98,7 +98,7 @@
                 },
                 "_minHeight": {
                   "type":"number",
-                  "required":true,
+                  "required":false,
                   "default": null,
                   "title": "Min Height",
                   "inputType": "Number",

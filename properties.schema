@@ -39,7 +39,7 @@
                   "default":"600",
                   "title": "Slide Animation Duration",
                   "inputType":"Number",
-                  "validators": ["required", "number"],
+                  "validators": ["number"],
                   "help": "Sets the slide duration, in milliseconds, of the animation between blocks."
                 },
                 "_heightAnimationDuration": {
@@ -48,7 +48,7 @@
                   "default":"300",
                   "title": "Height Animation Duration",
                   "inputType":"Number",
-                  "validators": ["required", "number"],
+                  "validators": ["number"],
                   "help": "Sets the duration, in milliseconds, of the animation between varying blocks heights."
                 },
                 "_isEnabledOnScreenSizes": {
@@ -102,7 +102,7 @@
                   "default": null,
                   "title": "Min Height",
                   "inputType": "Number",
-                  "validators": ["required", "number"],
+                  "validators": ["number"],
                   "help": "Sets a minimum height on the .article-block-slider container class."
                 }
               }

@@ -29,7 +29,7 @@
     </div>
     {{/if}}
     <div class="article-block-organise{{#if _articleBlockSlider._hasArrows}} has-arrows{{/if}}{{#if _articleBlockSlider._hasTabs}} has-tabs{{/if}}" role="region" {{#if _accessibility._ariaRegions.articleBlockSlider}}tabindex="0" aria-label="{{_accessibility._ariaRegions.articleBlockSlider}}"{{/if}}>
-	    <div class="article-block-slider clearfix" {{#if _articleBlockSlider.minHeight}}style="min-height: {{{_articleBlockSlider.minHeight}}}px"{{/if}}>
+	    <div class="article-block-slider clearfix" {{#if _articleBlockSlider._minHeight}}style="min-height: {{{_articleBlockSlider._minHeight}}}px"{{/if}}>
 	        <div class="block-container clearfix">
 
 	        </div>

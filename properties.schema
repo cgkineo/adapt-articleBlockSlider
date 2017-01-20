@@ -29,9 +29,8 @@
                   "type":"boolean",
                   "required":true,
                   "title": "Enabled",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
-                  "validators": [],
-                  "help": "Turns Article Block Slider on and off. Acceptable values are true and false."
+                  "inputType": "Checkbox",
+                  "validators": []
                 },
                 "_slideAnimationDuration": {
                   "type":"number",
@@ -58,25 +57,25 @@
                   "title": "Enabled On Screen Sizes",
                   "inputType": "Text",
                   "validators": [],
-                  "help": "Defines which screen sizes the Article Block Slider displays the navigation elements on. Acceptable values are large, medium and small."
+                  "help": "Defines which screen sizes the Article Block Slider displays the navigation elements on. Acceptable values are large, medium and small - or a comma-separated list of combinations thereof e.g. 'large medium'."
                 },
                 "_hasTabs": {
                   "type":"boolean",
                   "required":true,
                   "default": "false",
                   "title": "Has Tabs",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": [],
-                  "help": "Turns the tab navigation on and off. If _hasTabs is set to true, you must set _hasArrows to false. Acceptable values are true and false."
+                  "help": "Turns the tab navigation on and off. If this property is checked, you must uncheck 'Has Arrows'."
                 },
                 "_hasArrows": {
                   "type":"boolean",
                   "required":true,
                   "default": "true",
                   "title": "Has Arrows",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": [],
-                  "help": "Turns the arrow navigation on and off. If _hasArrows is set to true, you must set _hasTabs to false. Acceptable values are true and false."
+                  "help": "Turns the arrow navigation on and off. If this property is checked, you must uncheck 'Has Tabs'."
                 },
                 "_startIndex": {
                   "type":"number",
@@ -92,9 +91,9 @@
                   "required":true,
                   "default": "true",
                   "title": "Has a uniform height",
-                  "inputType": { "type": "Boolean", "options": [false, true]},
+                  "inputType": "Checkbox",
                   "validators": [],
-                  "help": "Sets all elements within the Article Block Slider to use the highest blocks height. Acceptable values are true and false."
+                  "help": "Sets all elements within the Article Block Slider to use the highest block's height."
                 },
                 "_minHeight": {
                   "type":"number",

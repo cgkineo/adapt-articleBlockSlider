@@ -4,7 +4,7 @@ define([
 	'coreModels/articleModel',
 	'./adapt-articleView',
 	'./adapt-articleModel',
-	'./lib/jquery.resize'
+	'libraries/jquery.resize'
 ], function(Adapt, ArticleView, ArticleModel, ArticleViewExtension, ArticleModelExtension) {
 
 	/*	

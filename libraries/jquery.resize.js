@@ -1,162 +1,242 @@
-//https://github.com/cgkineo/jquery.resize 2016-09-30
+'use strict';
+// jquery.resize 2017-05-31 https://github.com/adaptlearning/jquery.resize
 
 (function() {
 
-  if ($.fn.off.elementResizeOriginalOff) return;
+    // skip if library is already handling resize events
+    if ($.event.special.resize) return;
+    // skip if old library has been loaded
+    if ($.fn.off.elementResizeOriginalOff) return;
 
+    // handler id generation
+    var expando = {
 
-  var orig = $.fn.on;
-  $.fn.on = function () {
-    if (arguments[0] !== "resize") return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
-    if (this[0] === window) return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
+        index: 0,
 
-    addResizeListener.call(this, (new Date()).getTime());
+        check: function(element) {
+            // check that the element has a valid jquery expando property, or make one
 
-    return $.fn.on.elementResizeOriginalOn.apply(this, _.toArray(arguments));
-  };
-  $.fn.on.elementResizeOriginalOn = orig;
-  var orig = $.fn.off;
-  $.fn.off = function () {
-    if (arguments[0] !== "resize") return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
-    if (this[0] === window) return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
+            var hasExpando = (element[$.expando]);
+            if (hasExpando) return;
 
-    removeResizeListener.call(this, (new Date()).getTime());
+            element[$.expando] = ++expando.index;
 
-    return $.fn.off.elementResizeOriginalOff.apply(this, _.toArray(arguments));
-  };
-  $.fn.off.elementResizeOriginalOff = orig;
+        },
 
-  var expando = $.expando;
-  var expandoIndex = 0;
+        make: function(element, data) {
+            // make a unique event id from the element's expando property and the event handler guid
 
-  function checkExpando(element) {
-    if (!element[expando]) element[expando] = ++expandoIndex;
-    }
+            expando.check(element);
+            return data.guid + "-" + element[$.expando];
 
-  //element + event handler storage
-  var resizeObjs = {};
+        }
 
-  //jQuery element + event handler attachment / removal
-  var addResizeListener = function(data) {
-      checkExpando(this);
-      var $item = $(this);
-      var measure = getDimensions($item);
-      resizeObjs[data.guid + "-" + this[expando]] = { 
-        data: data, 
-        $element: $item,
-        _resizeData: measure.uniqueMeasurementId
-      };
-  };
+    };
 
-  var removeResizeListener = function(data) {
-    try { 
-      delete resizeObjs[data.guid + "-" + this[expando]]; 
-    } catch(e) {
+    // handler functions
+    var handlers = {
 
-    }
-  };
+        registered: [],
+        shouldReProcess: true,
 
-  function checkLoopExpired() {
-    if ((new Date()).getTime() - loopData.lastEvent > 1500) {
-      stopLoop()
-      return true;
-    }
-  }
+        register: function(element, data) {
 
-  function resizeLoop () {
-    if (checkLoopExpired()) return;
+            var $element = $(element);
+            handlers.registered.push({ 
+                id: expando.make(element, data),
+                $element: $element,
+                _measurement: measurements.get($element).uniqueMeasurementId,
+                _hasTriggered: false
+            });
+            handlers.shouldReProcess = true;
 
-    var resizeHandlers = getEventHandlers("resize");
+        },
 
-    if (resizeHandlers.length === 0) {
-      //nothing to resize
-      stopLoop();
-      resizeIntervalDuration = 500;
-      repeatLoop();
-    } else {
-      //something to resize
-      stopLoop();
-      resizeIntervalDuration = 250;
-      repeatLoop();
-    }
+        unregister: function(element, data) {
 
-    if  (resizeHandlers.length > 0) {
-      var items = resizeHandlers;
-      for (var i = 0; i < items.length; i++) {
-        var item = items[i];
-        triggerResize(item);
-      }
-    }
+            var registered = handlers.registered;
 
-  }
+            var findId = expando.make(element, data);
+            for (var i = registered.length-1, l = -1; i > l; i--) {
+                var item = registered[i]
+                if (item.id != findId) continue;
+                registered.splice(i,1);
+                handlers.shouldReProcess = true;
+            }
 
-  function getEventHandlers(eventName) {
-    var items = [];
-    
-    switch (eventName) {
-    case "resize":
-      for (var k in resizeObjs) {
-        items.push(resizeObjs[k]);
-      }
-      break;
-    }
+        },
 
-    return items;
-  }
+        process: function() {
 
-  function getDimensions($element) {
-      var height = $element.outerHeight();
-      var width = $element.outerWidth();
+            var registered = handlers.registered;
+            var registeredCount;
 
-      return {
-        uniqueMeasurementId: height+","+width
-      };
-  }
+            handlers.shouldReProcess = true;
+            while (handlers.shouldReProcess) {
+                handlers.shouldReProcess = false;
+                
+                registeredCount = registered.length;
+                if  (registeredCount == 0) return;
+                
+                for (var i = 0; i < registeredCount; i++) {
+                    var item = registered[i];
+                    var measure = measurements.get(item.$element);
 
-  function triggerResize(item) {
-    var measure = getDimensions(item.$element);
-    //check if measure has the same values as last
-    if (item._resizeData !== undefined && item._resizeData === measure.uniqueMeasurementId) return;
-    item._resizeData = measure.uniqueMeasurementId;
-    
-    //make sure to keep listening until no more resize changes are found
-    loopData.lastEvent = (new Date()).getTime();
-    
-    item.$element.trigger('resize');
-  }
+                    // check if measure has the same values as last
+                    var wasPreviouslyMeasured = (item._measurement !== undefined);
 
+                    if (wasPreviouslyMeasured && item._hasTriggered) {
+                        var hasMeasureChanged = (item._measurement != measure.uniqueMeasurementId);
+                        if (!hasMeasureChanged) {
+                            continue;
+                        }
+                    }
 
-  //checking loop interval duration
-  var resizeIntervalDuration = 250;
+                    item._measurement = measure.uniqueMeasurementId;
+                    item._hasTriggered = true;
 
-  var loopData = {
-    lastEvent: 0,
-    interval: null
-  };
+                    handlers.trigger(item);
 
-  //checking loop start and end
-  function startLoop() {
-    loopData.lastEvent = (new Date()).getTime();
-    if (loopData.interval !== null) {
-      stopLoop();
-    }
-    loopData.interval = setTimeout(resizeLoop, resizeIntervalDuration);
-  }
+                    if (handlers.shouldReProcess) {
+                        break;
+                    }
 
-  function repeatLoop() {
-    if (loopData.interval !== null) {
-      stopLoop();
-    }
-    loopData.interval = setTimeout(resizeLoop, resizeIntervalDuration);
-  }
+                }
+            }
 
-  function stopLoop() {
-    clearInterval(loopData.interval);
-    loopData.interval = null;
-  }
+        },
 
-  $('body').on("mousedown mouseup keyup keydown", startLoop);
-  $(window).on("resize", startLoop);
+        trigger: function triggerResize(item) {
+            
+            item.$element.trigger('resize');
 
+        }
+
+    };
+
+    // checking loop management
+    var loop = {
+
+        lastStartEvent: 0,
+        timeoutHandle: null,
+        intervalDuration: 100,
+
+        start: function() {
+
+            loop.lastStartEvent = (new Date()).getTime();
+            loop.repeat();
+
+        },
+
+        repeat: function() {
+            
+            loop.stop();
+            loop.timeoutHandle = setTimeout(loop.main, loop.intervalDuration);
+
+        },
+
+        hasExpired: function() {
+
+            var timeSinceLast = (new Date()).getTime() - loop.lastStartEvent;
+            if (timeSinceLast < 1500) return;
+            
+            loop.stop()
+            return true;
+        },
+
+        main: function() {
+
+            if (loop.hasExpired()) return;
+
+            if (handlers.registered.length == 0) {
+                // nothing to check
+                loop.stop();
+                // slow down to save cycles
+                loop.intervalDuration = 200;
+                loop.repeat();
+            } else {
+                // something to check
+                loop.stop();
+                // speed up to make more responsive
+                loop.intervalDuration = 100;
+                loop.repeat();
+            }
+
+            handlers.process();
+
+        },
+
+        stop: function() {
+
+            var intervalAttached = (loop.timeoutHandle !== null);
+            if (!intervalAttached) return;
+
+            clearTimeout(loop.timeoutHandle);
+            loop.timeoutHandle = null;
+
+        }
+
+    };
+
+    // jQuery element + event handler attachment / removal
+    $.extend($.event.special, {
+
+        resize: {
+
+            noBubble: true,
+
+            add: function(data) {
+                // allow window resize to be handled by browser
+                if (this === window) return;
+                handlers.register(this, data);
+            },
+
+            remove: function(data) {
+                // allow window resize to be handled by browser
+                if (this === window) return;
+                handlers.unregister(this, data);
+            }
+
+        }
+
+    });
+
+    // jQuery interfaces
+    // element functions
+    $.extend($.fn, {
+
+        resize: function resize(callback) {
+
+            if (callback) {
+                // standard event attachment jquery api behaviour
+                this.on("resize", callback);
+                return this;
+            }
+
+            return this;
+
+        }
+
+    });
+
+    var measurements = {
+
+        get: function($element) {
+
+            var height = $element.outerHeight();
+            var width = $element.outerWidth();
+
+            return {
+                uniqueMeasurementId: height+","+width
+            };
+
+        }
+
+    };
+
+    //attach event handlers
+    $(window).on({
+        "scroll mousedown mouseup touchstart touchend keydown keyup resize": loop.start
+    });
 
 })();

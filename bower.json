@@ -1,7 +1,7 @@
 {
     "name": "adapt-articleBlockSlider",
     "repository": "git://github.com/cgkineo/adapt-articleBlockSlider",
-    "framework": "^2.0.13",
+    "framework": "^2.0.14",
     "version": "2.0.2",
     "homepage": "https://github.com/cgkineo/adapt-articleBlockSlider",
     "issues": "https://github.com/cgkineo/adapt-articleBlockSlider/issues/",

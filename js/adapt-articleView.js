@@ -197,7 +197,7 @@ define([
             _.delay(_.bind(function(){
                 this._blockSliderConfigureControls(false);
                 this._onBlockSliderResize();
-            },this),250);
+            },this), 10);
             this.$(".component").on("resize", this._blockSliderResizeHeight);
         },
 

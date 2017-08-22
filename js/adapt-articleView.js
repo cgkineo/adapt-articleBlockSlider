@@ -39,6 +39,7 @@ define([
         },
 
         _blockSliderSetupEventListeners: function() {
+      this.listenTo(Adapt, "Brightcove:openTranscript", this._onBlockSliderResize);
 
             this._onBlockSliderResize = _.bind(this._onBlockSliderResize, this);
             this._blockSliderResizeHeight = _.bind(this._blockSliderResizeHeight, this);

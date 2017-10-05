@@ -1,5 +1,5 @@
 'use strict';
-// jquery.resize 2017-05-31 https://github.com/adaptlearning/jquery.resize
+// jquery.resize 2017-10-05 https://github.com/adaptlearning/jquery.resize
 
 (function() {
 
@@ -120,6 +120,7 @@
         lastStartEvent: 0,
         timeoutHandle: null,
         intervalDuration: 100,
+        hasRaf: false,
 
         start: function() {
 
@@ -131,7 +132,12 @@
         repeat: function() {
             
             loop.stop();
-            loop.timeoutHandle = setTimeout(loop.main, loop.intervalDuration);
+
+            if (loop.hasRaf) {
+                loop.timeoutHandle = requestAnimationFrame(loop.main);
+            } else {
+                loop.timeoutHandle = setTimeout(loop.main, loop.intervalDuration);
+            }
 
         },
 
@@ -144,9 +150,27 @@
             return true;
         },
 
+        lastMain: (new Date()).getTime(),
+
+        isThrottled: function() {
+            var passedTime = (new Date()).getTime() - loop.lastMain;
+            if (passedTime > loop.intervalDuration) return false;
+            return true;
+        },
+
         main: function() {
 
-            if (loop.hasExpired()) return;
+            if (loop.isThrottled()) {
+                loop.repeat();
+                return;
+            }
+
+            loop.lastMain = (new Date()).getTime();
+            
+            if (this.hasExpired()) {
+                loop.stop();
+                return;
+            }
 
             if (handlers.registered.length == 0) {
                 // nothing to check
@@ -171,8 +195,13 @@
             var intervalAttached = (loop.timeoutHandle !== null);
             if (!intervalAttached) return;
 
-            clearTimeout(loop.timeoutHandle);
-            loop.timeoutHandle = null;
+            if (loop.hasRaf) {
+                cancelAnimationFrame(loop.timeoutHandle);
+                loop.timeoutHandle = null;
+            } else {
+                clearTimeout(loop.timeoutHandle);
+                loop.timeoutHandle = null;
+            }
 
         }
 
@@ -221,10 +250,17 @@
 
     var measurements = {
 
+        featureDetect: function() {
+
+            loop.hasRaf = (window.requestAnimationFrame && window.cancelAnimationFrame);
+            
+        },
+
         get: function($element) {
 
-            var height = $element.outerHeight();
-            var width = $element.outerWidth();
+            var element = $element[0];
+            var height = element.clientHeight;
+            var width = element.clientWidth;
 
             return {
                 uniqueMeasurementId: height+","+width
@@ -236,7 +272,8 @@
 
     //attach event handlers
     $(window).on({
-        "scroll mousedown mouseup touchstart touchend keydown keyup resize": loop.start
+        "touchmove scroll mousedown keydown resize": loop.start
     });
+    $(measurements.featureDetect);
 
 })();

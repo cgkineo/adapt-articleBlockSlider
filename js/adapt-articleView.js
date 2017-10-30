@@ -103,7 +103,7 @@ define([
                 itemButtons.push({
                     _className: (i === 0 ? "home" : "not-home") + (" i"+i),
                     _index: i,
-                    _includeNumber: i != 0,
+                    _includeNumber: i !== 0,
                     _title: blocks[i].get('title')
                 });
             }
@@ -160,8 +160,6 @@ define([
 
         _blockSliderPostRender: function() {
             this._blockSliderConfigureControls(false);
-
-            
 
             if (this.model.get("_articleBlockSlider")._hasTabs) {
                 var parentHeight = this.$('.item-button').parent().height();
@@ -225,8 +223,7 @@ define([
             if (this.model.get("_currentBlock") === 0) return;
 
             var index = this.model.get("_currentBlock");
-            index--;
-            this._blockSliderMoveIndex(index);
+            this._blockSliderMoveIndex(--index);
         },
 
         _blockSliderMoveIndex: function(index, animate) {
@@ -237,7 +234,6 @@ define([
                 Adapt.trigger('media:stop');//in case any of the blocks contain media that's been left playing by the user
 
                 this._blockSliderSetVisible(this.model.getChildren().models[index], true);
-
                 this._blockSliderResizeHeight(animate);
                 this._blockSliderScrollToCurrent(animate);
                 this._blockSliderConfigureControls(animate);
@@ -261,8 +257,7 @@ define([
             if (this.model.get("_currentBlock") == this.model.get("_totalBlocks") - 1 ) return;
 
             var index = this.model.get("_currentBlock");
-            index++;
-            this._blockSliderMoveIndex(index);
+            this._blockSliderMoveIndex(++index);
         },
 
         _blockSliderScrollToCurrent: function(animate) {
@@ -281,7 +276,7 @@ define([
 
             var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
-            var currentBlock = this.model.get("_currentBlock")
+            var currentBlock = this.model.get("_currentBlock");
             var $currentBlock = $(blocks[currentBlock]);
 
             if (this._disableAnimationOnce) animate = false;
@@ -368,7 +363,7 @@ define([
             var blockHeight = $blocks.eq(currentBlock).height();
 
             var maxHeight = -1;
-            $container.find(".block").each(function() { 
+            $container.find(".block").each(function() {
             
             if ($(this).height() > maxHeight)
                 maxHeight = $(this).height();
@@ -457,7 +452,7 @@ define([
                 return;
             }
 
-            if (this.$el.find(selector).length == 0) return;
+            if (this.$el.find(selector).length === 0) return;
             
             var id = selector.substr(1);
 
@@ -478,7 +473,6 @@ define([
                     return;
                 }
             }
-
         },
 
         _onBlockSliderPageScrolledTo: function() {

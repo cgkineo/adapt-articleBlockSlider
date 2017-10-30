@@ -233,6 +233,9 @@ define([
             if (this.model.get("_currentBlock") != index) {
 
                 this.model.set("_currentBlock", index);
+                
+                Adapt.trigger('media:stop');//in case any of the blocks contain media that's been left playing by the user
+
                 this._blockSliderSetVisible(this.model.getChildren().models[index], true);
 
                 this._blockSliderResizeHeight(animate);

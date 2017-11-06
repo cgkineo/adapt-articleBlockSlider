@@ -1,6 +1,6 @@
 # adapt-articleBlockSlider
 
-**Article Block Slider** is a C&G Kineo *presentation extension*.
+**Article Block Slider** is a Kineo *presentation extension*.
 
 The extension changes the presentation of an article's blocks from being vertically stacked to horizontally ordered. This is achieved by implementing a left and right or tabbing navigational element to the article. By default, the **Article Block Slider** is available on large resolutions only (medium and small resolutions can be added but are currently unsupported). When viewing at other resolutions the blocks return to being vertically stacked.
 
@@ -41,9 +41,9 @@ Only one navigation element (Arrows or Tabs) should be active at any one time.
 The **Article Block Slider** and **Quicknav** extensions don't interact well together when the **Article Block Slider** is the last article on a page with an enabled **Quicknav.**  
 
 ----------------------------
-**Version number:**  2.0  
-**Framework versions:**  2.0  
-**Author / maintainer:** C&G Kineo  
+**Version number:**  2.0.4  
+**Framework versions:**  >=2.0.13  
+**Author / maintainer:** Kineo  
 **Accessibility support:** WAI AA  
 **RTL support:** No  
 **Cross-platform coverage:** To be confirmed  

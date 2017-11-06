@@ -144,10 +144,11 @@ define([
 
             $blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
             
-            _.delay(_.bind(function() {
-                if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
-            }, this), duration);
-
+            if(Adapt.accessibility.isActive()) {// prevents https://github.com/cgkineo/adapt-articleBlockSlider/issues/28
+                _.delay(_.bind(function() {
+                    if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
+                }, this), duration);
+            }
         },
 
         _blockSliderSetButtonLayout: function() {

@@ -345,9 +345,9 @@ define([
 
             var maxHeight = -1;
             $container.find(".block").each(function() {
-            
-            if ($(this).height() > maxHeight)
-                maxHeight = $(this).height();
+                if ($(this).height() > maxHeight) {
+                    maxHeight = $(this).height();
+                }
             });
 
             var duration = (this.model.get("_articleBlockSlider")._heightAnimationDuration || 200) * 2;

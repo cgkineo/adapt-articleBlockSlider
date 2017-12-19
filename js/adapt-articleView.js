@@ -162,25 +162,6 @@ define([
         _blockSliderPostRender: function() {
             this._blockSliderConfigureControls(false);
 
-            if (this.model.get("_articleBlockSlider")._hasTabs) {
-                var parentHeight = this.$('.item-button').parent().height();
-                this.$('.item-button').css({
-                    height: parentHeight + 'px'
-                });
-
-                var toolbarHeight = this.$('.article-block-toolbar').height();
-                var additionalMargin = '30';
-                this.$('.article-block-toolbar').css({
-                    top: '-' + (toolbarHeight + (additionalMargin/2)) + 'px'
-                });
-
-                var toolbarMargin = parseFloat(toolbarHeight) + parseFloat(additionalMargin);
-                this.$('.article-block-slider').css({
-                    marginTop: toolbarMargin + 'px'
-                });
-                this._blockSliderSetButtonLayout();
-            }
-
             this._onBlockSliderDeviceChanged();
 
             var startIndex = this.model.get("_articleBlockSlider")._startIndex || 0;
@@ -341,11 +322,10 @@ define([
         },
 
         _onBlockSliderResize: function() {
-            
             this._blockSliderResizeWidth(false);
             this._blockSliderResizeHeight(false);
             this._blockSliderScrollToCurrent(false);
-
+            this._blockSliderResizeTab();
         },
 
         _blockSliderResizeHeight: function(animate) {
@@ -365,9 +345,9 @@ define([
 
             var maxHeight = -1;
             $container.find(".block").each(function() {
-            
-            if ($(this).height() > maxHeight)
-                maxHeight = $(this).height();
+                if ($(this).height() > maxHeight) {
+                    maxHeight = $(this).height();
+                }
             });
 
             var duration = (this.model.get("_articleBlockSlider")._heightAnimationDuration || 200) * 2;
@@ -403,6 +383,33 @@ define([
             if (minHeight) {
                 $container.css({"min-height": minHeight+"px"});
             }
+
+        },
+
+        _blockSliderResizeTab: function() {
+            if (!this.model.get("_articleBlockSlider")._hasTabs) return;
+
+            this._blockSliderSetButtonLayout();
+
+            this.$('.item-button').css({
+                height: ""
+            });
+
+            var parentHeight = this.$('.item-button').parent().height();
+            this.$('.item-button').css({
+                height: parentHeight + 'px'
+            });
+            
+            var toolbarHeight = this.$('.article-block-toolbar').height();
+            var additionalMargin = '30';
+            this.$('.article-block-toolbar').css({
+                top: '-' + (toolbarHeight + (additionalMargin/2)) + 'px'
+            });
+
+            var toolbarMargin = parseFloat(toolbarHeight) + parseFloat(additionalMargin);
+            this.$('.article-block-slider').css({
+                marginTop: toolbarMargin + 'px'
+            });
         },
 
         _blockSliderResizeWidth: function() {

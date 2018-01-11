@@ -5,6 +5,7 @@
     "_slideAnimationDuration": 600,
     "_heightAnimationDuration": 300,
     "_isEnabledOnScreenSizes": "large",
+    "_animationType": "slide | fade | none",
     "_hasTabs": false,
     "_hasArrows": true,
     "_startIndex": 0,

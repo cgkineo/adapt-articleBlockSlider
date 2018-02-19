@@ -264,7 +264,6 @@ define([
             var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
             var currentBlock = this.model.get("_currentBlock");
-            var $currentBlock = $(blocks[currentBlock]);
 
             if (this._disableAnimationOnce) animate = false;
             if (this._disableAnimations) animate = false;

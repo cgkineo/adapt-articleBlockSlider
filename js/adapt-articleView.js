@@ -253,6 +253,11 @@ define([
             var blocks = this.$el.find(".block");
             var blockWidth = $(blocks[0]).outerWidth();
             var totalLeft = this.model.get("_currentBlock") * blockWidth;
+            if ($('html').hasClass('dir-rtl') && $('html').is('.firefox, .safari')) {
+                var totalBlocks = this.model.get('_totalBlocks');
+                var totalWidth = totalBlocks * blockWidth;
+                totalLeft = totalLeft - totalWidth + blockWidth;
+            }
 
             this._blockSliderShowAll();
 

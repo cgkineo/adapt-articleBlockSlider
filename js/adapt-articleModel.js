@@ -1,10 +1,10 @@
 define([
-	'core/js/adapt'
+    'core/js/adapt'
 ], function(Adapt) {
 
-	var BlockSliderModel = {
+    var BlockSliderModel = {
 
-		isBlockSliderEnabled: function() {
+        isBlockSliderEnabled: function() {
             var config = this.get('_articleBlockSlider');
             if (config && config._isEnabled) {
                 if (config._isDisabledWhenAccessibilityActive && Adapt.accessibility.isActive()) {
@@ -13,9 +13,9 @@ define([
                 return true;
             }
             return false;
-		}
+        }
 
-	};
+    };
 
-	return BlockSliderModel;
+    return BlockSliderModel;
 });

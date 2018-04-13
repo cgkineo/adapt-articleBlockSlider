@@ -1,5 +1,5 @@
 define([
-	'coreJS/adapt',
+	'core/js/adapt',
 	'./adapt-articleExtension'
 ], function(Adapt) {
 

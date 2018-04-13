@@ -35,6 +35,7 @@
                 "_isDisabledWhenAccessibilityActive": {
                   "type": "boolean",
                   "required": false,
+                  "default": false,
                   "title": "Disable when accessibility is active?",
                   "inputType": "Checkbox",
                   "validators": [],

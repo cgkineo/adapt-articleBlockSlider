@@ -32,6 +32,14 @@
                   "inputType": "Checkbox",
                   "validators": []
                 },
+                "_isDisabledWhenAccessibilityActive": {
+                  "type": "boolean",
+                  "required": false,
+                  "title": "Disable when accessibility is active?",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Disables this extension when accessibility is active to simplify navigation for screen reader users."
+                },
                 "_slideAnimationDuration": {
                   "type":"number",
                   "required":false,

@@ -27,10 +27,14 @@ define([
         },
 
         preRender: function() {
-
             AdaptArticleView.prototype.preRender.call(this);
-            if (this.model.isBlockSliderEnabled()) this._blockSliderPreRender();
 
+            if (this.model.isBlockSliderEnabled()) {
+                this._blockSliderPreRender();
+                this.$el.addClass('abs-enabled');
+            } else {
+                this.$el.addClass('abs-disabled');
+            }
         },
 
         _blockSliderPreRender: function() {

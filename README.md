@@ -14,9 +14,11 @@ Git clone the component, making sure to delete the hidden **.git** folder from t
 
 The attributes listed below are used in *articles.json* to configure **Article Block Slider**, and are properly formatted as JSON in [*example.json*](https://github.com/cgkineo/adapt-articleBlockSlider/blob/master/example.json).
 
-**_articleBlockSlider** (object): The Article Block Slider object that contains values for **_isEnabled**, **_slideAnimationDuration**, **_heightAnimationDuration**, **_isEnabledOnScreenSizes**, **_hasTabs**, **_hasArrows**, **_startIndex**, **_hasUniformHeight**, and **_minHeight**.
+**_articleBlockSlider** (object): The Article Block Slider object that contains values for **_isEnabled**, **_isDisabledWhenAccessibilityActive**, **_slideAnimationDuration**, **_heightAnimationDuration**, **_isEnabledOnScreenSizes**, **_hasTabs**, **_hasArrows**, **_startIndex**, **_hasUniformHeight**, and **_minHeight**.
 
 >**_isEnabled** (boolean): Turns Article Block Slider on and off. Acceptable values are `true` and `false`.
+
+>**_isDisabledWhenAccessibilityActive** (boolean): Disables this extension when accessibility is active to simplify navigation for screen reader users. Acceptable values are `true` and `false`.
 
 >**_slideAnimationDuration** (number): Sets the slide duration, in milliseconds, of the animation between blocks.
 
@@ -41,7 +43,7 @@ Only one navigation element (Arrows or Tabs) should be active at any one time.
 The **Article Block Slider** and **Quicknav** extensions don't interact well together when the **Article Block Slider** is the last article on a page with an enabled **Quicknav.**  
 
 ----------------------------
-**Version number:**  2.0.5  
+**Version number:**  2.1.0  
 **Framework versions:**  >=2.0.13  
 **Author / maintainer:** Kineo  
 **Accessibility support:** WAI AA  

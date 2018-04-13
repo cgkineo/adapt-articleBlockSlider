@@ -5,7 +5,14 @@ define([
 	var BlockSliderModel = {
 
 		isBlockSliderEnabled: function() {
-			return this.get("_articleBlockSlider") && this.get("_articleBlockSlider")._isEnabled;
+            var config = this.get('_articleBlockSlider');
+            if (config && config._isEnabled) {
+                if (config._isDisabledWhenAccessibilityActive && Adapt.accessibility.isActive()) {
+                    return false;
+                }
+                return true;
+            }
+            return false;
 		}
 
 	};

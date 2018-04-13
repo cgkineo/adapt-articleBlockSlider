@@ -43,7 +43,7 @@
                 "_slideAnimationDuration": {
                   "type": "number",
                   "required": false,
-                  "default": "600",
+                  "default": 600,
                   "title": "Slide Animation Duration",
                   "inputType": "Number",
                   "validators": ["number"],
@@ -52,7 +52,7 @@
                 "_heightAnimationDuration": {
                   "type": "number",
                   "required": false,
-                  "default": "300",
+                  "default": 300,
                   "title": "Height Animation Duration",
                   "inputType": "Number",
                   "validators": ["number"],
@@ -70,7 +70,7 @@
                 "_hasTabs": {
                   "type": "boolean",
                   "required": true,
-                  "default": "false",
+                  "default": false,
                   "title": "Has Tabs",
                   "inputType": "Checkbox",
                   "validators": [],
@@ -79,7 +79,7 @@
                 "_hasArrows": {
                   "type": "boolean",
                   "required": true,
-                  "default": "true",
+                  "default": true,
                   "title": "Has Arrows",
                   "inputType": "Checkbox",
                   "validators": [],
@@ -97,7 +97,7 @@
                 "_hasUniformHeight": {
                   "type": "boolean",
                   "required": true,
-                  "default": "true",
+                  "default": true,
                   "title": "Has a uniform height",
                   "inputType": "Checkbox",
                   "validators": [],

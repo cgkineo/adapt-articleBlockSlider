@@ -1,52 +1,61 @@
 {
-  "type":"object",
+  "type": "object",
   "$schema": "http://json-schema.org/draft-03/schema",
   "id": "http://jsonschema.net",
-  "required":false,
-  "properties":{
+  "required": false,
+  "properties": {
     "pluginLocations": {
-      "type":"object",
-      "required":true,
-      "properties":{
+      "type": "object",
+      "required": true,
+      "properties": {
         "config": {
-          "type":"object"
+          "type": "object"
         },
         "course": {
-          "type":"object"
+          "type": "object"
         },
         "contentobject": {
-          "type":"object"
+          "type": "object"
         },
         "article": {
-          "type":"object",
-          "properties":{
+          "type": "object",
+          "properties": {
             "_articleBlockSlider": {
-              "type":"object",
-              "required":false,
+              "type": "object",
+              "required": false,
               "legend": "BlockSlider",
-              "properties":{
+              "properties": {
                 "_isEnabled": {
-                  "type":"boolean",
-                  "required":true,
+                  "type": "boolean",
+                  "required": true,
                   "title": "Enabled",
                   "inputType": "Checkbox",
                   "validators": []
                 },
+                "_isDisabledWhenAccessibilityActive": {
+                  "type": "boolean",
+                  "required": false,
+                  "default": false,
+                  "title": "Disable when accessibility is active?",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Disables this extension when accessibility is active to simplify navigation for screen reader users."
+                },
                 "_slideAnimationDuration": {
-                  "type":"number",
-                  "required":false,
-                  "default":"600",
+                  "type": "number",
+                  "required": false,
+                  "default": 600,
                   "title": "Slide Animation Duration",
-                  "inputType":"Number",
+                  "inputType": "Number",
                   "validators": ["number"],
                   "help": "Sets the slide duration, in milliseconds, of the animation between blocks."
                 },
                 "_heightAnimationDuration": {
-                  "type":"number",
-                  "required":false,
-                  "default":"300",
+                  "type": "number",
+                  "required": false,
+                  "default": 300,
                   "title": "Height Animation Duration",
-                  "inputType":"Number",
+                  "inputType": "Number",
                   "validators": ["number"],
                   "help": "Sets the duration, in milliseconds, of the animation between varying blocks heights."
                 },
@@ -60,26 +69,26 @@
                   "help": "Defines which screen sizes the Article Block Slider displays the navigation elements on. Acceptable values are large, medium and small - or a comma-separated list of combinations thereof e.g. 'large medium'."
                 },
                 "_hasTabs": {
-                  "type":"boolean",
-                  "required":true,
-                  "default": "false",
+                  "type": "boolean",
+                  "required": true,
+                  "default": false,
                   "title": "Has Tabs",
                   "inputType": "Checkbox",
                   "validators": [],
                   "help": "Turns the tab navigation on and off. If this property is checked, you must uncheck 'Has Arrows'."
                 },
                 "_hasArrows": {
-                  "type":"boolean",
-                  "required":true,
-                  "default": "true",
+                  "type": "boolean",
+                  "required": true,
+                  "default": true,
                   "title": "Has Arrows",
                   "inputType": "Checkbox",
                   "validators": [],
                   "help": "Turns the arrow navigation on and off. If this property is checked, you must uncheck 'Has Tabs'."
                 },
                 "_startIndex": {
-                  "type":"number",
-                  "required":true,
+                  "type": "number",
+                  "required": true,
                   "default": 0,
                   "title": "Start on what block",
                   "inputType": "Number",
@@ -87,17 +96,17 @@
                   "help": "Sets which block displays on page load."
                 },
                 "_hasUniformHeight": {
-                  "type":"boolean",
-                  "required":true,
-                  "default": "true",
+                  "type": "boolean",
+                  "required": true,
+                  "default": true,
                   "title": "Has a uniform height",
                   "inputType": "Checkbox",
                   "validators": [],
                   "help": "Sets all elements within the Article Block Slider to use the highest block's height."
                 },
                 "_minHeight": {
-                  "type":"number",
-                  "required":false,
+                  "type": "number",
+                  "required": false,
                   "default": null,
                   "title": "Min Height",
                   "inputType": "Number",
@@ -109,10 +118,10 @@
           }
         },
         "block": {
-          "type":"object"
+          "type": "object"
         },
         "component": {
-          "type":"object"
+          "type": "object"
         }
       }
     }

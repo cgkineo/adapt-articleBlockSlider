@@ -27,10 +27,14 @@ define([
         },
 
         preRender: function() {
-
             AdaptArticleView.prototype.preRender.call(this);
-            if (this.model.isBlockSliderEnabled()) this._blockSliderPreRender();
 
+            if (!this.model.isBlockSliderEnabled()) {
+                this.$el.addClass('article-block-slider-disabled');
+                return;
+            }
+
+            this._blockSliderPreRender();
         },
 
         _blockSliderPreRender: function() {
@@ -40,17 +44,17 @@ define([
 
         _blockSliderSetupEventListeners: function() {
 
-            this._onBlockSliderResize = _.bind(this._onBlockSliderResize, this);
             this._blockSliderResizeHeight = _.bind(this._blockSliderResizeHeight, this);
 
-            this.listenTo(Adapt, "device:resize", this._onBlockSliderResize);
-            this.listenTo(Adapt, "device:changed", this._onBlockSliderDeviceChanged);
-            
+            this.listenTo(Adapt, {
+                "device:resize": this._onBlockSliderResize,
+                "device:changed": this._onBlockSliderDeviceChanged,
+                "page:scrollTo": this._onBlockSliderPageScrollTo,
+                "page:scrolledTo": this._onBlockSliderPageScrolledTo
+            });
+
             this.listenToOnce(Adapt, "remove", this._onBlockSliderRemove);
             this.listenToOnce(this.model, "change:_isReady", this._onBlockSliderReady);
-
-            this.listenTo(Adapt, "page:scrollTo", this._onBlockSliderPageScrollTo);
-            this.listenTo(Adapt, "page:scrolledTo", this._onBlockSliderPageScrolledTo);
 
             var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
@@ -65,12 +69,12 @@ define([
                 this._blockSliderRender();
 
             } else AdaptArticleView.prototype.render.call(this);
-        
+
         },
 
         _blockSliderRender: function() {
             Adapt.trigger(this.constructor.type + 'View:preRender', this);
-          
+
             this._blockSliderConfigureVariables();
 
             var data = this.model.toJSON();
@@ -143,7 +147,7 @@ define([
             if (!$blocks.length) return;
 
             $blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
-            
+
             if(Adapt.accessibility.isActive()) {// prevents https://github.com/cgkineo/adapt-articleBlockSlider/issues/28
                 _.delay(_.bind(function() {
                     if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
@@ -169,7 +173,7 @@ define([
             this._blockSliderMoveIndex(startIndex, false);
 
             Adapt.trigger(this.constructor.type + 'View:postRender', this);
-            
+
         },
 
         _onBlockSliderReady: function() {
@@ -212,7 +216,7 @@ define([
             if (this.model.get("_currentBlock") != index) {
 
                 this.model.set("_currentBlock", index);
-                
+
                 Adapt.trigger('media:stop');//in case any of the blocks contain media that's been left playing by the user
 
                 this._blockSliderSetVisible(this.model.getChildren().models[index], true);
@@ -263,7 +267,7 @@ define([
 
             if (this._disableAnimationOnce) animate = false;
             if (this._disableAnimations) animate = false;
-            
+
             if (animate === false) {
                 _.defer(_.bind(function(){
                     $container.scrollLeft(totalLeft );
@@ -299,7 +303,7 @@ define([
                 this._blockSliderSetVisible(blocks[i], true);
             }
         },
-        
+
         _blockSliderHideOthers: function() {
             var blocks = this.model.getChildren().models;
             var currentIndex = this.model.get("_currentBlock");
@@ -399,7 +403,7 @@ define([
             this.$('.item-button').css({
                 height: parentHeight + 'px'
             });
-            
+
             var toolbarHeight = this.$('.article-block-toolbar').height();
             var additionalMargin = '30';
             this.$('.article-block-toolbar').css({
@@ -425,7 +429,7 @@ define([
             var $container = this.$el.find(".article-block-slider");
 
             $blocks.css("width", $container.width()+"px");
-                
+
             var blockWidth = $($blocks[0]).outerWidth();
             var totalWidth = $blocks.length * (blockWidth);
 
@@ -461,7 +465,7 @@ define([
             }
 
             if (this.$el.find(selector).length === 0) return;
-            
+
             var id = selector.substr(1);
 
             var model = Adapt.findById(id);

@@ -29,12 +29,12 @@ define([
         preRender: function() {
             AdaptArticleView.prototype.preRender.call(this);
 
-            if (this.model.isBlockSliderEnabled()) {
-                this._blockSliderPreRender();
-                this.$el.addClass('abs-enabled');
-            } else {
-                this.$el.addClass('abs-disabled');
+            if (!this.model.isBlockSliderEnabled()) {
+                this.$el.addClass('article-block-slider-disabled');
+                return;
             }
+
+            this._blockSliderPreRender();
         },
 
         _blockSliderPreRender: function() {

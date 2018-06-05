@@ -38,7 +38,7 @@ define([
         },
 
         _blockSliderPreRender: function() {
-            this._disableAnimations = $('html').is(".ie8") || $('html').is(".iPhone.version-7\\.0");
+             this._disableAnimations = $('html').is(".ie8") || $('html').is(".iPhone.version-7\\.0") || this.model.get('_articleBlockSlider')._animationType != "slide";
             this._blockSliderSetupEventListeners();
         },
 
@@ -272,6 +272,9 @@ define([
                 _.defer(_.bind(function(){
                     $container.scrollLeft(totalLeft );
                     this._blockSliderHideOthers();
+                    if(this.model.get("_articleBlockSlider")._animationType == 'fade') {
+                      this.$('.block-inner').eq(this.model.get("_currentBlock")).css('opacity',0).animate({opacity:1}, duration);
+                    }
                 }, this));
             } else {
                 $container.stop(true).animate({scrollLeft:totalLeft}, duration, _.bind(function() {

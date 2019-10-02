@@ -1,64 +1,94 @@
-{{! Maintainers - Daryl Hedley}}
-{{! .block-container: Adapt will place the articles blocks inside this class}}
-{{#if _articleBackgroundTop}}
-<div class="article-inner-top" style="background-image:url({{_articleBackgroundTop.src}}); height:{{_articleBackgroundTop.height}}px"></div>
-{{/if}}
+{{! make the _globals object in course.json available to this template}}
+{{import_globals}}
 
-<div class="article-inner">
-  {{! Check if a page title exist and render it}}
-  {{#if displayTitle}}
-  <div class="article-title">
-    <div class="article-title-inner h2" tabindex="0" role="heading" aria-level="2">
-      {{{displayTitle}}}
-    </div>
-  </div>
-  {{/if}}
-  {{! Check if page body exists and render it}}
-  {{#if body}}
-  <div class="article-body">
-    <div class="article-body-inner">
-      {{{a11y_text body}}}
-    </div>
-  </div>
-  {{/if}}
-  {{#if instruction}}
-  <div class="article-instruction">
-    <div class="article-instruction-inner">
-      {{{a11y_text instruction}}}
-    </div>
-  </div>
-  {{/if}}
-  <div class="article-block-organise{{#if _articleBlockSlider._hasArrows}} has-arrows{{/if}}{{#if _articleBlockSlider._hasTabs}} has-tabs{{/if}}" role="region" {{#if _accessibility._ariaRegions.articleBlockSlider}}tabindex="0" aria-label="{{_accessibility._ariaRegions.articleBlockSlider}}"{{/if}}>
-    <div class="article-block-slider clearfix" {{#if _articleBlockSlider._minHeight}}style="min-height: {{{_articleBlockSlider._minHeight}}}px"{{/if}}>
-      <div class="block-container clearfix">
+<div class="article__inner">
+
+  {{#any displayTitle body instruction}}
+  <div class="article__header">
+    <div class="article__header-inner">
+
+      {{#if displayTitle}}
+      <div class="article__title">
+
+        {{#unless _disableAccessibilityState}}
+        <div class="js-heading"></div>
+        {{/unless}}
+
+        <div class="article__title-inner"{{#unless _disableAccessibilityState}} aria-hidden="true"{{/unless}}>
+          {{{compile displayTitle}}}
+        </div>
 
       </div>
+      {{/if}}
+
+      {{#if body}}
+      <div class="article__body">
+        <div class="article__body-inner">
+          {{{compile body}}}
+        </div>
+      </div>
+      {{/if}}
+
+      {{#if instruction}}
+      <div class="article__instruction">
+        <div class="article__instruction-inner">
+          {{{compile instruction}}}
+        </div>
+      </div>
+      {{/if}}
+
     </div>
-    <div class="article-block-toolbar clearfix">
+  </div>
+  {{/any}}
 
-      <div class="item-button-container clearfix">
+  <div class="abs__container{{#if _articleBlockSlider._hasArrows}} has-arrows{{/if}}{{#if _articleBlockSlider._hasTabs}} has-tabs{{/if}}" role="region"{{#if _accessibility._ariaRegions.articleBlockSlider}} tabindex="0" aria-label="{{_accessibility._ariaRegions.articleBlockSlider}}"{{/if}}>
 
-        {{#if _articleBlockSlider._hasArrows}}
-        <button class="base item-button-arrow" data-block-slider="left" aria-label="{{_globals._accessibility._ariaLabels.previous}}">
-          <div class="icon icon-controls-left"></div>
+    <div class="abs__slide-container js-abs-slide-container"{{#if _articleBlockSlider._minHeight}} style="min-height: {{{_articleBlockSlider._minHeight}}}px"{{/if}}>
+
+      <div class="block__container js-abs-block-container u-clearfix">
+        {{!-- Blocks render here --}}
+      </div>
+
+    </div>
+
+    <div class="abs__toolbar js-abs-toolbar">
+
+      {{#if _articleBlockSlider._hasArrows}}
+      <div class="abs__btn-arrow-container">
+
+        <button class="btn-icon abs__btn-arrow is-left" data-block-slider="left" aria-label="{{_globals._accessibility._ariaLabels.previous}}">
+          <div class="icon"></div>
         </button>
-        {{/if}}
-        {{#if _articleBlockSlider._hasArrows}}
-        <button class="base item-button-arrow" data-block-slider="right" aria-label="{{_globals._accessibility._ariaLabels.next}}">
-          <div class="icon icon-controls-right"></div>
+
+        <button class="btn-icon abs__btn-arrow is-right" data-block-slider="right" aria-label="{{_globals._accessibility._ariaLabels.next}}">
+          <div class="icon"></div>
         </button>
-        {{/if}}
-        {{#if _articleBlockSlider._hasTabs}}
+
+      </div>
+      {{/if}}
+
+      {{#if _articleBlockSlider._hasTabs}}
+      <div class="abs__btn-tab-container js-abs-btn-tab-container">
+
         {{#each _itemButtons}}
-        <button class="base item-button {{_className}}" aria-label="{{_title}}" data-block-slider="index" data-block-slider-index="{{this._index}}"><span class="item-button-inner">{{_title}}</span></button>
+        <button class="btn-text abs__btn-tab js-abs-btn-tab{{#if _className}} {{_className}}{{/if}}" aria-label="{{_title}}" data-block-slider="index" data-block-slider-index="{{this._index}}">
+
+          <div class="abs__btn-title">
+            <div class="abs__btn-title-inner">
+              {{{_title}}}
+            </div>
+          </div>
+
+        </button>
         {{/each}}
-        {{/if}}
 
       </div>
+      {{/if}}
 
     </div>
-</div>
-<div class="article-block-bottombar clearfix"></div>
-</div>
 
-{{#if _articleBackgroundBottom}}<div class="article-inner-bottom" style="background-image:url({{_articleBackgroundBottom.src}}); height:{{_articleBackgroundBottom.height}}px"></div>{{/if}}
+  </div>
+
+  <div class="abs__toolbar-bottom js-abs-toolbar-bottom"></div>
+
+</div>

@@ -1,211 +1,110 @@
-// .article-block-slider-enabled {
-//   &.article {
-//     .article-inner { // Duplicated from Open Source .block-inner
-//       margin: auto;
-//       max-width: @device-width-large;
-//       padding: @block-padding-top 0 @block-padding-bottom;
-//       // reduce padding as screen width decreases
-//       @media all and (max-width: (@device-width-large + 20px)) {
-//         padding: (@block-padding-top / 2) 20px (@block-padding-bottom / 2);
-//       }
-//       @media all and (max-width: (@device-width-small + 20px)) {
-//         padding: (@block-padding-top / 3) 10px (@block-padding-bottom / 3);
-//       }
-//     }
-//   }
+.abs {
+  // Calculates the size of an arrow button
+  // Adds block horizontal padding
+  // Attachs extra size to abs slide container when arrows present so content
+  // displays at the same size as other blocks
+  @abs-arrow-spacing: @icon-size + (@icon-padding * 2) + @block-padding-hoz;
 
-//   .article-block-organise {
-//     margin: 0 auto;
-//     position: relative;
-//     width: 100%;
-//   }
+  &__container.has-arrows {
+    .abs__slide-container {
+      max-width: @device-width-large + (@abs-arrow-spacing * 2);
+    }
 
-//   .article-block-slider {
-//     margin: auto;
-//     max-width: @device-width-large;
-//     overflow: hidden;
-//   }
+    .block__inner {
+      @media (min-width: @device-width-medium) {
+        max-width: inherit;
+        padding-left: @abs-arrow-spacing;
+        padding-right: @abs-arrow-spacing;
+      }
+    }
+  }
 
-//   .block {
-//     float: left;
-//     width: 100%;
-//   }
+  &__container {
+    position: relative;
+  }
 
-//   .block-container {
-//     position: relative;
-//   }
+  &__slide-container {
+    margin: 0 auto;
+    overflow: hidden;
+  }
 
-//   .article-block-toolbar {
-//     width: 100%;
-//   }
+  .block {
+    .u-float-left;
+    width: 100%;
+  }
 
-//   .item-button-container {
-//     margin: 0 auto;
-//     max-width: @device-width-large;
+  // --------------------------------------------------
+  // Arrows
+  // --------------------------------------------------
+  &__btn-arrow {
+    position: absolute;
+    top: 50%;
+  }
 
-//     @media all and (max-width (@device-width-large + 20px)) {
-//       max-width: @device-width-medium;
-//     }
-//   }
+  &__btn-arrow.is-left {
+    left: 0;
 
-//   // Arrows General
-//   .has-arrows {
-//     .block {
-//       .block-inner {
-//         // Added padding for arrow navigation
-//         @media all and (min-width: @device-width-medium) {
-//           padding: @block-padding-top 70px 0;
-//         }
+    .dir-rtl & {
+      left: inherit;
+      right: 0;
+    }
+  }
 
-//         .ie8 & {
-//           padding: @block-padding-top 70px 0;
-//         }
+  &__btn-arrow.is-right {
+    right: 0;
 
-//         // Removed arrow navigation padding
-//         @media all and (max-width: @device-width-medium) {
-//           padding-left: 0;
-//           padding-right: 0;
-//         }
-//       }
+    .dir-rtl & {
+      right: inherit;
+      left: 0;
+    }
+  }
 
-//       // Removed last block inner padding to even the spacing up on smaller resolutions
-//       @media all and (max-width: @device-width-medium) {
-//         &:last-child {
-//           .block-inner {
-//             padding-bottom: 0;
-//           }
-//         }
-//       }
-//     }
-//   }
+  &__btn-arrow.is-left .icon {
+    .icon-controls-left;
+  }
 
-//   // Arrow Buttons
-//   .item-button-arrow {
-//     background-color: @button-color;
-//     display: block;
-//     height: (@icon-size*2.5);
-//     margin-top: -(@icon-size*1.25);
-//     position: absolute;
-//     text-decoration: none;
-//     top: 50%;
-//     width: (@icon-size*2.5);
-//     z-index: 10;
+  &__btn-arrow.is-right .icon {
+    .icon-controls-right;
+  }
+  // --------------------------------------------------
 
-//     .icon {
-//       color: @button-text-color;
-//       font-size: (@icon-size*1.25);
-//       font-weight: bold;
-//       margin: (@icon-size/1.5);
-//     }
+  // --------------------------------------------------
+  // Tabs
+  // --------------------------------------------------
 
-//     .no-touch &:hover {
-//       background-color: @button-color-hover;
+  &__toolbar {
+    width: 100%;
+  }
 
-//       .icon {
-//         color: @button-text-color-hover;
-//       }
-//     }
+  &__btn-tab-container {
+    position: absolute;
+    top: 0;
 
-//     &[disabled="disabled"] {
-//       background-color: @button-color-disabled;
-//       cursor: default;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  // --------------------------------------------------
+}
 
-//       .no-touch &:hover {
-//         background-color: @button-color-disabled;
-//       }
-//     }
+// --------------------------------------------------
+// THEME
+// --------------------------------------------------
+.abs {
+  &__btn-arrow {
+    background-color: @item-color;
+    color: @item-color-inverted;
 
-//     &[data-block-slider='left'] {
-//       left: 0;
-//     }
+    .no-touch &:not(.is-disabled):hover {
+      background-color: @item-color-hover;
+      color: @item-color-inverted-hover;
+      .transition(background-color @duration ease-in, color @duration ease-in;);
+    }
+  }
 
-//     &[data-block-slider='right'] {
-//       right: 0;
-//     }
-//   }
-
-//   // Tabs General
-//   .has-tabs {
-//     .article-block-slider {
-//       @media all and (max-width: @device-width-medium) {
-//         margin-top: 0 !important;
-//       }
-//     }
-
-//     .article-block-toolbar {
-//       position: absolute;
-//     }
-
-//     .block {
-//       .block-inner {
-//         // Added padding to match .item-button-inner margin
-//         @media all and (min-width: @device-width-medium) {
-//           padding: 0 5px;
-//         }
-
-//         .ie8 & {
-//           padding: 0 5px;
-//         }
-
-//         // Removed padding
-//         @media all and (max-width: @device-width-medium) {
-//           padding-left: 0;
-//           padding-right: 0;
-//         }
-//       }
-
-//       // Removed last block inner padding to even the spacing up on smaller resolutions
-//       @media all and (max-width: @device-width-medium) {
-//         &:last-child {
-//           .block-inner {
-//             padding-bottom: 0;
-//           }
-//         }
-//       }
-//     }
-//   }
-
-//   // Tab Buttons
-//   .item-button {
-//     float: left;
-//     text-align: center;
-//     text-decoration: none;
-
-//     .no-touch &:hover {
-//       .item-button-inner {
-//         background-color: @button-color-hover;
-//       }
-//     }
-
-//     &[disabled="disabled"] {
-//       .item-button-inner {
-//         background-color: @button-color-disabled;
-//         color: @button-text-color-disabled;
-//         cursor: default;
-
-//         .no-touch &:hover {
-//           background-color: @button-color-disabled;
-//           color: @button-text-color-disabled;
-//         }
-//       }
-//     }
-//   }
-
-//   .item-button-inner {
-//     background-color: @button-color;
-//     color: @button-text-color;
-//     display: block;
-//     margin: 0 5px;
-//     padding: 10px;
-//   }
-
-//   .article-block-bottombar {
-//     &.display-none {
-//       display: none;
-//     }
-//   }
-
-//   &.display-none {
-//     display: none;
-//   }
-// }
+  &__btn-arrow.is-disabled {
+    background-color: @disabled;
+    color: @disabled-inverted;
+  }
+}
+// --------------------------------------------------

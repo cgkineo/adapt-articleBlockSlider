@@ -30,7 +30,7 @@ define([
       AdaptArticleView.prototype.preRender.call(this);
 
       if (!this.model.isBlockSliderEnabled()) {
-        this.$el.addClass('article-block-slider-disabled');
+        this.$el.addClass('is-disabled');
         return;
       }
 
@@ -38,6 +38,9 @@ define([
     },
 
     _blockSliderPreRender: function() {
+      Adapt.wait.for(function(done){
+        this.resolveQueue = done;
+      }.bind(this));
       this._disableAnimations = $('html').is(".ie8") || $('html').is(".iPhone.version-7\\.0");
       this._blockSliderSetupEventListeners();
     },
@@ -83,7 +86,7 @@ define([
 
       this.addChildren();
 
-      this.$el.addClass('article-block-slider-enabled');
+      this.$el.addClass('abs');
 
       this.delegateEvents();
 
@@ -140,8 +143,8 @@ define([
       }
 
       var $indexes = this.$el.find("[data-block-slider='index']");
-      $indexes.a11y_cntrl_enabled(true).removeClass("selected");
-      $indexes.eq(_currentBlock).a11y_cntrl_enabled(false).addClass("selected visited");
+      $indexes.a11y_cntrl_enabled(true).removeClass("is-selected");
+      $indexes.eq(_currentBlock).a11y_cntrl_enabled(false).addClass("is-selected is-visited");
 
       var $blocks = this.$el.find(".block");
       if (!$blocks.length) return;
@@ -158,7 +161,7 @@ define([
     _blockSliderSetButtonLayout: function() {
       var buttonsLength = this.model.get('_itemButtons').length;
       var itemwidth = 100 / buttonsLength;
-      this.$('.item-button').css({
+      this.$('.js-abs-btn-tab').css({
         width: itemwidth + '%'
       });
     },
@@ -181,6 +184,7 @@ define([
       _.delay(_.bind(function(){
         this._blockSliderConfigureControls(false);
         this._onBlockSliderResize();
+        this.resolveQueue();
       },this),250);
       this.$(".component").on("resize", this._blockSliderResizeHeight);
     },
@@ -248,7 +252,7 @@ define([
 
     _blockSliderScrollToCurrent: function(animate) {
       var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
-      var $container = this.$el.find(".article-block-slider");
+      var $container = this.$el.find(".js-abs-slide-container");
 
       if (!isEnabled) {
         return $container.scrollLeft(0);
@@ -256,7 +260,14 @@ define([
 
       var blocks = this.$el.find(".block");
       var blockWidth = $(blocks[0]).outerWidth();
-      var totalLeft = this.model.get("_currentBlock") * blockWidth;
+      var lastIndex = blocks.length - 1;
+      var totalLeft;
+      var isRTL = Adapt.config.get("_defaultDirection") === 'rtl';
+      if (!isRTL) {
+        totalLeft = this.model.get("_currentBlock") * blockWidth;
+      } else {
+        totalLeft = (lastIndex - this.model.get("_currentBlock")) * blockWidth;
+      }
 
       this._blockSliderShowAll();
 
@@ -333,7 +344,7 @@ define([
     },
 
     _blockSliderResizeHeight: function(animate) {
-      var $container = this.$el.find(".article-block-slider");
+      var $container = this.$el.find(".js-abs-slide-container");
       var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
 
       if (!isEnabled) {
@@ -395,30 +406,30 @@ define([
 
       this._blockSliderSetButtonLayout();
 
-      this.$('.item-button').css({
+      this.$('.js-abs-btn-tab').css({
         height: ""
       });
 
-      var parentHeight = this.$('.item-button').parent().height();
-      this.$('.item-button').css({
+      var parentHeight = this.$('.js-abs-btn-tab').parent().height();
+      this.$('.js-abs-btn-tab').css({
         height: parentHeight + 'px'
       });
 
-      var toolbarHeight = this.$('.article-block-toolbar').height();
+      var toolbarHeight = this.$('.js-abs-btn-tab-container').height();
       var additionalMargin = '30';
-      this.$('.article-block-toolbar').css({
+      this.$('.js-abs-btn-tab-container').css({
         top: '-' + (toolbarHeight + (additionalMargin/2)) + 'px'
       });
 
       var toolbarMargin = parseFloat(toolbarHeight) + parseFloat(additionalMargin);
-      this.$('.article-block-slider').css({
+      this.$('.js-abs-slide-container').css({
         marginTop: toolbarMargin + 'px'
       });
     },
 
     _blockSliderResizeWidth: function() {
       var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
-      var $blockContainer = this.$el.find(".block-container");
+      var $blockContainer = this.$el.find(".js-abs-block-container");
       var $blocks = this.$el.find(".block");
 
       if (!isEnabled) {
@@ -426,7 +437,7 @@ define([
         return $blockContainer.css({"width": "100%"});
       }
 
-      var $container = this.$el.find(".article-block-slider");
+      var $container = this.$el.find(".js-abs-slide-container");
 
       $blocks.css("width", $container.width()+"px");
 
@@ -441,9 +452,9 @@ define([
       var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
 
       if (isEnabled) {
-        this.$(".article-block-toolbar, .article-block-bottombar").removeClass("display-none")
+        this.$(".js-abs-toolbar, .js-abs-toolbar-bottom").removeClass("u-display-none")
       } else {
-        this.$(".article-block-toolbar, .article-block-bottombar").addClass("display-none");
+        this.$(".js-abs-toolbar, .js-abs-toolbar-bottom").addClass("u-display-none");
       }
 
       _.delay(function() {

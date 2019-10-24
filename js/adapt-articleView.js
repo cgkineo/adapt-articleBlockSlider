@@ -19,7 +19,7 @@ define([
 
   var BlockSliderView = {
 
-	_isReady: false,
+    _isReady: false,
     _disableAnimationOnce: false,
     _disableAnimations: false,
 

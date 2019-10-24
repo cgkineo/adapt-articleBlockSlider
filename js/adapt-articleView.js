@@ -19,6 +19,7 @@ define([
 
   var BlockSliderView = {
 
+	_isReady: false,
     _disableAnimationOnce: false,
     _disableAnimations: false,
 
@@ -185,6 +186,7 @@ define([
         this._blockSliderConfigureControls(false);
         this._onBlockSliderResize();
         this.resolveQueue();
+        this._isReady = true;
       },this),250);
       this.$(".component").on("resize", this._blockSliderResizeHeight);
     },
@@ -344,6 +346,7 @@ define([
     },
 
     _blockSliderResizeHeight: function(animate) {
+      if (!this._isReady) animate = false;
       var $container = this.$el.find(".js-abs-slide-container");
       var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
 

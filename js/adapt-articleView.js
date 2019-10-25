@@ -21,7 +21,6 @@ define([
 
     _isReady: false,
     _disableAnimationOnce: false,
-    _disableAnimations: false,
 
     events: {
       "click [data-block-slider]": "_onBlockSliderClick"
@@ -42,7 +41,6 @@ define([
       Adapt.wait.for(function(done){
         this.resolveQueue = done;
       }.bind(this));
-      this._disableAnimations = $('html').is(".ie8") || $('html').is(".iPhone.version-7\\.0");
       this._blockSliderSetupEventListeners();
     },
 
@@ -91,9 +89,9 @@ define([
 
       this.delegateEvents();
 
-      this.$el.imageready(_.bind(function() {
-        _.delay(_.bind(this._blockSliderPostRender, this), 500);
-      }, this));
+      this.$el.imageready(function() {
+        _.delay(this._blockSliderPostRender.bind(this), 500);
+      }.bind(this));
 
       return this;
     },
@@ -101,10 +99,6 @@ define([
     _blockSliderConfigureVariables: function() {
       var blocks = this.model.getChildren().models;
       var totalBlocks = blocks.length;
-
-      this.model.set("_currentBlock", 0);
-      this.model.set("_totalBlocks", totalBlocks);
-
       var itemButtons = [];
 
       for (var i = 0, l = totalBlocks; i < l; i++) {
@@ -116,16 +110,18 @@ define([
         });
       }
 
-      this.model.set("_itemButtons", itemButtons);
+      this.model.set({
+        _currentBlock: 0,
+        _totalBlocks: totalBlocks,
+        _itemButtons: itemButtons
+      });
     },
 
-    _blockSliderConfigureControls: function(animate) {
+    _blockSliderConfigureControls: function() {
 
       var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
       if (this._disableAnimationOnce) animate = false;
-      if (this._disableAnimations) animate = false;
-
       var _currentBlock = this.model.get("_currentBlock");
       var _totalBlocks = this.model.get("_totalBlocks");
 
@@ -153,9 +149,9 @@ define([
       $blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
 
       if (Adapt.accessibility.isActive()) {// prevents https://github.com/cgkineo/adapt-articleBlockSlider/issues/28
-        _.delay(_.bind(function() {
+        _.delay(function() {
           if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
-        }, this), duration);
+        }.bind(this), duration);
       }
     },
 
@@ -182,12 +178,12 @@ define([
 
     _onBlockSliderReady: function() {
       this._blockSliderHideOthers();
-      _.delay(_.bind(function(){
+      _.delay(function(){
         this._blockSliderConfigureControls(false);
         this._onBlockSliderResize();
         this.resolveQueue();
         this._isReady = true;
-      },this),250);
+      }.bind(this), 250);
       this.$(".component").on("resize", this._blockSliderResizeHeight);
     },
 
@@ -197,16 +193,16 @@ define([
       var id = $(event.currentTarget).attr("data-block-slider");
 
       switch(id) {
-      case "left":
-        this._blockSliderMoveLeft();
-        break;
-      case "index":
-        var index = parseInt($(event.currentTarget).attr("data-block-slider-index"));
-        this._blockSliderMoveIndex(index);
-        break;
-      case "right":
-        this._blockSliderMoveRight();
-        break;
+        case "left":
+          this._blockSliderMoveLeft();
+          break;
+        case "index":
+          var index = parseInt($(event.currentTarget).attr("data-block-slider-index"));
+          this._blockSliderMoveIndex(index);
+          break;
+        case "right":
+          this._blockSliderMoveRight();
+          break;
       }
 
     },
@@ -234,15 +230,16 @@ define([
       var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
       if (this._disableAnimationOnce) animate = false;
-      if (this._disableAnimations) animate = false;
 
       if (animate !== false) {
         _.delay(function() {
           $(window).resize();
         }, duration);
-      } else {
-        $(window).resize();
+        return;
       }
+
+      $(window).resize();
+
     },
 
     _blockSliderMoveRight: function() {
@@ -275,22 +272,18 @@ define([
 
       var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
-      var currentBlock = this.model.get("_currentBlock");
-      var $currentBlock = $(blocks[currentBlock]);
-
       if (this._disableAnimationOnce) animate = false;
-      if (this._disableAnimations) animate = false;
 
       if (animate === false) {
-        _.defer(_.bind(function(){
+        _.defer(function(){
           $container.scrollLeft(totalLeft );
           this._blockSliderHideOthers();
-        }, this));
+        }.bind(this));
       } else {
-        $container.stop(true).animate({scrollLeft:totalLeft}, duration, _.bind(function() {
+        $container.stop(true).animate({scrollLeft:totalLeft}, duration, function() {
           $container.scrollLeft(totalLeft );
           this._blockSliderHideOthers();
-        }, this));
+        }.bind(this));
       }
 
     },
@@ -299,43 +292,30 @@ define([
       var isEnabledOnScreenSizes = this.model.get("_articleBlockSlider")._isEnabledOnScreenSizes;
 
       var sizes = isEnabledOnScreenSizes.split(" ");
-      if (_.indexOf(sizes, Adapt.device.screenSize) > -1) {
+      if (sizes.indexOf(Adapt.device.screenSize) > -1) {
         return true;
       }
       return false;
     },
 
     _blockSliderShowAll: function() {
-
       this._blockSliderHideOthers.cancel();
 
-      var blocks = this.model.getChildren().models;
-      var currentIndex = this.model.get("_currentBlock");
-
-      for (var i = 0, l = blocks.length; i < l; i++) {
-        this._blockSliderSetVisible(blocks[i], true);
-      }
+      this.model.getChildren().models.forEach(function(block) {
+        this._blockSliderSetVisible(block, true);
+      }.bind(this));
     },
 
     _blockSliderHideOthers: function() {
-      var blocks = this.model.getChildren().models;
-      var currentIndex = this.model.get("_currentBlock");
-
-      for (var i = 0, l = blocks.length; i < l; i++) {
-        if (i != currentIndex) {
-          this._blockSliderSetVisible(blocks[i], false);
-        } else {
-          this._blockSliderSetVisible(blocks[i], true);
-        }
-      }
-
+      var currentIndex = this.model.get('_currentBlock');
+      this.model.getChildren().models.forEach(function(block, index) {
+        var makeVisible = (index === currentIndex);
+        this._blockSliderSetVisible(block, makeVisible);
+      }.bind(this));
     },
 
-    _blockSliderSetVisible: function(model, value) {
-      var id = model.get("_id");
-
-      this.$el.find("."+id + " *").css("visibility", value ? "" : "hidden");
-
+    _blockSliderSetVisible: function(model, makeVisible) {
+      this.$el.find("." + model.get('_id') + " *").css("visibility", makeVisible ? "" : "hidden");
     },
 
     _onBlockSliderResize: function() {
@@ -371,7 +351,6 @@ define([
       var duration = (this.model.get("_articleBlockSlider")._heightAnimationDuration || 200) * 2;
 
       if (this._disableAnimationOnce) animate = false;
-      if (this._disableAnimations) animate = false;
 
       if (this.model.get("_articleBlockSlider")._hasUniformHeight) {
         if (animate === false) {
@@ -452,13 +431,8 @@ define([
     },
 
     _onBlockSliderDeviceChanged: function() {
-      var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
-
-      if (isEnabled) {
-        this.$(".js-abs-toolbar, .js-abs-toolbar-bottom").removeClass("u-display-none")
-      } else {
-        this.$(".js-abs-toolbar, .js-abs-toolbar-bottom").addClass("u-display-none");
-      }
+      var showToolbar = this._blockSliderIsEnabledOnScreenSizes();
+      this.$('.js-abs-toolbar, .js-abs-toolbar-bottom').toggleClass('u-display-none', !showToolbar);
 
       _.delay(function() {
         $(window).resize();
@@ -467,14 +441,13 @@ define([
 
     _onBlockSliderPageScrollTo: function(selector) {
       this._disableAnimationOnce = true;
-      _.defer(_.bind(function() {
+      _.defer(function() {
         this._disableAnimationOnce = false;
-      }, this));
+      }.bind(this));
 
       if (typeof selector === "object") selector = selector.selector;
 
-      var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
-      if (!isEnabled) {
+      if (!this._blockSliderIsEnabledOnScreenSizes()) {
         return;
       }
 
@@ -492,19 +465,19 @@ define([
 
       var children = this.model.getChildren();
       for (var i = 0, item; item = children.models[i++];) {
-        if (item.get("_id") == block.get("_id")) {
-          _.defer(_.bind(function() {
+        if (item.get("_id") === block.get("_id")) {
+          _.defer(function() {
             this._blockSliderMoveIndex(i-1, false);
-          }, this));
+          }.bind(this));
           return;
         }
       }
     },
 
     _onBlockSliderPageScrolledTo: function() {
-      _.defer(_.bind(function() {
+      _.defer(function() {
         this._blockSliderScrollToCurrent(false);
-      }, this));
+      }.bind(this));
     },
 
     _onBlockSliderRemove: function() {

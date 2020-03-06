@@ -124,6 +124,7 @@ define([
 
             var _currentBlock = this.model.get("_currentBlock");
             var _totalBlocks = this.model.get("_totalBlocks");
+            var _config = this.model.get('_articleBlockSlider');
 
             var $left = this.$el.find("[data-block-slider='left']");
             var $right = this.$el.find("[data-block-slider='right']");
@@ -137,6 +138,10 @@ define([
             } else {
                 $left.a11y_cntrl_enabled(true);
                 $right.a11y_cntrl_enabled(true);
+            }
+
+            if (_config._slideCompletionLock) {
+                this.checkSlideCompletionLock();
             }
 
             var $indexes = this.$el.find("[data-block-slider='index']");
@@ -153,6 +158,28 @@ define([
                     if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
                 }, this), duration);
             }
+        },
+
+        checkSlideCompletionLock: function() {
+            var $right = this.$el.find("[data-block-slider='right']");
+            $right.a11y_cntrl_enabled(false);
+
+            var _currentBlock = this.model.get('_currentBlock');
+            var _totalBlocks = this.model.get("_totalBlocks");
+
+            if (_currentBlock == _totalBlocks - 1) return;
+
+            var _children = this.model.get('_children');
+            var target = _children.at(_currentBlock);
+
+            if (target.get('_isComplete')) {
+                $right.a11y_cntrl_enabled(true);
+                return;
+            }
+
+            target.on('change:_isComplete', function() {
+                $right.a11y_cntrl_enabled(true);
+            }.bind(this));
         },
 
         _blockSliderSetButtonLayout: function() {

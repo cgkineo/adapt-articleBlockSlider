@@ -60,7 +60,7 @@ define([
 
       var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
-      this._blockSliderHideOthers = debounce(_.bind(this._blockSliderHideOthers, this), duration);
+      this._blockSliderHideOthers = debounce(this._blockSliderHideOthers.bind(this), duration);
 
     },
 
@@ -82,6 +82,8 @@ define([
       var data = this.model.toJSON();
       var template = Handlebars.templates['articleBlockSlider-article'];
       this.$el.html(template(data));
+      
+      Adapt.trigger(this.constructor.type + 'View:render', this);
 
       this.addChildren();
 

@@ -167,7 +167,7 @@ define([
             var _currentBlock = this.model.get('_currentBlock');
             var _totalBlocks = this.model.get("_totalBlocks");
 
-            if (_currentBlock == _totalBlocks - 1) return;
+            if (_currentBlock === _totalBlocks - 1) return;
 
             var _children = this.model.get('_children');
             var target = _children.at(_currentBlock);

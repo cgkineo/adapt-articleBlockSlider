@@ -46,7 +46,7 @@ define([
 
     _blockSliderSetupEventListeners: function() {
 
-      this._blockSliderResizeHeight = _.bind(this._blockSliderResizeHeight, this);
+      this._blockSliderResizeHeight = this._blockSliderResizeHeight.bind(this);
 
       this.listenTo(Adapt, {
         "device:resize": this._onBlockSliderResize,

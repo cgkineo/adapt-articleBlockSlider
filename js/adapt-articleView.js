@@ -82,7 +82,7 @@ define([
       var data = this.model.toJSON();
       var template = Handlebars.templates['articleBlockSlider-article'];
       this.$el.html(template(data));
-      
+
       Adapt.trigger(this.constructor.type + 'View:render', this);
 
       this.addChildren();
@@ -149,12 +149,6 @@ define([
       if (!$blocks.length) return;
 
       $blocks.a11y_on(false).eq(_currentBlock).a11y_on(true);
-
-      if (Adapt.accessibility.isActive()) {// prevents https://github.com/cgkineo/adapt-articleBlockSlider/issues/28
-        _.delay(function() {
-          if ($blocks.eq(_currentBlock).onscreen().onscreen) $blocks.eq(_currentBlock).a11y_focus();
-        }.bind(this), duration);
-      }
     },
 
     _blockSliderSetButtonLayout: function() {
@@ -262,32 +256,28 @@ define([
       var blocks = this.$el.find(".block");
       var blockWidth = $(blocks[0]).outerWidth();
       var lastIndex = blocks.length - 1;
-      var totalLeft;
-      var isRTL = Adapt.config.get("_defaultDirection") === 'rtl';
-      if (!isRTL) {
-        totalLeft = this.model.get("_currentBlock") * blockWidth;
-      } else {
-        totalLeft = (lastIndex - this.model.get("_currentBlock")) * blockWidth;
-      }
+      var currentBlock = this.model.get('_currentBlock');
+      var isRTL = Adapt.config.get('_defaultDirection') === 'rtl';
+      var totalLeft = isRTL ? (lastIndex - currentBlock) * blockWidth : currentBlock * blockWidth;
 
       this._blockSliderShowAll();
 
-      var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
+      var duration = this.model.get('_articleBlockSlider')._slideAnimationDuration || 200;
 
       if (this._disableAnimationOnce) animate = false;
 
       if (animate === false) {
         _.defer(function(){
-          $container.scrollLeft(totalLeft );
+          $container.scrollLeft(totalLeft);
           this._blockSliderHideOthers();
         }.bind(this));
-      } else {
-        $container.stop(true).animate({scrollLeft:totalLeft}, duration, function() {
-          $container.scrollLeft(totalLeft );
-          this._blockSliderHideOthers();
-        }.bind(this));
+        return;
       }
 
+      $container.stop(true).animate({scrollLeft: totalLeft}, duration, function() {
+        $container.scrollLeft(totalLeft);
+        this._blockSliderHideOthers();
+      }.bind(this));
     },
 
     _blockSliderIsEnabledOnScreenSizes: function() {

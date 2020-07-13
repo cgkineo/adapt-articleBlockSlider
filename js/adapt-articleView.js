@@ -19,6 +19,7 @@ define([
 
     var BlockSliderView = {
 
+        _isReady: false,
         _disableAnimationOnce: false,
         _disableAnimations: false,
 
@@ -38,6 +39,9 @@ define([
         },
 
         _blockSliderPreRender: function() {
+            Adapt.wait.for(function(done){
+                this.resolveQueue = done;
+            }.bind(this));
             this._disableAnimations = $('html').is(".ie8") || $('html').is(".iPhone.version-7\\.0");
             this._blockSliderSetupEventListeners();
         },
@@ -181,6 +185,8 @@ define([
             _.delay(_.bind(function(){
                 this._blockSliderConfigureControls(false);
                 this._onBlockSliderResize();
+                this.resolveQueue();
+                this._isReady = true;
             },this),250);
             this.$(".component").on("resize", this._blockSliderResizeHeight);
         },
@@ -333,6 +339,7 @@ define([
         },
 
         _blockSliderResizeHeight: function(animate) {
+            if (!this._isReady) animate = false;
             var $container = this.$el.find(".article-block-slider");
             var isEnabled = this._blockSliderIsEnabledOnScreenSizes();
 

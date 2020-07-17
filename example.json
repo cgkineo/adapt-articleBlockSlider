@@ -2,6 +2,7 @@
 
 "_articleBlockSlider": {
     "_isEnabled": true,
+    "_slideCompletionLock": true,
     "_isDisabledWhenAccessibilityActive": false,
     "_slideAnimationDuration": 600,
     "_heightAnimationDuration": 300,

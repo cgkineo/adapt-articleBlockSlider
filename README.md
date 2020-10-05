@@ -18,12 +18,6 @@ The attributes listed below are used in *articles.json* to configure **Article B
 
 >**_isEnabled** (boolean): Turns Article Block Slider on and off. Acceptable values are `true` and `false`.
 
->**_isDisabledWhenAccessibilityActive** (boolean): Disables this extension when accessibility is active to simplify navigation for screen reader users. Acceptable values are `true` and `false`.
-
->**_slideAnimationDuration** (number): Sets the slide duration, in milliseconds, of the animation between blocks.
-
->**_heightAnimationDuration** (number): Sets the duration, in milliseconds, of the animation between varying blocks' heights.
-
 >**_isEnabledOnScreenSizes** (string): Defines which screen sizes the Article Block Slider displays the navigation elements on. Acceptable values are `"large"`, `"medium"` and `"small"` or combinations thereof as a space-separated list e.g. `"large medium"`.
 
 >**_hasTabs** (boolean): Turns the tab navigation on and off. If `_hasTabs` is set to true, you must set `_hasArrows` to false. Acceptable values are `true` and `false`. 

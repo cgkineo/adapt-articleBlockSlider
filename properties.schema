@@ -32,33 +32,6 @@
                   "inputType": "Checkbox",
                   "validators": []
                 },
-                "_isDisabledWhenAccessibilityActive": {
-                  "type": "boolean",
-                  "required": false,
-                  "default": false,
-                  "title": "Disable when accessibility is active?",
-                  "inputType": "Checkbox",
-                  "validators": [],
-                  "help": "Disables this extension when accessibility is active to simplify navigation for screen reader users."
-                },
-                "_slideAnimationDuration": {
-                  "type": "number",
-                  "required": false,
-                  "default": 600,
-                  "title": "Slide Animation Duration",
-                  "inputType": "Number",
-                  "validators": ["number"],
-                  "help": "Sets the slide duration, in milliseconds, of the animation between blocks."
-                },
-                "_heightAnimationDuration": {
-                  "type": "number",
-                  "required": false,
-                  "default": 300,
-                  "title": "Height Animation Duration",
-                  "inputType": "Number",
-                  "validators": ["number"],
-                  "help": "Sets the duration, in milliseconds, of the animation between varying blocks heights."
-                },
                 "_isEnabledOnScreenSizes": {
                   "type": "string",
                   "required": false,

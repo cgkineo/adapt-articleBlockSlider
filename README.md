@@ -38,7 +38,7 @@ The **Article Block Slider** and **Quicknav** extensions don't interact well tog
 
 ----------------------------
 **Version number:**  3.0.1  
-**Framework versions:**  >=4
+**Framework versions:**  >=4  
 **Author / maintainer:** Kineo  
 **Accessibility support:** WAI AA  
 **RTL support:** No  

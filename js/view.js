@@ -44,11 +44,7 @@ define([
 
     hideInactiveItems: function() {
       var isEnabled = this.isEnabledOnScreenSize();
-      if (!isEnabled) {
-        var $blocks = this.$('.article-block-slider > .block-container > .block');
-        $blocks.removeClass('is-visible');
-        return;
-      }
+      if (!isEnabled) return;
       this.model.getChildren().each(function(model) {
         var makeVisible = model.get('_isActive') || false;
         var $block = this.$('.' + model.get('_id'));
@@ -152,7 +148,7 @@ define([
       var isEnabled = this.isEnabledOnScreenSize();
       if (!isEnabled) return;
       var $container = this.$('.article-block-organise');
-      // Immediately move to a focs holder to prevent the button from double reading
+      // Immediately move to a focus holder to prevent the button from double reading
       Adapt.a11y.focus($container.find('.js-focus-holder').removeAttr('aria-hidden'));
       var currentBlock = this.model.getActiveItem().get('_index');
       this.showAllItems();
@@ -172,7 +168,7 @@ define([
       var currentBlock = this.model.getActiveItem().get('_index');
       // Modify the dom to hide other items
       this.hideInactiveItems();
-      // Shift focus to the next item after the animation as jaws struggle with off-screen content
+      // Shift focus to the next item after the animation as jaws struggles with off-screen content
       Adapt.a11y.focusFirst($container.find('.block').eq(currentBlock), { defer: false });
       // Hold horizontal scroll at 0 for ie11 which sometimes jumps
       this.$('.article-block-slider').scrollLeft(0);

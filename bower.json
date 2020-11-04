@@ -1,6 +1,9 @@
 {
     "name": "adapt-articleBlockSlider",
-    "repository": "git://github.com/cgkineo/adapt-articleBlockSlider",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/cgkineo/adapt-articleBlockSlider"
+    },
     "framework": ">=4",
     "version": "3.0.1",
     "homepage": "https://github.com/cgkineo/adapt-articleBlockSlider",
@@ -13,6 +16,6 @@
         "adapt-plugin",
         "adapt-extension"
     ],
-    "license": "GPLv3",
+    "license": "GPL-3.0",
     "targetAttribute": "_articleBlockSlider"
 }

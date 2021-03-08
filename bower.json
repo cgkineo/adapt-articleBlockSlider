@@ -4,8 +4,8 @@
         "type": "git",
         "url": "git://github.com/cgkineo/adapt-articleBlockSlider"
     },
-    "framework": ">=4",
-    "version": "3.0.1",
+    "framework": ">=5.8",
+    "version": "4.0.0",
     "homepage": "https://github.com/cgkineo/adapt-articleBlockSlider",
     "issues": "https://github.com/cgkineo/adapt-articleBlockSlider/issues/",
     "displayName": "Article Block Slider",

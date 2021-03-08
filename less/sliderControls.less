@@ -1,0 +1,66 @@
+.slidercontrols {
+  max-width: @device-width-large;
+  margin: auto;
+  position: static;
+  position: initial;
+}
+
+.is-slidercontrols-align-top {
+  order: -1;
+}
+
+.slidercontrols__tabs {
+
+  .slidercontrols__btn-container {
+    display: flex;
+  }
+
+  button[name="tabs"] {
+    flex: 1;
+  }
+
+}
+
+.slidercontrols__arrows {
+
+  button[name="previousArrow"] {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(~"calc(-100% - @{device-width-large} / 2)", -50%);
+  }
+
+  button[name="nextArrow"] {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(~"calc(@{device-width-large} / 2)", -50%);
+  }
+
+}
+
+.slidercontrols__nextprevious {
+
+  button[name="previous"] {
+    position: absolute;
+    top: 0.3em;
+    left: 0.3em;
+  }
+
+  button[name="next"] {
+    position: absolute;
+    bottom: 0;
+    right: 0.3em;
+  }
+
+}
+
+.slidercontrols__reset {
+
+  button[name="reset"] {
+    position: absolute;
+    top: 0.3em;
+    right: 0.3em;
+  }
+
+}

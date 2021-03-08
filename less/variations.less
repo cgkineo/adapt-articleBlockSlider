@@ -1,0 +1,37 @@
+.has-slidercontrols-reset .block__container {
+  // Add top padding to accomodate the reset button
+  padding-top: 3em;
+}
+
+.has-slidercontrols-nextprevious .block__container {
+  // Add top + bottom padding to accomodate the next and previous buttons
+  padding-top: 3em;
+  padding-bottom: 3em;
+}
+
+@abs-arrow-width: 3em;
+.has-slidercontrols-arrows {
+  @media (max-width: @device-width-large + (@abs-arrow-width * 2)) {
+
+    // Pull in the blocks sides to accomodate the arrow buttons on mobile and tablet
+    .block__container {
+      margin: 0 3em;
+    }
+
+    .slidercontrols__arrows {
+
+      // Pull in the arrows on mobile and tablet as they are outside on desktop
+      button[name="previousArrow"] {
+        left: 0%;
+        transform: translate(0, -50%);
+      }
+
+      button[name="nextArrow"] {
+        left: 100%;
+        transform: translate(-100%, -50%);
+      }
+
+    }
+
+  }
+}

@@ -1,13 +1,18 @@
-define([
-  'core/js/adapt',
-  './model',
-  './view',
-  './articleExtension'
-], function(Adapt, Model, View) {
+import './assessmentPatch';
+import controller from './controller';
+import models from './models';
+import styles from './styles';
+import sliderControls from './sliderControls';
+import SliderControlsModel from './SliderControlsModel';
+import SliderControlsView from './SliderControlsView';
 
-  return Adapt.register('articleBlockSlider', {
-    model: Model,
-    view: View
-  });
+export default controller;
 
-});
+export {
+  controller,
+  models,
+  styles,
+  sliderControls,
+  SliderControlsModel,
+  SliderControlsView
+};

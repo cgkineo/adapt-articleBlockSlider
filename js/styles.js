@@ -3,13 +3,13 @@ import Adapt from 'core/js/adapt';
 import {
   getSliderModel,
   getSliderIndex,
-  getSliderChildren
+  getSliderChildren,
+  getSliderId
 } from './models';
 
 export function startSliderMove(model) {
   if (!Adapt.parentView) return;
-  const sliderModel = getSliderModel(model);
-  const sliderId = sliderModel.get('_id');
+  const sliderId = getSliderId(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
   // Add/remove is-articleblockslider-animating class
   sliderView.$el.addClass('is-articleblockslider-animating');
@@ -17,8 +17,7 @@ export function startSliderMove(model) {
 
 export function endSliderMove(model) {
   if (!Adapt.parentView) return;
-  const sliderModel = getSliderModel(model);
-  const sliderId = sliderModel.get('_id');
+  const sliderId = getSliderId(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
   // Add/remove is-articleblockslider-animating class
   const $firstElement = $(`.articleblockslider[data-adapt-id=${sliderId}] .block`).first();
@@ -34,7 +33,7 @@ export function endSliderMove(model) {
 export function updateSliderStyles(model) {
   if (!Adapt.parentView) return;
   const sliderModel = getSliderModel(model);
-  const sliderId = sliderModel.get('_id');
+  const sliderId = getSliderId(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
   if (!sliderView) return;
   const currentIndex = getSliderIndex(sliderModel);
@@ -83,8 +82,7 @@ export async function waitUntilTransitionEnd($element) {
 }
 
 export function scrollToSliderTop(model) {
-  const sliderModel = getSliderModel(model);
-  const sliderId = sliderModel.get('_id');
+  const sliderId = getSliderId(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
   const placement = sliderView.$el.offset();
   placement.top -= $('.nav').outerHeight();

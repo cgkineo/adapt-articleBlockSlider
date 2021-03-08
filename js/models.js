@@ -204,6 +204,11 @@ export function getSliderIndex(model) {
   return sliderModel.get('_sliderCurrentIndex');
 }
 
+export function getSliderId(model) {
+  const sliderModel = getSliderModel(model);
+  return sliderModel.get('_id');
+}
+
 export function moveSliderIndex(model, by) {
   let sliderIndex = getSliderIndex(model);
   sliderIndex += by;

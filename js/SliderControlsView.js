@@ -5,7 +5,8 @@ import {
   getSliderModel,
   checkReturnSliderToStart,
   setSliderIndex,
-  moveSliderIndex
+  moveSliderIndex,
+  getSliderId
 } from './models';
 
 import {
@@ -161,7 +162,7 @@ export default class SliderControlsView extends ComponentView {
   async reset() {
     // Reset completion and return to index 0
     const sliderModel = getSliderModel(this.model);
-    const sliderId = sliderModel.get('_id');
+    const sliderId = getSliderId(this.model);
     const sliderView = Adapt.findViewByModelId(sliderId);
     // Perform and wait for resetting animation
     sliderModel.set('_isSliderResetting', true);

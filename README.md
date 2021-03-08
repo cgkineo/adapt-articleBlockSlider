@@ -35,8 +35,8 @@ The attributes listed below are used in *articles.json* to configure **Article B
 Only one navigation element (Arrows or Tabs) should be active at any one time.  
 
 ----------------------------
-**Version number:**  3.0.1  
-**Framework versions:**  >=4  
+**Version number:**  4.0.0  
+**Framework versions:**  >=5.8  
 **Author / maintainer:** Kineo  
 **Accessibility support:** WAI AA  
 **RTL support:** No  

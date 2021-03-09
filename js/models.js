@@ -107,8 +107,8 @@ export function getConfig(overrides = {}) {
 export function addComponents() {
   let id = 0;
   getSliderModels().forEach(model => {
-    const config = model.get('_articleBlockSlider');
-    addClass(model, 'articleblockslider');
+    const config = getSliderConfig(model);
+    addClass(model, 'abs');
     if (config._hasTabs) {
       addClass(model, 'has-slidercontrols-tabs');
       Adapt.data.push(getConfig({
@@ -138,26 +138,26 @@ export function addComponents() {
       addClass(model, 'has-slidercontrols-nextprevious');
       Adapt.data.push(getConfig({
         _id: `abs-${id++}`,
-        _classes: 'slidercontrols__nextprevious',
+        _classes: 'slidercontrols__bottom',
         _parentId: model.get('_id'),
-        _renderPosition: 'inner-append',
+        _renderPosition: 'outer-append',
         _align: '',
         '_buttons._next._isAvailable': true,
-        '_buttons._next._isEnabled': true,
-        '_buttons._previous._isAvailable': true,
-        '_buttons._previous._isEnabled': false
+        '_buttons._next._isEnabled': true
       }));
     }
-    if (config._hasReset) {
+    if (config._hasReset || config._hasNextPrevious) {
       addClass(model, 'has-slidercontrols-reset');
       Adapt.data.push(getConfig({
         _id: `abs-${id++}`,
-        _classes: 'slidercontrols__reset',
+        _classes: 'slidercontrols__top',
         _parentId: model.get('_id'),
-        _renderPosition: 'inner-append',
-        _align: '',
-        '_buttons._reset._isAvailable': true,
-        '_buttons._reset._isEnabled': true
+        _renderPosition: 'outer-append',
+        _align: 'top',
+        '_buttons._reset._isAvailable': config._hasReset,
+        '_buttons._reset._isEnabled': config._hasReset,
+        '_buttons._previous._isAvailable': config._hasNextPrevious,
+        '_buttons._previous._isEnabled': false
       }));
     }
   });
@@ -165,7 +165,7 @@ export function addComponents() {
 };
 
 export function isSliderModel(model) {
-  const config = model.get('_articleBlockSlider');
+  const config = getSliderConfig(model);
   return (config && config._isEnabled);
 }
 
@@ -180,10 +180,14 @@ export function getSliderModels() {
   return Adapt.data.filter(isSliderModel);
 }
 
+export function getSliderConfig(model) {
+  return model.get('_articleBlockSlider');
+}
+
 export function getSliderChildren(model) {
   const sliderModel = getSliderModel(model);
   const children = sliderModel.getChildren().filter(model => {
-    return model.get('_isAvailable') && model.get('_renderPosition') !== 'outer-append' && !model.isTypeGroup('articleblockslidercontrol');
+    return model.get('_isAvailable') && model.get('_renderPosition') !== 'outer-append' && !model.isTypeGroup('abscontrol');
   });
   return children;
 }

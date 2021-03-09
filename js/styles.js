@@ -4,29 +4,30 @@ import {
   getSliderModel,
   getSliderIndex,
   getSliderChildren,
-  getSliderId
+  getSliderId,
+  getSliderConfig
 } from './models';
 
 export function startSliderMove(model) {
   if (!Adapt.parentView) return;
   const sliderId = getSliderId(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
-  // Add/remove is-articleblockslider-animating class
-  sliderView.$el.addClass('is-articleblockslider-animating');
+  // Add/remove is-abs-animating class
+  sliderView.$el.addClass('is-abs-animating');
 }
 
 export function endSliderMove(model) {
   if (!Adapt.parentView) return;
   const sliderId = getSliderId(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
-  // Add/remove is-articleblockslider-animating class
-  const $firstElement = $(`.articleblockslider[data-adapt-id=${sliderId}] .block`).first();
+  // Add/remove is-abs-animating class
+  const $firstElement = $(`.abs[data-adapt-id=${sliderId}] .block`).first();
   if ($firstElement.css('transition-duration') !== '0s') {
     $firstElement.one('transitionend', () => {
-      sliderView.$el.removeClass(`is-articleblockslider-animating`);
+      sliderView.$el.removeClass(`is-abs-animating`);
     });
   } else {
-    sliderView.$el.removeClass(`is-articleblockslider-animating`);
+    sliderView.$el.removeClass(`is-abs-animating`);
   }
 }
 
@@ -38,20 +39,22 @@ export function updateSliderStyles(model) {
   if (!sliderView) return;
   const currentIndex = getSliderIndex(sliderModel);
   const isSliderResetting = sliderModel.get('_isSliderResetting');
-  // Add/remove is-articleblockslider-end and is-articleblockslider-start class
+  // Add/remove is-abs-end and is-abs-start class
   const isAtEnd = (currentIndex === getSliderChildren(sliderModel).length - 1);
   const isAtStart = (currentIndex === 0);
-  sliderView.$el.toggleClass('is-articleblockslider-end', isAtEnd);
-  sliderView.$el.toggleClass('is-articleblockslider-start', isAtStart);
-  // Add/remove is-articleblockslider-resetting
-  sliderView.$el.toggleClass('is-articleblockslider-resetting', Boolean(isSliderResetting));
+  sliderView.$el.toggleClass('is-abs-end', isAtEnd);
+  sliderView.$el.toggleClass('is-abs-start', isAtStart);
+  // Add/remove is-abs-resetting
+  sliderView.$el.toggleClass('is-abs-resetting', Boolean(isSliderResetting));
   // Fix height
-  const $currentBlock = $(`.articleblockslider[data-adapt-id=${sliderId}] .block`).eq(currentIndex);
-  const $blockContainer = $(`.articleblockslider[data-adapt-id=${sliderId}] .block__container`);
-  const config = sliderModel.get('_articleBlockSlider');
+  const $currentBlock = $(`.abs[data-adapt-id=${sliderId}] .block`).eq(currentIndex);
+  const $blockContainer = $(`.abs[data-adapt-id=${sliderId}] .block__container`);
+  const config = getSliderConfig(sliderModel);
+  const isFullHeightOnMobile = Boolean(config._isFullHeightOnMobile);
+  sliderView.$el.toggleClass('is-abs-full-height-on-mobile', isFullHeightOnMobile);
   const hasUniformHeight = config._hasUniformHeight &&
     (!config._hasUniformHeightOnSizes || config._hasUniformHeightOnSizes.split(' ').includes(Adapt.device.screenSize));
-  sliderView.$el.toggleClass('has-articleblockslider-uniform-height', Boolean(hasUniformHeight));
+  sliderView.$el.toggleClass('has-abs-uniform-height', Boolean(hasUniformHeight));
   const height = isSliderResetting ?
     `${sliderView.$el.height()}px` :
     hasUniformHeight ?
@@ -66,7 +69,7 @@ export function updateSliderStyles(model) {
   sliderView.$el.attr('data-item-index', currentIndex);
   // Add animation
   const animation = (config._animation || 'noanimation');
-  sliderView.$el.addClass(`is-articleblockslider-${animation}`);
+  sliderView.$el.addClass(`is-abs-${animation}`);
 }
 
 export async function waitUntilTransitionEnd($element) {

@@ -1,26 +1,18 @@
-@abs-device-large: ~"(max-width: "(@device-width-large + 6em)~")";
+@abs-arrow-spacing: @icon-size + (@icon-padding * 2) + @block-padding-hoz;
+@abs-controls-width: @max-width;
+@abs-arrows-controls-width: min(@abs-controls-width + (@abs-arrow-spacing * 2), @max-width);
 @abs-non-mobile: ~"html:not(.os-ios):not(.os-android)";
 
-.articleblockslider {
+.abs {
   position: relative;
   display: flex;
   flex-flow: column;
-
-  .article__inner {
-    max-width: 100%;
-    @media (min-width: @device-width-large) {
-      margin: auto;
-      max-width: @device-width-large;
-    }
-    overflow-y: hidden;
-    padding-bottom: 3em;
-  }
 
   > * {
     opacity: 1;
     transition: opacity 0.4s ease-in-out;
 
-    .is-articleblockslider-resetting& {
+    .is-abs-resetting& {
       opacity: 0;
     }
 
@@ -32,20 +24,18 @@
     margin: auto;
     max-width: @device-width-large;
     max-height: 100%;
+  }
 
-    .block {
-      visibility: hidden;
+  .block {
+    visibility: hidden;
+  }
 
-      .is-articleblockslider-animating& {
-        visibility: visible;
-      }
+  &.is-abs-animating .block {
+    visibility: visible;
+  }
 
-      .is-articleblockslider-resetting& {
-        transition: none;
-      }
-
-    }
-
+  &.is-abs-resetting .block {
+    transition: none;
   }
 
 }

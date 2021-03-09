@@ -1,37 +1,68 @@
-.has-slidercontrols-reset .block__container {
-  // Add top padding to accomodate the reset button
-  padding-top: 3em;
+.has-slidercontrols-reset,
+.has-slidercontrols-nextprevious {
+
+  .block__container {
+    // Add top padding to accomodate the reset and/or previous button
+    padding-top: 3em;
+  }
+
 }
 
-.has-slidercontrols-nextprevious .block__container {
-  // Add top + bottom padding to accomodate the next and previous buttons
-  padding-top: 3em;
-  padding-bottom: 3em;
+.has-slidercontrols-nextprevious {
+
+  .article__inner {
+    // Accomodate a trickle button
+    padding-bottom: 3em;
+  }
+
+  .block__container {
+    // Add  bottom padding to accomodate the next buttons
+    padding-bottom: 3em;
+  }
+
 }
 
-@abs-arrow-width: 3em;
 .has-slidercontrols-arrows {
-  @media (max-width: @device-width-large + (@abs-arrow-width * 2)) {
+  @media (max-width: @device-width-large + (@abs-arrow-spacing * 2)) {
 
     // Pull in the blocks sides to accomodate the arrow buttons on mobile and tablet
     .block__container {
       margin: 0 3em;
     }
 
-    .slidercontrols__arrows {
+  }
 
-      // Pull in the arrows on mobile and tablet as they are outside on desktop
-      button[name="previousArrow"] {
-        left: 0%;
-        transform: translate(0, -50%);
+  // Keep arrows inside abs-arrows-controls-width
+  @media (min-width: @abs-arrows-controls-width) {
+
+    button[name="previousArrow"] {
+      left: 50%;
+      transform: translate(~"calc(-@{abs-arrows-controls-width} / 2)", -50%);
+      .dir-rtl & {
+        left: 50%;
+        transform: translate(~"calc(-100% + @{abs-arrows-controls-width} / 2)", -50%);
       }
+    }
 
-      button[name="nextArrow"] {
-        left: 100%;
-        transform: translate(-100%, -50%);
+    button[name="nextArrow"] {
+      left: 50%;
+      transform: translate(~"calc(-100% + @{abs-arrows-controls-width} / 2)", -50%);
+      .dir-rtl & {
+        left: 50%;
+        transform: translate(~"calc(-@{abs-arrows-controls-width} / 2)", -50%);
       }
-
     }
 
   }
+}
+
+// Minimum of full-screen on mobile
+.is-abs-full-height-on-mobile {
+
+  .article__inner {
+    @media (max-width: @device-width-large) {
+      min-height: calc(100vh - @navigation-height);
+    }
+  }
+
 }

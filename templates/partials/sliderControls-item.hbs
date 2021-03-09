@@ -1,8 +1,7 @@
 {{import_globals}}
-{{#if _isEnabled}}
 <button
   name="{{name}}"
-  class="aria-hidden {{#if _iconClass}}btn-icon{{/if}}{{#if text}} btn-text{{/if}} slidercontrols__btn{{#if locked}} is-locked is-disabled{{/if}}{{#if _classes}} {{_classes}}{{/if}}{{#if text}} has-text{{/if}}{{#if _iconClass}} has-icon{{/if}}{{#if _alignIconRight}} icon-is-right{{else}} icon-is-left{{/if}} js-slidercontrols-btn"
+  class="aria-hidden i{{_index}} {{#if _iconClass}}btn-icon{{/if}}{{#if text}} btn-text{{/if}} slidercontrols__btn{{#if locked}} is-locked is-disabled{{/if}}{{#if _classes}} {{_classes}}{{/if}}{{#if text}} has-text{{/if}}{{#if _iconClass}} has-icon{{/if}}{{#if _alignIconRight}} icon-is-right{{else}} icon-is-left{{/if}} js-slidercontrols-btn"
   data-item-index="{{_index}}"
   {{#if locked}} disabled="disabled"{{/if}}
   aria-label="{{{compile ariaLabel this}}} {{#if locked}}{{@root/_globals._accessibility._ariaLabels.locked}}{{else if _isComplete}}{{@root/_globals._accessibility._ariaLabels.complete}}{{else}}{{@root/_globals._accessibility._ariaLabels.incomplete}}{{/if}}">
@@ -36,4 +35,3 @@
   </div>
 
 </button>
-{{/if}}

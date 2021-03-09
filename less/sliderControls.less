@@ -1,66 +1,76 @@
 .slidercontrols {
-  max-width: @device-width-large;
+  max-width: @abs-controls-width;
   margin: auto;
-  position: static;
-  position: initial;
-}
+  position: relative;
+  padding-top: 0.3em;
 
-.is-slidercontrols-align-top {
-  order: -1;
-}
+  // Allow absolute position of arrow buttons
+  &__arrows {
+    position: static;
+    position: initial;
+  }
 
-.slidercontrols__tabs {
-
-  .slidercontrols__btn-container {
+  // Make sure button icons sit next to text
+  &__btn-inner {
     display: flex;
   }
 
+  &__btn-container {
+    display: flex;
+  }
+
+  // Make tabs equal size
   button[name="tabs"] {
     flex: 1;
   }
 
-}
-
-.slidercontrols__arrows {
-
   button[name="previousArrow"] {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(~"calc(-100% - @{device-width-large} / 2)", -50%);
+    left: 0%;
+    transform: translate(0, -50%);
+    .dir-rtl & {
+      left: 100%;
+      transform: translate(-100%, -50%);
+    }
+    .primary-action()
   }
 
   button[name="nextArrow"] {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform: translate(~"calc(@{device-width-large} / 2)", -50%);
+    left: 100%;
+    transform: translate(-100%, -50%);
+    .dir-rtl & {
+      left: 0;
+      transform: translate(0, -50%);
+    }
+    .primary-action()
   }
 
-}
-
-.slidercontrols__nextprevious {
-
-  button[name="previous"] {
-    position: absolute;
-    top: 0.3em;
-    left: 0.3em;
+  // Position reset to the right always
+  button[name="reset"] {
+    margin-left: auto;
+    .dir-rtl & {
+      order: 0;
+      margin-left: inherit;
+      margin-right: auto;
+    }
   }
 
+  // Position next above trickle and bottom right always
   button[name="next"] {
     position: absolute;
-    bottom: 0;
-    right: 0.3em;
+    bottom: 3em;
+    right: 0;
+    .dir-rtl & {
+      left: 0;
+      right: inherit;
+    }
   }
 
 }
 
-.slidercontrols__reset {
-
-  button[name="reset"] {
-    position: absolute;
-    top: 0.3em;
-    right: 0.3em;
-  }
-
+.is-slidercontrols-align-top {
+  order: -1;
 }

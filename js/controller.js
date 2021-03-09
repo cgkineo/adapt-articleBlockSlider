@@ -3,7 +3,8 @@ import {
   addComponents,
   moveSliderIndex,
   isSliderModel,
-  setSliderIndex
+  setSliderIndex,
+  getSliderConfig
 } from './models';
 import {
   startSliderMove,
@@ -30,7 +31,7 @@ class SliderControlsController extends Backbone.Controller {
     if (model.changed._isInteractionComplete !== true) return;
     const sliderModel = model.getParent();
     if (!isSliderModel(sliderModel)) return;
-    const config = sliderModel.get('_articleBlockSlider');
+    const config = getSliderConfig(sliderModel);
     const questions = model.findDescendantModels('question');
     const hasQuestions = Boolean(questions.length);
     if (hasQuestions && config._autoQuestionNext) {

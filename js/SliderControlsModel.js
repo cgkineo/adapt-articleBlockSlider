@@ -3,7 +3,8 @@ import ComponentModel from 'core/js/models/componentModel';
 import {
   getSliderChildren,
   getSliderIndex,
-  getSliderModel
+  getSliderModel,
+  getSliderConfig
 } from './models';
 
 export function overrideButtonItem(value, override) {
@@ -34,7 +35,7 @@ export default class SliderControlsModel extends ComponentModel {
   }
 
   getTypeGroup() {
-    return 'articleblockslidercontrol';
+    return 'abscontrol';
   }
 
   get data() {
@@ -49,34 +50,37 @@ export default class SliderControlsModel extends ComponentModel {
 
   get buttonItems() {
     const sliderModel = getSliderModel(this);
-    const config = sliderModel.get('_articleBlockSlider');
+    const config = getSliderConfig(sliderModel);
     const isCompletionRequired = Boolean(config._isCompletionRequired);
     const children = getSliderChildren(this);
     const sliderCurrentIndex = getSliderIndex(this);
-    const block = children[sliderCurrentIndex].toJSON();
+    const block = children[sliderCurrentIndex];
     const data = _.flatten(Object.entries(this.get('_buttons')).filter(([key, value]) => value._isAvailable).map(([key, value]) => {
       value = { ...value };
       const name = key.slice(1);
       let locked = false;
       overrideButtonItem(value, config?.[key]);
-      overrideButtonItem(value, block?._articleBlockSlider?.[key]);
+      overrideButtonItem(value, getSliderConfig(block)?.[key]);
       switch (name) {
         case 'tabs':
+          let tabsLocked = false;
           return children.map((child, index) => {
-            const block = child.toJSON();
+            const isPreviousButtonIncomplete = (children[index - 1]?.get?.('_isComplete') === false);
+            tabsLocked = tabsLocked || (isCompletionRequired && isPreviousButtonIncomplete);
+            const isCurrentIndex = (sliderCurrentIndex === index);
             return {
-              ...block,
+              ...child.toJSON(),
               ...value,
               name,
               index,
               number: index + 1,
-              locked
+              locked: tabsLocked || isCurrentIndex
             };
           });
         case 'nextArrow':
         case 'next':
           locked = locked || (sliderCurrentIndex + 1 === children.length);
-          locked = locked || (isCompletionRequired && !block._isComplete);
+          locked = locked || (isCompletionRequired && !block.get('_isComplete'));
           break;
         case 'previousArrow':
         case 'previous':

@@ -10,7 +10,7 @@
 
 .abs-container-layout() {
 
-  .articleblockslider {
+  .abs {
     & when (@i < @abs-item-max-count) {
       @t: @i + 1;
       &[data-item-index="@{i}"] .block__container .block:nth-child(@{t}) {
@@ -19,13 +19,17 @@
     }
   }
 
-  .is-articleblockslider-noanimation,
-  .is-articleblockslider-slide-leftright {
+  .is-abs-noanimation,
+  .is-abs-slide-horizontal {
     & when (@i < @abs-item-max-count) {
       &[data-item-index="@{i}"] {
         .block__container {
           .block {
             left: -100% * @i;
+            .dir-rtl & {
+              left: inherit;
+              right: -100% * @i;
+            }
           }
         }
       }
@@ -34,7 +38,15 @@
 
 }
 
-.articleblockslider {
+.abs {
+
+  .block__container {
+    align-items: flex-start;
+  }
+
+}
+
+.has-abs-uniform-height {
 
   .block__container {
     align-items: center;
@@ -42,20 +54,11 @@
 
 }
 
-.has-articleblockslider-uniform-height {
-
-  .block__container {
-    align-items: center;
-  }
-
-}
-
-.is-articleblockslider-noanimation {
+.is-abs-noanimation {
 
   .article__inner {
     transition: height 0.1s linear, opacity 0.4s ease-in-out;
   }
-
 
   .block__container {
     display: flex;
@@ -64,15 +67,13 @@
   }
 
   .block {
-    position: relative;
-    left: 0%;
     flex-shrink: 0;
     width: 100%;
   }
 
 }
 
-.is-articleblockslider-slide-leftright {
+.is-abs-slide-horizontal {
 
   .article__inner {
     transition: height 0.4s ease-in-out, opacity 0.4s ease-in-out;
@@ -85,8 +86,6 @@
   }
 
   .block {
-    position: relative;
-    left: 0%;
     flex-shrink: 0;
     width: 100%;
     transition: left 0.4s ease-in-out;

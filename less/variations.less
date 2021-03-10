@@ -2,7 +2,7 @@
 .has-slidercontrols-nextprevious {
 
   .block__container {
-    // Add top padding to accomodate the reset and/or previous button
+    // add top padding to accomodate the reset and/or previous button
     padding-top: 3em;
   }
 
@@ -11,12 +11,12 @@
 .has-slidercontrols-nextprevious {
 
   .article__inner {
-    // Accomodate a trickle button
+    // accomodate a trickle button
     padding-bottom: 3em;
   }
 
   .block__container {
-    // Add  bottom padding to accomodate the next buttons
+    // add  bottom padding to accomodate the next buttons
     padding-bottom: 3em;
   }
 
@@ -25,14 +25,14 @@
 .has-slidercontrols-arrows {
   @media (max-width: @device-width-large + (@abs-arrow-spacing * 2)) {
 
-    // Pull in the blocks sides to accomodate the arrow buttons on mobile and tablet
+    // pull in the blocks sides to accomodate the arrow buttons on mobile and tablet
     .block__container {
       margin: 0 3em;
     }
 
   }
 
-  // Keep arrows inside abs-arrows-controls-width
+  // keep arrows inside abs-arrows-controls-width
   @media (min-width: @abs-arrows-controls-width) {
 
     button[name="previousArrow"] {
@@ -56,13 +56,23 @@
   }
 }
 
-// Minimum of full-screen on mobile
-.is-abs-full-height-on-mobile {
+// minimum of full-screen on small and medium
+.is-abs-full-height-on-small-and-medium {
 
   .article__inner {
     @media (max-width: @device-width-large) {
       min-height: calc(100vh - @navigation-height);
     }
+  }
+
+}
+
+// centrally position abs elements
+.is-abs-full-height-on-small-and-medium,
+.has-abs-uniform-height {
+
+  .block__container {
+    align-items: center;
   }
 
 }

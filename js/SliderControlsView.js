@@ -6,7 +6,8 @@ import {
   checkReturnSliderToStart,
   setSliderIndex,
   moveSliderIndex,
-  getSliderId
+  getSliderId,
+  returnSliderToStart
 } from './models';
 
 import {
@@ -43,6 +44,7 @@ export default class SliderControlsView extends ComponentView {
 
   preRender() {
     _.bindAll(this, 'postRender');
+    this.model.set('_items', this.model.buttonItems);
     const sliderModel = getSliderModel(this.model);
     this.listenTo(sliderModel.getChildren(), 'add remove change', this.update);
     this.listenTo(sliderModel, 'change', this.update);
@@ -90,14 +92,6 @@ export default class SliderControlsView extends ComponentView {
     $button.attr(renderedAttrs);
     // update button text
     $button.html($buttonRendered.html());
-  }
-
-  render() {
-    const template = Handlebars.templates.sliderControls;
-    const data = this.model.data;
-    this.$el.html(template(data));
-    Adapt.trigger(this.constructor.type + 'View:render', this);
-    _.defer(this.postRender);
   }
 
   postRender() {
@@ -163,10 +157,11 @@ export default class SliderControlsView extends ComponentView {
     // Reset completion and return to index 0
     const sliderModel = getSliderModel(this.model);
     const sliderId = getSliderId(this.model);
-    const sliderView = Adapt.findViewByModelId(sliderId);
+    let sliderView = Adapt.findViewByModelId(sliderId);
     // Perform and wait for resetting animation
     sliderModel.set('_isSliderResetting', true);
     await waitUntilTransitionEnd(sliderView.$('.article__inner'));
+    returnSliderToStart(sliderModel);
     // Perform relevant reset, branching / normal / assessment
     const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
     if (AdaptBranchingSubset) {
@@ -191,17 +186,17 @@ export default class SliderControlsView extends ComponentView {
       await new Promise(resolve => {
         AdaptAssessment.reset(true, resolve);
       });
+      sliderView = Adapt.findViewByModelId(sliderId);
     }
     await Adapt.parentView.addChildren();
     // Wait for new children to be ready
     await Adapt.parentView.whenReady();
+    scrollToSliderTop(this.model);
     // These two calls must be separate otherwise their animations happen together
-    sliderModel.set('_sliderCurrentIndex', 0); // Update item display styles
     sliderModel.set('_isSliderResetting', false); // Animate in
     await waitUntilTransitionEnd(sliderView.$('.article__inner'));
     // Initiate inview animations
     $.inview();
-    scrollToSliderTop(this.model);
     focusOnSliderCurrentIndex(this.model);
   }
 

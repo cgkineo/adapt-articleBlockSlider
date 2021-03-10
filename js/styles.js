@@ -50,8 +50,8 @@ export function updateSliderStyles(model) {
   const $currentBlock = $(`.abs[data-adapt-id=${sliderId}] .block`).eq(currentIndex);
   const $blockContainer = $(`.abs[data-adapt-id=${sliderId}] .block__container`);
   const config = getSliderConfig(sliderModel);
-  const isFullHeightOnMobile = Boolean(config._isFullHeightOnMobile);
-  sliderView.$el.toggleClass('is-abs-full-height-on-mobile', isFullHeightOnMobile);
+  const isFullHeightOnSmallAndMedium = Boolean(config._isFullHeightOnSmallAndMedium);
+  sliderView.$el.toggleClass('is-abs-full-height-on-small-and-medium', isFullHeightOnSmallAndMedium);
   const hasUniformHeight = config._hasUniformHeight &&
     (!config._hasUniformHeightOnSizes || config._hasUniformHeightOnSizes.split(' ').includes(Adapt.device.screenSize));
   sliderView.$el.toggleClass('has-abs-uniform-height', Boolean(hasUniformHeight));

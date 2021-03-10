@@ -8,7 +8,7 @@ import {
 } from './models';
 
 export function overrideButtonItem(value, override) {
-  if (override?._isInherited !== false) return;
+  if (override?._isOverride !== true) return;
   value._isEnabled = override?._isEnabled ?? value._isEnabled;
   value._order = override?._order ?? value._order;
   value._classes = override?._classes ?? value._classes;
@@ -36,16 +36,6 @@ export default class SliderControlsModel extends ComponentModel {
 
   getTypeGroup() {
     return 'abscontrol';
-  }
-
-  get data() {
-    const data = {
-      ...this.toJSON(),
-      ...{
-        _items: this.buttonItems
-      }
-    };
-    return data;
   }
 
   get buttonItems() {

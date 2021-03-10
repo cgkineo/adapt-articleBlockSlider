@@ -1,11 +1,49 @@
-//articles.json
-
+// articles.json
 "_articleBlockSlider": {
     "_isEnabled": true,
     "_isEnabledOnScreenSizes": "large",
+    "_animation": "",
     "_hasTabs": false,
-    "_hasArrows": true,
+    "_hasArrows": false,
+    "_hasNextPrevious": true,
+    "_hasReset": true,
+    "_autoQuestionNext": true,
     "_startIndex": 0,
+    "_isCompletionRequired": true,
     "_hasUniformHeight": true,
+    "_hasUniformHeightOnSizes": "large",
+    "_isFullHeightOnSmallAndMedium": true,
     "_minHeight": null
+},
+
+// blocks.json
+{
+    "_articleBlockSlider": {
+        "_next": {
+            "_isOverride": false,
+            "_isEnabled": false
+        },
+        "_previous": {
+            "_isOverride": false,
+            "_isEnabled": false,
+            "_iconClass": "icon-controls-left",
+            "text": "Go back"
+        },
+        "_nextArrow": {
+            "_isOverride": false,
+            "_isEnabled": false
+        },
+        "_previousArrow": {
+            "_isOverride": false,
+            "_isEnabled": false
+        },
+        "_tabs": {
+            "_isOverride": false,
+            "_isEnabled": false
+        },
+        "_reset": {
+            "_isOverride": false,
+            "_isEnabled": false
+        }
+    }
 }

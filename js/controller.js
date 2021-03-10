@@ -1,10 +1,15 @@
 import Adapt from 'core/js/adapt';
+import BlockModel from 'core/js/models/blockModel';
+
 import {
   addComponents,
   moveSliderIndex,
   isSliderModel,
-  setSliderIndex,
-  getSliderConfig
+  returnSliderToStart,
+  getSliderConfig,
+  getSliderModel,
+  getSliderChildren,
+  setSliderIndex
 } from './models';
 import {
   startSliderMove,
@@ -21,7 +26,9 @@ class SliderControlsController extends Backbone.Controller {
     this.listenTo(Adapt.data, 'change:_isInteractionComplete', this.onInteractionComplete);
     this.listenTo(Adapt, {
       'assessments:reset': this.onAssessmentReset,
+      'articleView:postRender': this.updateArticleStyling,
       'blockView:postRender': this.attachBlockResizeListener,
+      'page:scrollTo': this.onPageScrollTo,
       remove: this.removeBlockResizeListener
     });
     this._resizeListeners = [];
@@ -49,7 +56,13 @@ class SliderControlsController extends Backbone.Controller {
   onAssessmentReset(state) {
     const sliderModel = Adapt.findById(state.articleId);
     if (!isSliderModel(sliderModel)) return;
-    setSliderIndex(sliderModel, 0);
+    returnSliderToStart(sliderModel);
+  }
+
+  updateArticleStyling(view) {
+    const { model } = view;
+    if (!isSliderModel(model)) return;
+    updateSliderStyles(model);
   }
 
   attachBlockResizeListener(blockView) {
@@ -73,6 +86,25 @@ class SliderControlsController extends Backbone.Controller {
     this._resizeListeners.forEach(({ blockView, listener }) => {
       blockView.$el.off('resize', listener);
     });
+  }
+
+  onPageScrollTo(selector) {
+    if (typeof selector === 'object') selector = selector.selector;
+    if (selector[0] === '.') selector = selector.split(' ')[0].slice(1);
+    const model = Adapt.findById(selector);
+    if (!model) return;
+    const sliderModel = getSliderModel(model);
+    if (!sliderModel || model === sliderModel) return;
+    let blockModel;
+    if (model instanceof BlockModel) {
+      blockModel = model;
+    } else {
+      const ancestors = model.getAncestorModels();
+      blockModel = ancestors.find(model => model instanceof BlockModel);
+    }
+    const children = getSliderChildren(sliderModel);
+    const index = children.findIndex(child => child === blockModel);
+    setSliderIndex(sliderModel, index);
   }
 
 }

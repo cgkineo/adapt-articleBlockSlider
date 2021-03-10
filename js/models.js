@@ -172,8 +172,12 @@ export function isSliderModel(model) {
 export function getSliderModel(model) {
   if (isSliderModel(model)) return model;
   const sliderId = model.get('_sliderId');
-  const sliderModel = Adapt.findById(sliderId);
-  return sliderModel;
+  if (sliderId) {
+    const sliderModel = Adapt.findById(sliderId);
+    return sliderModel;
+  }
+  const ancestors = model.getAncestorModels();
+  return ancestors.find(isSliderModel);
 }
 
 export function getSliderModels() {
@@ -195,7 +199,13 @@ export function getSliderChildren(model) {
 export function checkReturnSliderToStart(model) {
   const sliderModel = getSliderModel(model);
   if (sliderModel.get('_sliderCurrentIndex') !== undefined) return;
-  sliderModel.set('_sliderCurrentIndex', 0);
+  returnSliderToStart(model);
+}
+
+export function returnSliderToStart(model) {
+  const sliderModel = getSliderModel(model);
+  const sliderConfig = getSliderConfig(sliderModel);
+  sliderModel.set('_sliderCurrentIndex', sliderConfig._startIndex || 0);
 }
 
 export function setSliderIndex(model, index) {

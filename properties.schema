@@ -23,7 +23,7 @@
             "_articleBlockSlider": {
               "type": "object",
               "required": false,
-              "legend": "BlockSlider",
+              "legend": "Article Block Slider",
               "properties": {
                 "_isEnabled": {
                   "type": "boolean",
@@ -32,66 +32,1096 @@
                   "inputType": "Checkbox",
                   "validators": []
                 },
-                "_isEnabledOnScreenSizes": {
+                "_isEnabledOnSizes": {
                   "type": "string",
                   "required": false,
                   "default": "large",
-                  "title": "Enabled On Screen Sizes",
+                  "title": "Enabled on screen sizes",
                   "inputType": "Text",
                   "validators": [],
-                  "help": "Defines which screen sizes the Article Block Slider displays the navigation elements on. Acceptable values are large, medium and small - or a comma-separated list of combinations thereof e.g. 'large medium'."
+                  "help": "Acceptable values are large, medium and small - or a combination thereof e.g. 'medium large'."
+                },
+                "_animation": {
+                  "type": "string",
+                  "required": false,
+                  "enum": ["noanimation", "slide-horizontal"],
+                  "default": "slide-horizontal",
+                  "title": "Block transition animation",
+                  "inputType": {"type": "Select", "options":["noanimation", "slide-horizontal"]},
+                  "validators": [],
+                  "help": "Defines which animation should be used to move between items."
+                },
+                "_lockType": {
+                  "type": "string",
+                  "default": "",
+                  "inputType": {
+                    "type": "Select",
+                    "options": [
+                      "",
+                      "custom",
+                      "lockLast",
+                      "sequential",
+                      "unlockFirst"
+                    ]
+                  },
+                  "title": "Lock type",
+                  "help": "Defines which (if any) locking mechanism will be used for blocks",
+                  "validators": []
                 },
                 "_hasTabs": {
                   "type": "boolean",
                   "required": true,
                   "default": false,
-                  "title": "Has Tabs",
+                  "title": "Has tabs buttons?",
                   "inputType": "Checkbox",
                   "validators": [],
-                  "help": "Turns the tab navigation on and off. If this property is checked, you must uncheck 'Has Arrows'."
+                  "help": "Turns the tab navigation on and off."
                 },
                 "_hasArrows": {
                   "type": "boolean",
                   "required": true,
                   "default": true,
-                  "title": "Has Arrows",
+                  "title": "Has arrows buttons?",
                   "inputType": "Checkbox",
                   "validators": [],
-                  "help": "Turns the arrow navigation on and off. If this property is checked, you must uncheck 'Has Tabs'."
+                  "help": "Turns the arrow navigation on and off."
+                },
+                "_hasNextPrevious": {
+                  "type": "boolean",
+                  "required": true,
+                  "default": false,
+                  "title": "Has next/previous buttons?",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Turns the next/previous navigation on and off."
+                },
+                "_hasReset": {
+                  "type": "boolean",
+                  "required": true,
+                  "default": false,
+                  "title": "Has reset button?",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Turns the reset button on and off."
+                },
+                "_autoQuestionNext": {
+                  "type": "boolean",
+                  "required": true,
+                  "default": false,
+                  "title": "On question completion, auto next?",
+                  "inputType": "Checkbox",
+                  "validators": [],
+                  "help": "Moves next when a block containing a question is completed."
+                },
+                "_nextScrollTopOnScreenSizes": {
+                  "type": "string",
+                  "required": false,
+                  "title": "On next, scroll top on screen sizes",
+                  "default": "small medium",
+                  "inputType": "Text",
+                  "validators": [],
+                  "help": "Acceptable values are large, medium and small - or a combination thereof e.g. 'medium large'."
                 },
                 "_startIndex": {
                   "type": "number",
                   "required": true,
                   "default": 0,
-                  "title": "Start on what block",
+                  "title": "Start at which block?",
                   "inputType": "Number",
                   "validators": ["required", "number"],
                   "help": "Sets which block displays on page load."
                 },
-                "_hasUniformHeight": {
-                  "type": "boolean",
-                  "required": true,
-                  "default": true,
-                  "title": "Has a uniform height",
-                  "inputType": "Checkbox",
+                "_isUniformHeightOnSizes": {
+                  "type": "string",
+                  "required": false,
+                  "title": "Uniform height on screen sizes",
+                  "default": "large",
+                  "inputType": "Text",
                   "validators": [],
-                  "help": "Sets all elements within the Article Block Slider to use the highest block's height."
+                  "help": "Acceptable values are large, medium and small - or a combination thereof e.g. 'medium large'."
+                },
+                "_isFullHeightOnSizes": {
+                  "type": "string",
+                  "required": false,
+                  "title": "Full height on screen sizes",
+                  "default": "small medium",
+                  "inputType": "Text",
+                  "validators": [],
+                  "help": "Acceptable values are large, medium and small - or a combination thereof e.g. 'medium large'."
                 },
                 "_minHeight": {
                   "type": "number",
                   "required": false,
                   "default": null,
-                  "title": "Min Height",
+                  "title": "Min px height",
                   "inputType": "Number",
                   "validators": ["number"],
-                  "help": "Sets a minimum height on the .article-block-slider container class."
+                  "help": "Sets a minimum height on the .article__inner container class."
+                },
+                "_next": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Next button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-controls-right",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-controls-right` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Next",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{_globals._accessibility._ariaLabels.next}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_previous": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Previous button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-controls-left",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-controls-left` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Previous",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{_globals._accessibility._ariaLabels.previous}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_nextArrow": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Next arrow button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-controls-right",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-controls-right` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{_globals._accessibility._ariaLabels.next}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_previousArrow": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Previous arrow button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-controls-left",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-controls-left` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{_globals._accessibility._ariaLabels.previous}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_tabs": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Tabs buttons",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "{{title}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{title}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_reset": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Reset button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-video-replay",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-video-replay` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Reset",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "Reset",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_resetWarning": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Reset warning",
+                  "properties": {
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "title": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Reset?",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "body": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Are you sure you want to restart this activity?",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "yes": {
+                      "type": "string",
+                      "required": true,
+                      "title": "Yes button text",
+                      "default": "Yes",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "no": {
+                      "type": "string",
+                      "required": true,
+                      "title": "No button text",
+                      "default": "No",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
                 }
               }
             }
           }
         },
         "block": {
-          "type": "object"
+          "type": "object",
+          "properties": {
+            "_articleBlockSlider": {
+              "type": "object",
+              "required": false,
+              "legend": "Article Block Slider - Overrides",
+              "properties": {
+                "_next": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Next button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-controls-right",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-controls-right` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Next",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{_globals._accessibility._ariaLabels.next}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_previous": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Previous button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-controls-left",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-controls-left` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Previous",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{_globals._accessibility._ariaLabels.previous}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_nextArrow": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Next arrow button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-controls-right",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-controls-right` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{_globals._accessibility._ariaLabels.next}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_previousArrow": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Previous arrow button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-controls-left",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-controls-left` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{_globals._accessibility._ariaLabels.previous}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_tabs": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Tabs buttons",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "{{title}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "{{title}}",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
+                "_reset": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Reset button",
+                  "properties": {
+                    "_isOverride": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Override?",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "_order": {
+                      "type": "number",
+                      "required": true,
+                      "default": 0,
+                      "title": "Order",
+                      "inputType": "Number",
+                      "validators": ["required", "number"],
+                      "help": "Button display order, lowest is leftest."
+                    },
+                    "_classes": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Classes",
+                      "default": "",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": ""
+                    },
+                    "_iconClass": {
+                      "type": "string",
+                      "required": false,
+                      "title": "Icon class",
+                      "default": "icon-video-replay",
+                      "inputType": "Text",
+                      "validators": [],
+                      "help": "`icon-video-replay` is the default."
+                    },
+                    "_alignIconRight": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Align icon right",
+                      "default": false,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "text": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Reset",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "ariaLabel": {
+                      "type": "string",
+                      "required": true,
+                      "title": "ARIA label",
+                      "default": "Reset",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                }
+              }
+            }
+          }
         },
         "component": {
           "type": "object"

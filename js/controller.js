@@ -1,9 +1,8 @@
 import Adapt from 'core/js/adapt';
 import BlockModel from 'core/js/models/blockModel';
-
 import {
+  setLockTypes,
   addComponents,
-  moveSliderIndex,
   isSliderModel,
   returnSliderToStart,
   getSliderConfig,
@@ -12,20 +11,18 @@ import {
   setSliderIndex
 } from './models';
 import {
-  startSliderMove,
-  endSliderMove,
   updateSliderStyles,
-  scrollToSliderTop,
-  focusOnSliderCurrentIndex
+  animateMoveSliderIndexBy
 } from './styles';
 
 class SliderControlsController extends Backbone.Controller {
 
   initialize() {
-    this.listenTo(Adapt.data, 'loaded', addComponents);
+    this.listenTo(Adapt.data, 'loaded', this.onDataLoaded);
     this.listenTo(Adapt.data, 'change:_isInteractionComplete', this.onInteractionComplete);
     this.listenTo(Adapt, {
       'assessments:reset': this.onAssessmentReset,
+      'device:change': this.updateAllArticleStyles,
       'articleView:postRender': this.updateArticleStyling,
       'blockView:postRender': this.attachBlockResizeListener,
       'page:scrollTo': this.onPageScrollTo,
@@ -34,29 +31,38 @@ class SliderControlsController extends Backbone.Controller {
     this._resizeListeners = [];
   }
 
+  onDataLoaded() {
+    setLockTypes();
+    addComponents();
+  }
+
   async onInteractionComplete(model) {
     if (model.changed._isInteractionComplete !== true) return;
+    // Only check direct children of a slider model (blocks)
     const sliderModel = model.getParent();
     if (!isSliderModel(sliderModel)) return;
     const config = getSliderConfig(sliderModel);
+    const isDisabledOnSize = (!config._isEnabledOnSizes || !config._isEnabledOnSizes.includes(Adapt.device.screenSize));
+    if (isDisabledOnSize) return;
     const questions = model.findDescendantModels('question');
     const hasQuestions = Boolean(questions.length);
-    if (hasQuestions && config._autoQuestionNext) {
-      startSliderMove(sliderModel);
-      scrollToSliderTop(sliderModel);
-      moveSliderIndex(sliderModel, 1);
-      // Initiate inview animations
-      $.inview();
-      focusOnSliderCurrentIndex(sliderModel);
-      scrollToSliderTop(sliderModel);
-      endSliderMove(sliderModel);
-    }
+    const isAutoNext = (hasQuestions && config._autoQuestionNext);
+    if (!isAutoNext) return;
+    animateMoveSliderIndexBy(sliderModel, 1);
   }
 
   onAssessmentReset(state) {
     const sliderModel = Adapt.findById(state.articleId);
     if (!isSliderModel(sliderModel)) return;
     returnSliderToStart(sliderModel);
+  }
+
+  updateAllArticleStyles() {
+    if (!Adapt.parentView) return;
+    const articleModels = Adapt.parentView.model.findDescendantModels('article');
+    const sliderModels = articleModels.filter(model => isSliderModel(model));
+    if (!sliderModels.length) return;
+    sliderModels.forEach(updateSliderStyles);
   }
 
   updateArticleStyling(view) {

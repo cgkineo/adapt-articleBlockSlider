@@ -1,8 +1,17 @@
 .slidercontrols {
+  display: none;
+  position: static;
   max-width: @abs-controls-width;
   margin: auto;
-  position: relative;
   padding-top: 0.3em;
+
+  &__inner {
+    width: 100%;
+  }
+
+  .abs & {
+    display: inherit;
+  }
 
   // allow absolute position of arrow buttons
   &__arrows {
@@ -33,7 +42,7 @@
       left: 100%;
       transform: translate(-100%, -50%);
     }
-    .primary-action()
+    .btn()
   }
 
   button[name="nextArrow"] {
@@ -45,7 +54,7 @@
       left: 0;
       transform: translate(0, -50%);
     }
-    .primary-action()
+    .btn()
   }
 
   // position reset to the right always
@@ -60,12 +69,11 @@
 
   // position next above trickle and bottom right always
   button[name="next"] {
-    position: absolute;
-    bottom: 3em;
-    right: 0;
+    margin-left: auto;
     .dir-rtl & {
-      left: 0;
-      right: inherit;
+      order: 0;
+      margin-left: inherit;
+      margin-right: auto;
     }
   }
 

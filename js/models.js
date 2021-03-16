@@ -46,54 +46,54 @@ export function getConfig(overrides = {}) {
     _renderPosition: 'inner-append',
     _sliderId: null,
     _buttons: {
-      _tabs: {
-        _isEnabled: false,
-        _order: 1,
-        _classes: '',
-        _iconClass: '',
-        _alignIconRight: false,
-        text: '{{title}}',
-        ariaLabel: '{{title}}'
-      },
-      _previousArrow: {
-        _isEnabled: false,
-        _order: 1,
-        _classes: '',
-        _iconClass: 'icon-controls-left',
-        _alignIconRight: false,
-        text: '',
-        ariaLabel: '{{_globals._accessibility._ariaLabels.previous}}'
-      },
-      _nextArrow: {
-        _isEnabled: false,
-        _order: 1,
-        _classes: '',
-        _iconClass: 'icon-controls-right',
-        _alignIconRight: false,
-        text: '',
-        ariaLabel: '{{_globals._accessibility._ariaLabels.next}}'
-      },
-      _previous: {
-        _isEnabled: false,
-        _order: 1,
-        _classes: '',
-        _iconClass: 'icon-controls-left',
-        _alignIconRight: false,
-        text: 'Previous',
-        ariaLabel: '{{_globals._accessibility._ariaLabels.previous}}'
-      },
       _next: {
         _isEnabled: false,
-        _order: 1,
+        _order: 0,
         _classes: '',
         _iconClass: 'icon-controls-right',
         _alignIconRight: true,
         text: 'Next',
         ariaLabel: '{{_globals._accessibility._ariaLabels.next}}'
       },
+      _previous: {
+        _isEnabled: false,
+        _order: 0,
+        _classes: '',
+        _iconClass: 'icon-controls-left',
+        _alignIconRight: false,
+        text: 'Previous',
+        ariaLabel: '{{_globals._accessibility._ariaLabels.previous}}'
+      },
+      _nextArrow: {
+        _isEnabled: false,
+        _order: 0,
+        _classes: '',
+        _iconClass: 'icon-controls-right',
+        _alignIconRight: true,
+        text: '',
+        ariaLabel: '{{_globals._accessibility._ariaLabels.next}}'
+      },
+      _previousArrow: {
+        _isEnabled: false,
+        _order: 0,
+        _classes: '',
+        _iconClass: 'icon-controls-left',
+        _alignIconRight: false,
+        text: '',
+        ariaLabel: '{{_globals._accessibility._ariaLabels.previous}}'
+      },
+      _tabs: {
+        _isEnabled: false,
+        _order: 0,
+        _classes: '',
+        _iconClass: '',
+        _alignIconRight: false,
+        text: '{{title}}',
+        ariaLabel: '{{title}}'
+      },
       _reset: {
         _isEnabled: false,
-        _order: 1,
+        _order: 0,
         _classes: '',
         _iconClass: 'icon-video-replay',
         _alignIconRight: false,
@@ -104,62 +104,56 @@ export function getConfig(overrides = {}) {
   }, overrides);
 }
 
+export function setLockTypes() {
+  getSliderModels().forEach(model => {
+    const config = getSliderConfig(model);
+    config._lockType && model.set('_lockType', config._lockType);
+  });
+}
+
 export function addComponents() {
   let id = 0;
   getSliderModels().forEach(model => {
     const config = getSliderConfig(model);
-    addClass(model, 'abs');
-    if (config._hasTabs) {
-      addClass(model, 'has-slidercontrols-tabs');
-      Adapt.data.push(getConfig({
-        _id: `abs-${id++}`,
-        _classes: 'slidercontrols__tabs',
-        _parentId: model.get('_id'),
-        _renderPosition: 'outer-append',
-        _align: 'top',
-        '_buttons._tabs._isAvailable': true,
-        '_buttons._tabs._isEnabled': true
-      }));
-    }
-    if (config._hasArrows) {
-      addClass(model, 'has-slidercontrols-arrows');
-      Adapt.data.push(getConfig({
-        _id: `abs-${id++}`,
-        _classes: 'slidercontrols__arrows',
-        _parentId: model.get('_id'),
-        _renderPosition: 'outer-append',
-        '_buttons._nextArrow._isAvailable': true,
-        '_buttons._nextArrow._isEnabled': true,
-        '_buttons._previousArrow._isAvailable': true,
-        '_buttons._previousArrow._isEnabled': true
-      }));
-    }
-    if (config._hasNextPrevious) {
-      addClass(model, 'has-slidercontrols-nextprevious');
-      Adapt.data.push(getConfig({
-        _id: `abs-${id++}`,
-        _classes: 'slidercontrols__bottom',
-        _parentId: model.get('_id'),
-        _renderPosition: 'outer-append',
-        _align: '',
-        '_buttons._next._isAvailable': true,
-        '_buttons._next._isEnabled': true
-      }));
-    }
-    if (config._hasReset || config._hasNextPrevious) {
-      addClass(model, 'has-slidercontrols-reset');
-      Adapt.data.push(getConfig({
-        _id: `abs-${id++}`,
-        _classes: 'slidercontrols__top',
-        _parentId: model.get('_id'),
-        _renderPosition: 'outer-append',
-        _align: 'top',
-        '_buttons._reset._isAvailable': config._hasReset,
-        '_buttons._reset._isEnabled': config._hasReset,
-        '_buttons._previous._isAvailable': config._hasNextPrevious,
-        '_buttons._previous._isEnabled': false
-      }));
-    }
+    config._hasTabs && Adapt.data.push(getConfig({
+      _id: `abs-${id++}`,
+      _classes: 'slidercontrols__tabs',
+      _parentId: model.get('_id'),
+      _renderPosition: 'outer-append',
+      _align: 'top',
+      '_buttons._tabs._isAvailable': true,
+      '_buttons._tabs._isEnabled': true
+    }));
+    config._hasArrows && Adapt.data.push(getConfig({
+      _id: `abs-${id++}`,
+      _classes: 'slidercontrols__arrows',
+      _parentId: model.get('_id'),
+      _renderPosition: 'outer-append',
+      '_buttons._nextArrow._isAvailable': true,
+      '_buttons._nextArrow._isEnabled': true,
+      '_buttons._previousArrow._isAvailable': true,
+      '_buttons._previousArrow._isEnabled': true
+    }));
+    config._hasNextPrevious && Adapt.data.push(getConfig({
+      _id: `abs-${id++}`,
+      _classes: 'slidercontrols__bottom',
+      _parentId: model.get('_id'),
+      _renderPosition: 'outer-append',
+      _align: '',
+      '_buttons._next._isAvailable': true,
+      '_buttons._next._isEnabled': true
+    }));
+    (config._hasReset || config._hasNextPrevious) && Adapt.data.push(getConfig({
+      _id: `abs-${id++}`,
+      _classes: 'slidercontrols__top',
+      _parentId: model.get('_id'),
+      _renderPosition: 'outer-append',
+      _align: 'top',
+      '_buttons._reset._isAvailable': config._hasReset,
+      '_buttons._reset._isEnabled': config._hasReset,
+      '_buttons._previous._isAvailable': config._hasNextPrevious,
+      '_buttons._previous._isEnabled': config._hasNextPrevious
+    }));
   });
 
 };

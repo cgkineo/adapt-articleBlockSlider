@@ -1,16 +1,17 @@
 @abs-arrow-spacing: @icon-size + (@icon-padding * 2) + @block-padding-hoz;
 @abs-controls-width: @max-width;
 @abs-arrows-controls-width: min(@abs-controls-width + (@abs-arrow-spacing * 2), @max-width);
-@abs-non-mobile: ~"html:not(.os-ios):not(.os-android)";
 
 .abs {
   position: relative;
   display: flex;
   flex-flow: column;
+  // Trickle spacing
+  padding-bottom: 3em;
 
   > * {
     opacity: 1;
-    transition: opacity 0.4s ease-in-out;
+    transition: opacity 0.2s ease-in-out;
 
     .is-abs-resetting& {
       opacity: 0;

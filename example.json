@@ -1,19 +1,86 @@
 // articles.json
 "_articleBlockSlider": {
     "_isEnabled": true,
-    "_isEnabledOnScreenSizes": "large",
+    "_isEnabledOnSizes": "large",
     "_animation": "",
+    "_lockType": "",
     "_hasTabs": false,
-    "_hasArrows": false,
-    "_hasNextPrevious": true,
+    "_hasArrows": true,
+    "_hasNextPrevious": false,
     "_hasReset": true,
-    "_autoQuestionNext": true,
+    "_autoQuestionNext": false,
+    "_nextScrollTopOnScreenSizes": "small medium",
     "_startIndex": 0,
-    "_isCompletionRequired": true,
-    "_hasUniformHeight": true,
-    "_hasUniformHeightOnSizes": "large",
-    "_isFullHeightOnSmallAndMedium": true,
-    "_minHeight": null
+    "_isUniformHeightOnSizes": "large",
+    "_isFullHeightOnSizes": "small medium",
+    "_minHeight": null,
+    "_next": {
+        "_isOverride": false,
+        "_isEnabled": true,
+        "_order": 0,
+        "_classes": "icon-controls-right",
+        "_iconClass": "",
+        "_alignIconRight": true,
+        "text": "Next",
+        "ariaLabel": "{{_globals._accessibility._ariaLabels.next}}"
+    },
+    "_previous": {
+        "_isOverride": false,
+        "_isEnabled": true,
+        "_order": 0,
+        "_classes": "",
+        "_iconClass": "icon-controls-left",
+        "_alignIconRight": false,
+        "text": "Previous",
+        "ariaLabel": "{{_globals._accessibility._ariaLabels.previous}}"
+    },
+    "_nextArrow": {
+        "_isOverride": false,
+        "_isEnabled": true,
+        "_order": 0,
+        "_classes": "",
+        "_iconClass": 'icon-controls-right',
+        "_alignIconRight": true,
+        "text": "",
+        "ariaLabel": "{{_globals._accessibility._ariaLabels.next}}",
+    },
+    "_previousArrow": {
+        "_isOverride": false,
+        "_isEnabled": true,
+        "_order": 0,
+        "_classes": "",
+        "_iconClass": "icon-controls-left",
+        "_alignIconRight": false,
+        "text": "",
+        "ariaLabel": "{{_globals._accessibility._ariaLabels.previous}}"
+    },
+    "_tabs": {
+        "_isOverride": false,
+        "_isEnabled": true,
+        "_order": 0,
+        "_classes": "",
+        "_iconClass": "",
+        "_alignIconRight": false,
+        "text": "{{title}}",
+        "ariaLabel": "{{title}}"
+    },
+    "_reset": {
+        "_isOverride": false,
+        "_isEnabled": true,
+        "_order": 0,
+        "_classes": "icon-video-replay",
+        "_iconClass": "",
+        "_alignIconRight": false,
+        "text": "Reset",
+        "ariaLabel": "Reset"
+    },
+    "_resetWarning": {
+        "_isEnabled": true,
+        "title": "Reset?",
+        "body": "Are you sure you want to restart this activity?",
+        "yes": "Yes",
+        "no": "No"
+    }
 },
 
 // blocks.json
@@ -21,29 +88,63 @@
     "_articleBlockSlider": {
         "_next": {
             "_isOverride": false,
-            "_isEnabled": false
+            "_isEnabled": true,
+            "_order": 0,
+            "_classes": "icon-controls-right",
+            "_iconClass": "",
+            "_alignIconRight": true,
+            "text": "Next",
+            "ariaLabel": "{{_globals._accessibility._ariaLabels.next}}"
         },
         "_previous": {
             "_isOverride": false,
-            "_isEnabled": false,
+            "_isEnabled": true,
+            "_order": 0,
+            "_classes": "",
             "_iconClass": "icon-controls-left",
-            "text": "Go back"
+            "_alignIconRight": false,
+            "text": "Previous",
+            "ariaLabel": "{{_globals._accessibility._ariaLabels.previous}}"
         },
         "_nextArrow": {
             "_isOverride": false,
-            "_isEnabled": false
+            "_isEnabled": true,
+            "_order": 0,
+            "_classes": "",
+            "_iconClass": 'icon-controls-right',
+            "_alignIconRight": true,
+            "text": "",
+            "ariaLabel": "{{_globals._accessibility._ariaLabels.next}}",
         },
         "_previousArrow": {
             "_isOverride": false,
-            "_isEnabled": false
+            "_isEnabled": true,
+            "_order": 0,
+            "_classes": "",
+            "_iconClass": "icon-controls-left",
+            "_alignIconRight": false,
+            "text": "",
+            "ariaLabel": "{{_globals._accessibility._ariaLabels.previous}}"
         },
         "_tabs": {
             "_isOverride": false,
-            "_isEnabled": false
+            "_isEnabled": true,
+            "_order": 0,
+            "_classes": "",
+            "_iconClass": "",
+            "_alignIconRight": false,
+            "text": "{{title}}",
+            "ariaLabel": "{{title}}"
         },
         "_reset": {
             "_isOverride": false,
-            "_isEnabled": false
+            "_isEnabled": true,
+            "_order": 0,
+            "_classes": "icon-video-replay",
+            "_iconClass": "",
+            "_alignIconRight": false,
+            "text": "Reset",
+            "ariaLabel": "Reset"
         }
     }
 }

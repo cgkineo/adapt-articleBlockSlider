@@ -1,22 +1,19 @@
 import Adapt from 'core/js/adapt';
 import ComponentView from 'core/js/views/componentView';
-
 import {
   getSliderModel,
   checkReturnSliderToStart,
-  setSliderIndex,
-  moveSliderIndex,
   getSliderId,
-  returnSliderToStart
+  returnSliderToStart,
+  getSliderConfig
 } from './models';
-
 import {
-  startSliderMove,
   updateSliderStyles,
-  endSliderMove,
   waitUntilTransitionEnd,
   scrollToSliderTop,
-  focusOnSliderCurrentIndex
+  focusOnSliderCurrentIndex,
+  animateMoveSliderIndexBy,
+  animateMoveSliderIndexTo
 } from './styles';
 
 export function getAttributes($node) {
@@ -44,12 +41,12 @@ export default class SliderControlsView extends ComponentView {
 
   preRender() {
     _.bindAll(this, 'postRender');
-    this.model.set('_items', this.model.buttonItems);
     const sliderModel = getSliderModel(this.model);
+    checkReturnSliderToStart(sliderModel);
+    this.model.set('_items', this.model.buttonItems);
     this.listenTo(sliderModel.getChildren(), 'add remove change', this.update);
     this.listenTo(sliderModel, 'change', this.update);
     this.listenTo(Adapt, 'device:resize', this.update);
-    checkReturnSliderToStart(sliderModel);
   }
 
   update() {
@@ -108,20 +105,24 @@ export default class SliderControlsView extends ComponentView {
         break;
       case 'next':
       case 'nextArrow':
-        this.onNext();
+        animateMoveSliderIndexBy(this.model, 1);
         break;
       case 'previous':
       case 'previousArrow':
-        this.onPrevious();
+        animateMoveSliderIndexBy(this.model, -1);
         break;
       case 'tabs':
-        setSliderIndex(this.model, buttonItem.index);
-        scrollToSliderTop(this.model);
+        animateMoveSliderIndexTo(this.model, buttonItem.index);
         break;
     }
   }
 
   async onReset() {
+    const sliderModel = getSliderModel(this.model);
+    const sliderConfig = getSliderConfig(sliderModel);
+    if (!sliderConfig?._resetWarning?._isEnabled) {
+      return this.reset();
+    }
     const yes = () => {
       stopListening();
       this.reset();
@@ -138,15 +139,15 @@ export default class SliderControlsView extends ComponentView {
     this.listenToOnce(Adapt, 'articleBlockSlider:reset', yes);
     this.listenToOnce(Adapt, 'articleBlockSlider:resetCancel', no);
     Adapt.notify.prompt({
-      title: '',
-      body: 'Are you sure you want to restart this activity?',
+      title: sliderConfig?._resetWarning?.title,
+      body: sliderConfig?._resetWarning?.body,
       _prompts: [
         {
-          promptText: 'Yes',
+          promptText: sliderConfig?._resetWarning?.yes,
           _callbackEvent: 'articleBlockSlider:reset'
         },
         {
-          promptText: 'No',
+          promptText: sliderConfig?._resetWarning?.no,
           _callbackEvent: 'articleBlockSlider:resetCancel'
         }
       ]
@@ -159,19 +160,33 @@ export default class SliderControlsView extends ComponentView {
     const sliderId = getSliderId(this.model);
     let sliderView = Adapt.findViewByModelId(sliderId);
     // Perform and wait for resetting animation
-    sliderModel.set('_isSliderResetting', true);
-    await waitUntilTransitionEnd(sliderView.$('.article__inner'));
+    sliderModel.set({
+      _isSliderResetting: true,
+      _isSliderHeightFixed: true
+    });
+    await waitUntilTransitionEnd(sliderView.$('.article__inner'), 'opacity');
     returnSliderToStart(sliderModel);
     // Perform relevant reset, branching / normal / assessment
     const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
+    const AdaptAssessment = Adapt.assessment && Adapt.assessment._assessments.find(model => model.get('_id') === sliderId);
     if (AdaptBranchingSubset) {
+      // Reset branching if one exists
       await AdaptBranchingSubset.reset({
         /** Note: not compatible with bookmarking < v3.2.0 */
         removeViews: true
       });
+    } else if (AdaptAssessment) {
+      // Reset an assessment if one exists
+      await new Promise(resolve => {
+        AdaptAssessment.reset(true, resolve);
+      });
+      // Fetch the next view as assessments refresh the page on reset
+      sliderView = Adapt.findViewByModelId(sliderId);
+      // Stop holding the height as the new view will be different
+      sliderModel.set('_isSliderHeightFixed', false);
     } else {
+      // Otherwise, remove the views, reset the models and readd the children
       sliderModel.getChildren().forEach(model => {
-        // Remove views, reset models and add children
         const view = Adapt.findViewByModelId(model.get('_id'));
         view && view.remove();
         model.findDescendantModels('component').forEach(component => component.reset('hard', true));
@@ -180,46 +195,20 @@ export default class SliderControlsView extends ComponentView {
       sliderModel.set('_nthChild', 0);
       sliderView.setChildViews([]);
     }
-    // Reset an assessment if one exists
-    const AdaptAssessment = Adapt.assessment && Adapt.assessment._assessments.find(model => model.get('_id') === sliderId);
-    if (AdaptAssessment) {
-      await new Promise(resolve => {
-        AdaptAssessment.reset(true, resolve);
-      });
-      sliderView = Adapt.findViewByModelId(sliderId);
-    }
     await Adapt.parentView.addChildren();
     // Wait for new children to be ready
     await Adapt.parentView.whenReady();
-    scrollToSliderTop(this.model);
-    // These two calls must be separate otherwise their animations happen together
-    sliderModel.set('_isSliderResetting', false); // Animate in
-    await waitUntilTransitionEnd(sliderView.$('.article__inner'));
+    // Force trickle to reassess its height
+    $(window).resize();
+    scrollToSliderTop(this.model, true);
+    sliderModel.set({
+      _isSliderResetting: false, // Animate in
+      _isSliderHeightFixed: false
+    });
+    await waitUntilTransitionEnd(sliderView.$('.article__inner'), 'opacity');
     // Initiate inview animations
     $.inview();
     focusOnSliderCurrentIndex(this.model);
-  }
-
-  onNext() {
-    startSliderMove(this.model);
-    scrollToSliderTop(this.model);
-    moveSliderIndex(this.model, 1);
-    // Initiate inview animations
-    $.inview();
-    focusOnSliderCurrentIndex(this.model);
-    scrollToSliderTop(this.model);
-    endSliderMove(this.model);
-  }
-
-  onPrevious() {
-    startSliderMove(this.model);
-    scrollToSliderTop(this.model);
-    moveSliderIndex(this.model, -1);
-    // Initiate inview animations
-    $.inview();
-    focusOnSliderCurrentIndex(this.model);
-    scrollToSliderTop(this.model);
-    endSliderMove(this.model);
   }
 
 }

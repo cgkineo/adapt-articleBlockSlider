@@ -14,7 +14,7 @@
   .abs {
     & when (@i < @abs-item-max-count) {
       @t: @i + 1;
-      &[data-item-index="@{i}"] .block__container .block:nth-child(@{t}) {
+      &[data-abs-item-index="@{i}"] .block__container .block:nth-child(@{t}) {
         visibility: visible;
       }
     }
@@ -23,7 +23,7 @@
   .is-abs-noanimation,
   .is-abs-slide-horizontal {
     & when (@i < @abs-item-max-count) {
-      &[data-item-index="@{i}"] {
+      &[data-abs-item-index="@{i}"] {
         .block__container {
           .block {
             left: -100% * @i;

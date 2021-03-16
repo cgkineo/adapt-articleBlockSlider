@@ -1,5 +1,4 @@
 import ComponentModel from 'core/js/models/componentModel';
-
 import {
   getSliderChildren,
   getSliderIndex,
@@ -41,7 +40,6 @@ export default class SliderControlsModel extends ComponentModel {
   get buttonItems() {
     const sliderModel = getSliderModel(this);
     const config = getSliderConfig(sliderModel);
-    const isCompletionRequired = Boolean(config._isCompletionRequired);
     const children = getSliderChildren(this);
     const sliderCurrentIndex = getSliderIndex(this);
     const block = children[sliderCurrentIndex];
@@ -55,8 +53,7 @@ export default class SliderControlsModel extends ComponentModel {
         case 'tabs':
           let tabsLocked = false;
           return children.map((child, index) => {
-            const isPreviousButtonIncomplete = (children[index - 1]?.get?.('_isComplete') === false);
-            tabsLocked = tabsLocked || (isCompletionRequired && isPreviousButtonIncomplete);
+            tabsLocked = tabsLocked || child.get('_isLocked');
             const isCurrentIndex = (sliderCurrentIndex === index);
             return {
               ...child.toJSON(),
@@ -67,14 +64,14 @@ export default class SliderControlsModel extends ComponentModel {
               locked: tabsLocked || isCurrentIndex
             };
           });
-        case 'nextArrow':
         case 'next':
+        case 'nextArrow':
           locked = locked || (sliderCurrentIndex + 1 === children.length);
-          locked = locked || (isCompletionRequired && !block.get('_isComplete'));
+          locked = locked || children[sliderCurrentIndex + 1]?.get?.('_isLocked');
           break;
-        case 'previousArrow':
         case 'previous':
-          locked = locked || (!sliderCurrentIndex);
+        case 'previousArrow':
+          locked = locked || (!sliderCurrentIndex) || children[sliderCurrentIndex - 1]?.get?.('_isLocked');
           break;
       }
       return {

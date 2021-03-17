@@ -161,25 +161,27 @@ export default class SliderControlsView extends ComponentView {
     const sliderModel = getSliderModel(this.model);
     const sliderId = getSliderId(sliderModel);
     await startSliderReset(sliderModel);
-    // Perform relevant reset, branching / normal / assessment
-    const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
+    // Perform relevant reset, (assessment +/ branching) / normal
     const AdaptAssessment = Adapt.assessment && Adapt.assessment._assessments.find(model => model.get('_id') === sliderId);
-    if (AdaptBranchingSubset) {
-      // Reset branching if one exists
-      await AdaptBranchingSubset.reset({
-        /** Note: not compatible with bookmarking < v3.2.0 */
-        removeViews: true
-      });
-    } else if (AdaptAssessment) {
+    if (AdaptAssessment) {
       // Reset an assessment if one exists
       await new Promise(resolve => {
         AdaptAssessment.reset(true, resolve);
       });
       // Stop holding the height as the new view will be different
       sliderModel.set('_isSliderHeightFixed', false);
-    } else {
-      const sliderView = Adapt.findViewByModelId(sliderId);
+    }
+    const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
+    if (AdaptBranchingSubset) {
+      // Reset branching if one exists
+      await AdaptBranchingSubset.reset({
+        /** Note: not compatible with bookmarking < v3.2.0 */
+        removeViews: true
+      });
+    }
+    if (!AdaptAssessment && !AdaptBranchingSubset) {
       // Otherwise, remove the views, reset the models and readd the children
+      const sliderView = Adapt.findViewByModelId(sliderId);
       sliderModel.getChildren().forEach(model => {
         const view = Adapt.findViewByModelId(model.get('_id'));
         view && view.remove();

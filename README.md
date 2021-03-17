@@ -20,7 +20,7 @@ The attributes listed below are used in *articles.json* to configure **Article B
 
 >**\_isEnabledOnSizes** (string): Defines which screen sizes the Article Block Slider displays the navigation elements on. Acceptable values are `"large"`, `"medium"` and `"small"` or combinations thereof as a space-separated list e.g. `"large medium"`. Defaults to `large`.
 
->**\_animation** (string): Choose an animation style, `"noanimation"` or `"slide-horizontal"`. Defaults to `"slide-horizontal"`.
+>**\_animation** (string): Choose an animation style, `"noanimation"`, `"slide-horizontal"` or `"fadein"`. Defaults to `"slide-horizontal"`.
 
 >**\_lockType** (string): Choose how the blocks inside the article will lock. This will then lock the article block slider controls accordingly. Uses the standard Adapt `_lockType` attribute. Acceptable values are `""`, `"custom"`, `"locklast"`, `"sequential"` and `"unlockFirst"`. Defaults to `""`.
 

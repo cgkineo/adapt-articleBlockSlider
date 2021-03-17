@@ -15,11 +15,7 @@ export async function startSliderMove(model) {
   const sliderId = getSliderId(model);
   const sliderModel = getSliderModel(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
-  // Add/remove is-abs-animating class
-  sliderModel.set({
-    _isSliderAnimating: true
-  });
-  // sliderView.$el.addClass('is-abs-animating');
+  sliderModel.set('_isSliderAnimating', true);
   const $firstElement = sliderView.$(`.block`).first();
   await waitUntilTransitionEnd($firstElement, 'opacity');
 }
@@ -29,13 +25,9 @@ export async function endSliderMove(model) {
   const sliderId = getSliderId(model);
   const sliderModel = getSliderModel(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
-  // Add/remove is-abs-animating class
   const $firstElement = sliderView.$(`.block`).first();
   await waitUntilTransitionEnd($firstElement, 'opacity');
-  sliderModel.set({
-    _isSliderAnimating: true
-  });
-  // sliderView.$el.removeClass(`is-abs-animating`);
+  sliderModel.set('_isSliderAnimating', false);
 }
 
 export async function startSliderReset(model) {

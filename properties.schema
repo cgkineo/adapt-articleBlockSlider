@@ -47,7 +47,7 @@
                   "enum": ["noanimation", "slide-horizontal"],
                   "default": "slide-horizontal",
                   "title": "Block transition animation",
-                  "inputType": {"type": "Select", "options":["noanimation", "slide-horizontal"]},
+                  "inputType": {"type": "Select", "options":["noanimation", "slide-horizontal", "fadein"]},
                   "validators": [],
                   "help": "Defines which animation should be used to move between items."
                 },

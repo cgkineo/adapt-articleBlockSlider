@@ -9,7 +9,7 @@
     "_hasNextPrevious": false,
     "_hasReset": true,
     "_autoQuestionNext": false,
-    "_nextScrollTopOnScreenSizes": "small medium",
+    "_nextScrollTopOnSizes": "small medium",
     "_startIndex": 0,
     "_isUniformHeightOnSizes": "large",
     "_isFullHeightOnSizes": "small medium",

@@ -180,7 +180,7 @@ export function scrollToSliderTop(model, force = false) {
   const sliderId = getSliderId(model);
   const sliderModel = getSliderModel(model);
   const sliderConfig = getSliderConfig(sliderModel);
-  if (!force && !sliderConfig?._nextScrollTopOnScreenSizes?.includes?.(Adapt.device.screenSize)) {
+  if (!force && !sliderConfig?._nextScrollTopOnSizes?.includes?.(Adapt.device.screenSize)) {
     return;
   }
   const sliderView = Adapt.findViewByModelId(sliderId);

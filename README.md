@@ -14,7 +14,7 @@ Git clone the component, making sure to delete the hidden **.git** folder from t
 
 The attributes listed below are used in *articles.json* to configure **Article Block Slider**, and are properly formatted as JSON in [*example.json*](https://github.com/cgkineo/adapt-articleBlockSlider/blob/master/example.json).
 
-**\_articleBlockSlider** (object): The Article Block Slider object that contains values for **\_isEnabled**, **\_isEnabledOnScreenSizes**, **\_animation**, **\_lockType**, **\_hasTabs**, **\_hasArrows**, **\_hasNextPrevious**, **\_hasReset**, **\_autoQuestionNext**, **\_nextScrollTopOnScreenSizes**, **\_startIndex**, **\_isUniformHeightOnSizes**, **\_isUniformHeightOnSizes**, **\_minHeight** and **\_resetWarning**.
+**\_articleBlockSlider** (object): The Article Block Slider object that contains values for **\_isEnabled**, **\_isEnabledOnSizes**, **\_animation**, **\_lockType**, **\_hasTabs**, **\_hasArrows**, **\_hasNextPrevious**, **\_hasReset**, **\_autoQuestionNext**, **\_nextScrollTopOnSizes**, **\_startIndex**, **\_isUniformHeightOnSizes**, **\_isUniformHeightOnSizes**, **\_minHeight** and **\_resetWarning**.
 
 >**\_isEnabled** (boolean): Turns Article Block Slider on and off. Acceptable values are `true` and `false`. Defaults to `false`.
 
@@ -34,7 +34,7 @@ The attributes listed below are used in *articles.json* to configure **Article B
 
 >**\_autoQuestionNext** (boolean): Moves next when a block containing a question is completed. Acceptable values are `true` and `false`. Defaults to `false`.
 
->**\_nextScrollTopOnScreenSizes** (string): Scrolls to the top of the article when moving between blocks. Acceptable values are `"large"`, `"medium"` and `"small"` or combinations thereof as a space-separated list e.g. `"large medium"`. Defaults to `small medium`.
+>**\_nextScrollTopOnSizes** (string): Scrolls to the top of the article when moving between blocks. Acceptable values are `"large"`, `"medium"` and `"small"` or combinations thereof as a space-separated list e.g. `"large medium"`. Defaults to `small medium`.
 
 >**\_startIndex** (number): Sets which block displays on page load. Defaults to `0`.
 

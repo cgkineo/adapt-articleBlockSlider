@@ -113,7 +113,7 @@
                   "validators": [],
                   "help": "Moves next when a block containing a question is completed."
                 },
-                "_nextScrollTopOnScreenSizes": {
+                "_nextScrollTopOnSizes": {
                   "type": "string",
                   "required": false,
                   "title": "On next, scroll top on screen sizes",

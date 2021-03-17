@@ -48,17 +48,17 @@ The attributes listed below are used in *articles.json* to configure **Article B
 
 >>**\_isEnabled** (boolean): Show a reset warning. Acceptable values are `true` and `false`. Defaults to `true`.
 
->>**\title** (string): Popup title text. Defaults to `"Reset?"`.
+>>**title** (string): Popup title text. Defaults to `"Reset?"`.
 
->>**\body** (string): Popup body text. Defaults to `"Are you sure you want to reset this activity?"`.
+>>**body** (string): Popup body text. Defaults to `"Are you sure you want to reset this activity?"`.
 
->>**\yes** (string): Popup, Yes button text. Defaults to `"Yes"`.
+>>**yes** (string): Popup, Yes button text. Defaults to `"Yes"`.
 
->>**\no** (string): Popup, No button text. Defaults to `"No"`.
+>>**no** (string): Popup, No button text. Defaults to `"No"`.
 
 The attributes listed below are used in *articles.json* and *blocks.json* to configure **Article Block Slider** buttons, they are properly formatted as JSON in [*example.json*](https://github.com/cgkineo/adapt-articleBlockSlider/blob/master/example.json).
 
-**\_articleBlockSlider** (object): The Article Block Slider object that contains values for the buttons configurations **\_next**, **\_previous**, **\_nextArrow**, **\_previousArrow**, **\_tabs** and **\_reset** objects, which all have the following sub properties **\_isOverride**, **\_isEnabled**, **\_order**, **\_classes**, **\_iconClass**, **\_alignIconRight**, **\text** and **\ariaLabel**.
+**\_articleBlockSlider** (object): The Article Block Slider object that contains values for the buttons configurations **\_next**, **\_previous**, **\_nextArrow**, **\_previousArrow**, **\_tabs** and **\_reset** objects, which all have the following sub properties **\_isOverride**, **\_isEnabled**, **\_order**, **\_classes**, **\_iconClass**, **\_alignIconRight**, **text** and **ariaLabel**.
 
 >**\_next** (object): Represents a next button at the bottom right of the Article Block Slider.
 
@@ -74,9 +74,9 @@ The attributes listed below are used in *articles.json* and *blocks.json* to con
 
 >>**\_alignIconRight** (boolean): Align the button text icon to the right instead of the left. Defaults to `true`.
 
->>**\text** (string): Button text. Defaults to `"Next"`.
+>>**text** (string): Button text. Defaults to `"Next"`.
 
->>**\ariaLabel** (string): Button aria label. Defaults to `"{{_globals._accessibility._ariaLabels.next}}"`.
+>>**ariaLabel** (string): Button aria label. Defaults to `"{{_globals._accessibility._ariaLabels.next}}"`.
 
 >**\_previous** (object): Represents a back button at the top left of the Article Block Slider.
 
@@ -92,9 +92,9 @@ The attributes listed below are used in *articles.json* and *blocks.json* to con
 
 >>**\_alignIconRight** (boolean): Align the button text icon to the right instead of the left. Defaults to `false`.
 
->>**\text** (string): Button text. Defaults to `"Back"`.
+>>**text** (string): Button text. Defaults to `"Back"`.
 
->>**\ariaLabel** (string): Button aria label. Defaults to `"{{_globals._accessibility._ariaLabels.previous}}"`.
+>>**ariaLabel** (string): Button aria label. Defaults to `"{{_globals._accessibility._ariaLabels.previous}}"`.
 
 >**\_nextArrow** (object): Represents a next arrow button to the middle right of the Article Block Slider.
 
@@ -110,9 +110,9 @@ The attributes listed below are used in *articles.json* and *blocks.json* to con
 
 >>**\_alignIconRight** (boolean): Align the button text icon to the right instead of the left. Defaults to `true`.
 
->>**\text** (string): Button text. Defaults to `""`.
+>>**text** (string): Button text. Defaults to `""`.
 
->>**\ariaLabel** (string): Button aria label. Defaults to `"{{_globals._accessibility._ariaLabels.next}}"`.
+>>**ariaLabel** (string): Button aria label. Defaults to `"{{_globals._accessibility._ariaLabels.next}}"`.
 
 >**\_previousArrow** (object): Represents a back arrow button to the middle left of the Article Block Slider.
 
@@ -128,9 +128,9 @@ The attributes listed below are used in *articles.json* and *blocks.json* to con
 
 >>**\_alignIconRight** (boolean): Align the button text icon to the right instead of the left. Defaults to `false`.
 
->>**\text** (string): Button text. Defaults to `""`.
+>>**text** (string): Button text. Defaults to `""`.
 
->>**\ariaLabel** (string): Button aria label. Defaults to `"{{_globals._accessibility._ariaLabels.previous}}"`.
+>>**ariaLabel** (string): Button aria label. Defaults to `"{{_globals._accessibility._ariaLabels.previous}}"`.
 
 >**\_tabs** (object): Represents a collection of buttons at the top of the Article Block Slider.
 
@@ -146,9 +146,9 @@ The attributes listed below are used in *articles.json* and *blocks.json* to con
 
 >>**\_alignIconRight** (boolean): Align the button text icon to the right instead of the left. Defaults to `false`.
 
->>**\text** (string): Button text. Defaults to `"{{title}}"` the title of the current block.
+>>**text** (string): Button text. Defaults to `"{{title}}"` the title of the current block.
 
->>**\ariaLabel** (string): Button aria label. Defaults to `"{{title}}"` the title of the current block.
+>>**ariaLabel** (string): Button aria label. Defaults to `"{{title}}"` the title of the current block.
 
 >**\_reset** (object): Represents a reset button at the top right of the Article Block Slider.
 
@@ -164,9 +164,9 @@ The attributes listed below are used in *articles.json* and *blocks.json* to con
 
 >>**\_alignIconRight** (boolean): Align the button text icon to the right instead of the left. Defaults to `false`.
 
->>**\text** (string): Button text. Defaults to `"Reset"`.
+>>**text** (string): Button text. Defaults to `"Reset"`.
 
->>**\ariaLabel** (string): Button aria label. Defaults to `"Reset"`.
+>>**ariaLabel** (string): Button aria label. Defaults to `"Reset"`.
 
 ----------------------------
 **Version number:**  4.0.0  

@@ -1,9 +1,10 @@
 import Adapt from 'core/js/adapt';
+import data from 'core/js/data';
 
 class AssessmentPatch extends Backbone.Controller {
 
   initialize() {
-    this.listenTo(Adapt.data, 'ready', this.onDataReady);
+    this.listenTo(data, 'ready', this.onDataReady);
   }
 
   onDataReady() {

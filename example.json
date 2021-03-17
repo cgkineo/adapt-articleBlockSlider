@@ -31,7 +31,7 @@
         "_classes": "",
         "_iconClass": "icon-controls-left",
         "_alignIconRight": false,
-        "text": "Previous",
+        "text": "Back",
         "ariaLabel": "{{_globals._accessibility._ariaLabels.previous}}"
     },
     "_nextArrow": {
@@ -103,7 +103,7 @@
             "_classes": "",
             "_iconClass": "icon-controls-left",
             "_alignIconRight": false,
-            "text": "Previous",
+            "text": "Back",
             "ariaLabel": "{{_globals._accessibility._ariaLabels.previous}}"
         },
         "_nextArrow": {

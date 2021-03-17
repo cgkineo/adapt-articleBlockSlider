@@ -1,8 +1,9 @@
 import Adapt from 'core/js/adapt';
+import data from 'core/js/data';
 import BlockModel from 'core/js/models/blockModel';
 import {
-  setLockTypes,
-  addComponents,
+  setSliderLockTypes,
+  addSliderControlsComponents,
   isSliderModel,
   returnSliderToStart,
   getSliderConfig,
@@ -18,8 +19,10 @@ import {
 class SliderControlsController extends Backbone.Controller {
 
   initialize() {
-    this.listenTo(Adapt.data, 'loaded', this.onDataLoaded);
-    this.listenTo(Adapt.data, 'change:_isInteractionComplete', this.onInteractionComplete);
+    this.listenTo(data, {
+      'loaded': this.onDataLoaded,
+      'change:_isInteractionComplete': this.onInteractionComplete
+    });
     this.listenTo(Adapt, {
       'assessments:reset': this.onAssessmentReset,
       'device:change': this.updateAllArticleStyles,
@@ -32,8 +35,8 @@ class SliderControlsController extends Backbone.Controller {
   }
 
   onDataLoaded() {
-    setLockTypes();
-    addComponents();
+    setSliderLockTypes();
+    addSliderControlsComponents();
   }
 
   async onInteractionComplete(model) {

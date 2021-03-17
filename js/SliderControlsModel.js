@@ -3,19 +3,9 @@ import {
   getSliderChildren,
   getSliderIndex,
   getSliderModel,
-  getSliderConfig
+  getSliderConfig,
+  overrideSliderControlsButtonItem
 } from './models';
-
-export function overrideButtonItem(value, override) {
-  if (override?._isOverride !== true) return;
-  value._isEnabled = override?._isEnabled ?? value._isEnabled;
-  value._order = override?._order ?? value._order;
-  value._classes = override?._classes ?? value._classes;
-  value._iconClass = override?._iconClass ?? value._iconClass;
-  value._alignIconRight = override?._alignIconRight ?? value._alignIconRight;
-  value.text = override?.text ?? value.text;
-  value.ariaLabel = override?.ariaLabel ?? value.ariaLabel;
-}
 
 export default class SliderControlsModel extends ComponentModel {
 
@@ -39,16 +29,17 @@ export default class SliderControlsModel extends ComponentModel {
 
   get buttonItems() {
     const sliderModel = getSliderModel(this);
-    const config = getSliderConfig(sliderModel);
+    const sliderConfig = getSliderConfig(sliderModel);
     const children = getSliderChildren(this);
     const sliderCurrentIndex = getSliderIndex(this);
     const block = children[sliderCurrentIndex];
-    const data = _.flatten(Object.entries(this.get('_buttons')).filter(([key, value]) => value._isAvailable).map(([key, value]) => {
-      value = { ...value };
+    const data = _.flatten(Object.entries(this.get('_buttons')).filter(([key, buttonConfig]) => buttonConfig._isAvailable).map(([key, buttonConfig]) => {
+      buttonConfig = { ...buttonConfig };
       const name = key.slice(1);
       let locked = false;
-      overrideButtonItem(value, config?.[key]);
-      overrideButtonItem(value, getSliderConfig(block)?.[key]);
+      const sliderBlockConfig = getSliderConfig(block);
+      overrideSliderControlsButtonItem(buttonConfig, sliderConfig?.[key]);
+      overrideSliderControlsButtonItem(buttonConfig, sliderBlockConfig?.[key]);
       switch (name) {
         case 'tabs':
           let tabsLocked = false;
@@ -57,11 +48,12 @@ export default class SliderControlsModel extends ComponentModel {
             const isCurrentIndex = (sliderCurrentIndex === index);
             return {
               ...child.toJSON(),
-              ...value,
+              ...buttonConfig,
               name,
               index,
               number: index + 1,
-              locked: tabsLocked || isCurrentIndex
+              locked: tabsLocked,
+              selected: isCurrentIndex
             };
           });
         case 'next':
@@ -76,9 +68,10 @@ export default class SliderControlsModel extends ComponentModel {
       }
       return {
         ...block,
-        ...value,
+        ...buttonConfig,
         name,
-        locked
+        locked,
+        selected: null
       };
     }));
 

@@ -1,33 +1,9 @@
-.has-slidercontrols-reset,
-.has-slidercontrols-nextprevious {
-
-  .block__container {
-    // add top padding to accomodate the reset and/or previous button
-    padding-top: 3em;
-  }
-
-}
-
-.has-slidercontrols-nextprevious {
-
-  .article__inner {
-    // accomodate a trickle button
-    padding-bottom: 3em;
-  }
-
-  .block__container {
-    // add  bottom padding to accomodate the next buttons
-    padding-bottom: 3em;
-  }
-
-}
-
 .has-slidercontrols-arrows {
   @media (max-width: @device-width-large + (@abs-arrow-spacing * 2)) {
 
     // pull in the blocks sides to accomodate the arrow buttons on mobile and tablet
     .block__container {
-      margin: 0 3em;
+      margin: 0 @item-padding + (@btn-size * @btn-line-height) + @btn-padding;
     }
 
   }
@@ -58,11 +34,10 @@
 
 // minimum of full screen height
 .is-abs-full-height {
+  min-height: calc(100vh - @navigation-height);
 
   .article__inner {
-    @media (max-width: @device-width-large) {
-      min-height: calc(100vh - @navigation-height);
-    }
+    flex-grow: 1;
   }
 
 }
@@ -73,6 +48,24 @@
 
   .block__container {
     align-items: center;
+    min-height: 100%;
+  }
+
+}
+
+.trickle {
+
+  // Trickle spacing
+  .abs.has-slidercontrols-nextprevious {
+    .slidercontrols__bottom {
+      margin-bottom: (@btn-size * @btn-line-height) + @btn-padding;
+    }
+  }
+
+  .abs:not(.has-slidercontrols-nextprevious) {
+    .article__inner {
+      margin-bottom: (@btn-size * @btn-line-height) + @btn-padding;
+    }
   }
 
 }

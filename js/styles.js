@@ -6,30 +6,71 @@ import {
   getSliderId,
   getSliderConfig,
   moveSliderIndex,
-  setSliderIndex
+  setSliderIndex,
+  returnSliderToStart
 } from './models';
 
-export function startSliderMove(model) {
+export async function startSliderMove(model) {
   if (!Adapt.parentView) return;
   const sliderId = getSliderId(model);
+  const sliderModel = getSliderModel(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
   // Add/remove is-abs-animating class
-  sliderView.$el.addClass('is-abs-animating');
+  sliderModel.set({
+    _isSliderAnimating: true
+  });
+  // sliderView.$el.addClass('is-abs-animating');
+  const $firstElement = sliderView.$(`.block`).first();
+  await waitUntilTransitionEnd($firstElement, 'opacity');
 }
 
-export function endSliderMove(model) {
+export async function endSliderMove(model) {
   if (!Adapt.parentView) return;
   const sliderId = getSliderId(model);
+  const sliderModel = getSliderModel(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
   // Add/remove is-abs-animating class
-  const $firstElement = $(`.abs[data-adapt-id=${sliderId}] .block`).first();
-  if ($firstElement.css('transition-duration') !== '0s') {
-    $firstElement.one('transitionend', () => {
-      sliderView.$el.removeClass(`is-abs-animating`);
-    });
-  } else {
-    sliderView.$el.removeClass(`is-abs-animating`);
-  }
+  const $firstElement = sliderView.$(`.block`).first();
+  await waitUntilTransitionEnd($firstElement, 'opacity');
+  sliderModel.set({
+    _isSliderAnimating: true
+  });
+  // sliderView.$el.removeClass(`is-abs-animating`);
+}
+
+export async function startSliderReset(model) {
+  if (!Adapt.parentView) return;
+  const sliderId = getSliderId(model);
+  const sliderModel = getSliderModel(model);
+  const sliderView = Adapt.findViewByModelId(sliderId);
+  // Perform and wait for resetting animation
+  sliderModel.set({
+    _isSliderResetting: true,
+    _isSliderHeightFixed: true
+  });
+  await waitUntilTransitionEnd(sliderView.$('.article__inner'), 'opacity');
+  returnSliderToStart(sliderModel);
+}
+
+export async function endSliderReset(model) {
+  if (!Adapt.parentView) return;
+  const sliderId = getSliderId(model);
+  const sliderModel = getSliderModel(model);
+  const sliderView = Adapt.findViewByModelId(sliderId);
+  await Adapt.parentView.addChildren();
+  // Wait for new children to be ready
+  await Adapt.parentView.whenReady();
+  // Force trickle to reassess its height
+  $(window).resize();
+  scrollToSliderTop(sliderModel, true);
+  sliderModel.set({
+    _isSliderResetting: false, // Animate in
+    _isSliderHeightFixed: false
+  });
+  await waitUntilTransitionEnd(sliderView.$('.article__inner'), 'opacity');
+  // Initiate inview animations
+  $.inview();
+  focusOnSliderCurrentIndex(sliderModel);
 }
 
 export function removeSliderStyles(model) {
@@ -42,17 +83,18 @@ export function removeSliderStyles(model) {
   const animation = (config._animation || 'noanimation');
   sliderView.$el.removeClass([
     'abs',
-    config._hasTabs && 'has-slidercontrols-tabs',
-    config._hasArrows && 'has-slidercontrols-arrows',
-    config._hasNextPrevious && 'has-slidercontrols-nextprevious',
-    config._hasReset && 'has-slidercontrols-reset',
+    'has-slidercontrols-tabs',
+    'has-slidercontrols-arrows',
+    'has-slidercontrols-nextprevious',
+    'has-slidercontrols-reset',
     'is-abs-start',
     'is-abs-end',
+    'is-abs-animating',
     'is-abs-resettings',
     'is-abs-full-height',
     'is-abs-uniform-height',
     `is-abs-${animation}`
-  ].filter(Boolean).join(' '));
+  ].join(' '));
   sliderView.$('.article__inner').css({
     height: '',
     minHeight: ''
@@ -83,6 +125,9 @@ export function addSliderStyles(model) {
   // Add/remove is-abs-resetting
   const isSliderResetting = sliderModel.get('_isSliderResetting');
   sliderView.$el.toggleClass('is-abs-resetting', Boolean(isSliderResetting));
+  // Add/remove is-abs-animating
+  const isSliderAnimating = sliderModel.get('_isSliderAnimating');
+  sliderView.$el.toggleClass('is-abs-animating', Boolean(isSliderAnimating));
   // Fix height
   const $currentBlock = $(`.abs[data-adapt-id=${sliderId}] .block`).eq(currentIndex);
   const $blockContainer = $(`.abs[data-adapt-id=${sliderId}] .block__container`);
@@ -92,7 +137,7 @@ export function addSliderStyles(model) {
   sliderView.$el.toggleClass('is-abs-uniform-height', Boolean(isUniformHeight));
   const isSliderHeightFixed = sliderModel.get('_isSliderHeightFixed');
   const height = isSliderHeightFixed ?
-    `${sliderView.$el.height()}px` :
+    `${sliderView.$('.article__inner').outerHeight()}px` :
     isUniformHeight ?
       '' :
       $currentBlock.outerHeight() + ($blockContainer.outerHeight() - $blockContainer.height());
@@ -154,7 +199,7 @@ export function scrollToSliderTop(model, force = false) {
   window.scrollTo(placement);
 }
 
-export async function focusOnSliderCurrentIndex(model) {
+export function focusOnSliderCurrentIndex(model) {
   const index = getSliderIndex(model);
   const children = getSliderChildren(model);
   const child = children[index];
@@ -169,7 +214,7 @@ export async function animateMoveSliderIndexBy(model, by) {
   $.inview();
   focusOnSliderCurrentIndex(model);
   scrollToSliderTop(model);
-  endSliderMove(model);
+  await endSliderMove(model);
 }
 
 export async function animateMoveSliderIndexTo(model, index) {
@@ -179,12 +224,20 @@ export async function animateMoveSliderIndexTo(model, index) {
   $.inview();
   focusOnSliderCurrentIndex(model);
   scrollToSliderTop(model);
-  endSliderMove(model);
+  await endSliderMove(model);
 }
 
 export default {
   startSliderMove,
+  endSliderMove,
+  startSliderReset,
+  endSliderReset,
+  removeSliderStyles,
+  addSliderStyles,
   updateSliderStyles,
   waitUntilTransitionEnd,
-  scrollToSliderTop
+  scrollToSliderTop,
+  focusOnSliderCurrentIndex,
+  animateMoveSliderIndexBy,
+  animateMoveSliderIndexTo
 };

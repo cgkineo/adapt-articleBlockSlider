@@ -1,17 +1,12 @@
 import Adapt from 'core/js/adapt';
-
-export function addClass(model, className) {
-  let classes = model.get('_classes');
-  classes = _.uniq(classes.split(' ').concat(className.split(' '))).filter(Boolean).join(' ');
-  model.set('_classes', classes);
-}
+import data from 'core/js/data';
 
 export function _parsePath(path) {
   if (typeof path !== 'string') return path;
   return path.split('.');
 }
 
-export function _set(obj, path, value) {
+export function _deepPathSet(obj, path, value) {
   const paths = _parsePath(path);
   let part = obj;
   paths.slice(0, -1).find(path => {
@@ -23,15 +18,15 @@ export function _set(obj, path, value) {
   return obj;
 }
 
-export function _sets(obj, values) {
+export function _deepPathSets(obj, values) {
   Object.entries(values).forEach(([path, value]) => {
-    _set(obj, path, value);
+    _deepPathSet(obj, path, value);
   });
   return obj;
 }
 
-export function getConfig(overrides = {}) {
-  return _sets({
+export function getDefaultSliderConfig(overrides = {}) {
+  return _deepPathSets({
     _id: null,
     _parentId: null,
     _type: 'component',
@@ -104,27 +99,28 @@ export function getConfig(overrides = {}) {
   }, overrides);
 }
 
-export function setLockTypes() {
+export function setSliderLockTypes() {
   getSliderModels().forEach(model => {
     const config = getSliderConfig(model);
     config._lockType && model.set('_lockType', config._lockType);
   });
 }
 
-export function addComponents() {
+export function addSliderControlsComponents() {
   let id = 0;
   getSliderModels().forEach(model => {
     const config = getSliderConfig(model);
-    config._hasTabs && Adapt.data.push(getConfig({
+    config._hasTabs && data.push(getDefaultSliderConfig({
       _id: `abs-${id++}`,
       _classes: 'slidercontrols__tabs',
       _parentId: model.get('_id'),
       _renderPosition: 'outer-append',
       _align: 'top',
+      _isTabs: true,
       '_buttons._tabs._isAvailable': true,
       '_buttons._tabs._isEnabled': true
     }));
-    config._hasArrows && Adapt.data.push(getConfig({
+    config._hasArrows && data.push(getDefaultSliderConfig({
       _id: `abs-${id++}`,
       _classes: 'slidercontrols__arrows',
       _parentId: model.get('_id'),
@@ -134,16 +130,15 @@ export function addComponents() {
       '_buttons._previousArrow._isAvailable': true,
       '_buttons._previousArrow._isEnabled': true
     }));
-    config._hasNextPrevious && Adapt.data.push(getConfig({
+    config._hasNextPrevious && data.push(getDefaultSliderConfig({
       _id: `abs-${id++}`,
       _classes: 'slidercontrols__bottom',
       _parentId: model.get('_id'),
       _renderPosition: 'outer-append',
-      _align: '',
       '_buttons._next._isAvailable': true,
       '_buttons._next._isEnabled': true
     }));
-    (config._hasReset || config._hasNextPrevious) && Adapt.data.push(getConfig({
+    (config._hasReset || config._hasNextPrevious) && data.push(getDefaultSliderConfig({
       _id: `abs-${id++}`,
       _classes: 'slidercontrols__top',
       _parentId: model.get('_id'),
@@ -159,6 +154,7 @@ export function addComponents() {
 };
 
 export function isSliderModel(model) {
+  if (!model) return false;
   const config = getSliderConfig(model);
   return (config && config._isEnabled);
 }
@@ -175,7 +171,7 @@ export function getSliderModel(model) {
 }
 
 export function getSliderModels() {
-  return Adapt.data.filter(isSliderModel);
+  return data.filter(isSliderModel);
 }
 
 export function getSliderConfig(model) {
@@ -226,18 +222,33 @@ export function moveSliderIndex(model, by) {
   setSliderIndex(model, sliderIndex);
 }
 
+export function overrideSliderControlsButtonItem(value, override) {
+  if (override?._isOverride !== true) return;
+  value._isEnabled = override?._isEnabled ?? value._isEnabled;
+  value._order = override?._order ?? value._order;
+  value._classes = override?._classes ?? value._classes;
+  value._iconClass = override?._iconClass ?? value._iconClass;
+  value._alignIconRight = override?._alignIconRight ?? value._alignIconRight;
+  value.text = override?.text ?? value.text;
+  value.ariaLabel = override?.ariaLabel ?? value.ariaLabel;
+}
+
 export default {
-  addClass,
   _parsePath,
-  _set,
-  _sets,
-  getConfig,
-  addComponents,
+  _deepPathSet,
+  _deepPathSets,
+  getDefaultSliderConfig,
+  setSliderLockTypes,
+  addSliderControlsComponents,
   isSliderModel,
   getSliderModel,
   getSliderModels,
   getSliderChildren,
   checkReturnSliderToStart,
+  returnSliderToStart,
   setSliderIndex,
-  getSliderIndex
+  getSliderIndex,
+  getSliderId,
+  moveSliderIndex,
+  overrideSliderControlsButtonItem
 };

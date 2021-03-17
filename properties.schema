@@ -158,6 +158,55 @@
                   "validators": ["number"],
                   "help": "Sets a minimum height on the .article__inner container class."
                 },
+                "_resetWarning": {
+                  "type": "object",
+                  "required": true,
+                  "legend": "Reset warning",
+                  "properties": {
+                    "_isEnabled": {
+                      "type": "boolean",
+                      "required": true,
+                      "title": "Show?",
+                      "default": true,
+                      "inputType": "Checkbox",
+                      "validators": []
+                    },
+                    "title": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Reset?",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "body": {
+                      "type": "string",
+                      "required": true,
+                      "default": "Are you sure you want to reset this activity?",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "yes": {
+                      "type": "string",
+                      "required": true,
+                      "title": "Yes button text",
+                      "default": "Yes",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    },
+                    "no": {
+                      "type": "string",
+                      "required": true,
+                      "title": "No button text",
+                      "default": "No",
+                      "inputType": "Text",
+                      "validators": [],
+                      "translatable": true
+                    }
+                  }
+                },
                 "_next": {
                   "type": "object",
                   "required": true,
@@ -292,7 +341,7 @@
                     "text": {
                       "type": "string",
                       "required": true,
-                      "default": "Previous",
+                      "default": "Back",
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true
@@ -607,55 +656,6 @@
                       "translatable": true
                     }
                   }
-                },
-                "_resetWarning": {
-                  "type": "object",
-                  "required": true,
-                  "legend": "Reset warning",
-                  "properties": {
-                    "_isEnabled": {
-                      "type": "boolean",
-                      "required": true,
-                      "title": "Show?",
-                      "default": true,
-                      "inputType": "Checkbox",
-                      "validators": []
-                    },
-                    "title": {
-                      "type": "string",
-                      "required": true,
-                      "default": "Reset?",
-                      "inputType": "Text",
-                      "validators": [],
-                      "translatable": true
-                    },
-                    "body": {
-                      "type": "string",
-                      "required": true,
-                      "default": "Are you sure you want to restart this activity?",
-                      "inputType": "Text",
-                      "validators": [],
-                      "translatable": true
-                    },
-                    "yes": {
-                      "type": "string",
-                      "required": true,
-                      "title": "Yes button text",
-                      "default": "Yes",
-                      "inputType": "Text",
-                      "validators": [],
-                      "translatable": true
-                    },
-                    "no": {
-                      "type": "string",
-                      "required": true,
-                      "title": "No button text",
-                      "default": "No",
-                      "inputType": "Text",
-                      "validators": [],
-                      "translatable": true
-                    }
-                  }
                 }
               }
             }
@@ -803,7 +803,7 @@
                     "text": {
                       "type": "string",
                       "required": true,
-                      "default": "Previous",
+                      "default": "Back",
                       "inputType": "Text",
                       "validators": [],
                       "translatable": true

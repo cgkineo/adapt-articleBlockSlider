@@ -1,6 +1,6 @@
 <div class="component__inner slidercontrols__inner">
   <div class="component__widget slidercontrols__widget">
-    <div class="slidercontrols__btn-container js-button-container">
+    <div class="slidercontrols__btn-container js-button-container"{{#if _isTabs}} role="tablist"{{/if}}>
       {{#each _items}}
         {{> sliderControls-item this}}
       {{/each}}

@@ -4,16 +4,14 @@ import {
   getSliderModel,
   checkReturnSliderToStart,
   getSliderId,
-  returnSliderToStart,
   getSliderConfig
 } from './models';
 import {
   updateSliderStyles,
-  waitUntilTransitionEnd,
-  scrollToSliderTop,
-  focusOnSliderCurrentIndex,
   animateMoveSliderIndexBy,
-  animateMoveSliderIndexTo
+  animateMoveSliderIndexTo,
+  startSliderReset,
+  endSliderReset
 } from './styles';
 
 export function getAttributes($node) {
@@ -96,7 +94,9 @@ export default class SliderControlsView extends ComponentView {
   }
 
   onButtonClick(event) {
-    const index = $(event.currentTarget).data('item-index');
+    const $button = $(event.currentTarget);
+    if ($button.is('.is-disabled')) return;
+    const index = $button.data('item-index');
     const buttonItems = this.model.buttonItems;
     const buttonItem = buttonItems[index];
     switch (buttonItem.name) {
@@ -157,15 +157,8 @@ export default class SliderControlsView extends ComponentView {
   async reset() {
     // Reset completion and return to index 0
     const sliderModel = getSliderModel(this.model);
-    const sliderId = getSliderId(this.model);
-    let sliderView = Adapt.findViewByModelId(sliderId);
-    // Perform and wait for resetting animation
-    sliderModel.set({
-      _isSliderResetting: true,
-      _isSliderHeightFixed: true
-    });
-    await waitUntilTransitionEnd(sliderView.$('.article__inner'), 'opacity');
-    returnSliderToStart(sliderModel);
+    const sliderId = getSliderId(sliderModel);
+    startSliderReset(sliderModel);
     // Perform relevant reset, branching / normal / assessment
     const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
     const AdaptAssessment = Adapt.assessment && Adapt.assessment._assessments.find(model => model.get('_id') === sliderId);
@@ -180,11 +173,10 @@ export default class SliderControlsView extends ComponentView {
       await new Promise(resolve => {
         AdaptAssessment.reset(true, resolve);
       });
-      // Fetch the next view as assessments refresh the page on reset
-      sliderView = Adapt.findViewByModelId(sliderId);
       // Stop holding the height as the new view will be different
       sliderModel.set('_isSliderHeightFixed', false);
     } else {
+      const sliderView = Adapt.findViewByModelId(sliderId);
       // Otherwise, remove the views, reset the models and readd the children
       sliderModel.getChildren().forEach(model => {
         const view = Adapt.findViewByModelId(model.get('_id'));
@@ -195,20 +187,7 @@ export default class SliderControlsView extends ComponentView {
       sliderModel.set('_nthChild', 0);
       sliderView.setChildViews([]);
     }
-    await Adapt.parentView.addChildren();
-    // Wait for new children to be ready
-    await Adapt.parentView.whenReady();
-    // Force trickle to reassess its height
-    $(window).resize();
-    scrollToSliderTop(this.model, true);
-    sliderModel.set({
-      _isSliderResetting: false, // Animate in
-      _isSliderHeightFixed: false
-    });
-    await waitUntilTransitionEnd(sliderView.$('.article__inner'), 'opacity');
-    // Initiate inview animations
-    $.inview();
-    focusOnSliderCurrentIndex(this.model);
+    endSliderReset(sliderModel);
   }
 
 }

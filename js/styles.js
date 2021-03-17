@@ -10,14 +10,10 @@ import {
   returnSliderToStart
 } from './models';
 
-export async function startSliderMove(model) {
+export function startSliderMove(model) {
   if (!Adapt.parentView) return;
-  const sliderId = getSliderId(model);
   const sliderModel = getSliderModel(model);
-  const sliderView = Adapt.findViewByModelId(sliderId);
   sliderModel.set('_isSliderAnimating', true);
-  const $firstElement = sliderView.$(`.block`).first();
-  await waitUntilTransitionEnd($firstElement, 'opacity');
 }
 
 export async function endSliderMove(model) {
@@ -25,8 +21,10 @@ export async function endSliderMove(model) {
   const sliderId = getSliderId(model);
   const sliderModel = getSliderModel(model);
   const sliderView = Adapt.findViewByModelId(sliderId);
-  const $firstElement = sliderView.$(`.block`).first();
-  await waitUntilTransitionEnd($firstElement, 'opacity');
+  const sliderIndex = getSliderIndex(model);
+  const $element = sliderView.$(`.block`).eq(sliderIndex);
+  await waitUntilTransitionEnd($element, 'left');
+  await waitUntilTransitionEnd($element, 'opacity');
   sliderModel.set('_isSliderAnimating', false);
 }
 
@@ -163,9 +161,9 @@ export async function waitUntilTransitionEnd($element, propertyName = null) {
     const transitionDurations = $element.css('transition-duration').split(',').map(duration => duration.trim());
     const propertyIndex = transitionPropertyNames.findIndex(name => name === propertyName);
     const allIndex = transitionPropertyNames.findIndex(name => name === 'all');
-    const configurationIndex = [propertyIndex, allIndex, 0].filter(i => i > -1).shift();
+    const configurationIndex = [propertyIndex, allIndex, propertyName ? false : 0].filter(i => i > -1).shift();
     const transitionDuration = transitionDurations[configurationIndex];
-    const hasTransitionDuration = (transitionDuration !== '0s');
+    const hasTransitionDuration = (transitionDuration && transitionDuration !== '0s');
     if (!hasTransitionDuration) return resolve();
     const handler = e => {
       const isCorrectProperty = (e.originalEvent.propertyName === propertyName);

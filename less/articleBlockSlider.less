@@ -31,13 +31,13 @@
     opacity: 0;
   }
 
-  &.is-abs-animating .block {
-    visibility: visible;
-    opacity: 1;
-  }
+}
 
-  &.is-abs-resetting .block {
-    transition: none;
-  }
+.is-abs-animating .block {
+  visibility: visible;
+  opacity: 0;
+}
 
+.is-abs-resetting .block {
+  transition: none;
 }

@@ -48,8 +48,10 @@ export default class SliderControlsView extends ComponentView {
   }
 
   update() {
+    const sliderModel = getSliderModel(this.model);
+    updateSliderStyles(sliderModel);
+    if (sliderModel.get('_isSliderResetting')) return;
     this.checkButtonStates();
-    updateSliderStyles(this.model);
   }
 
   checkButtonStates() {
@@ -158,7 +160,7 @@ export default class SliderControlsView extends ComponentView {
     // Reset completion and return to index 0
     const sliderModel = getSliderModel(this.model);
     const sliderId = getSliderId(sliderModel);
-    startSliderReset(sliderModel);
+    await startSliderReset(sliderModel);
     // Perform relevant reset, branching / normal / assessment
     const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
     const AdaptAssessment = Adapt.assessment && Adapt.assessment._assessments.find(model => model.get('_id') === sliderId);

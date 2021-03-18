@@ -1,4 +1,3 @@
-import './assessmentPatch';
 import controller from './controller';
 import models from './models';
 import styles from './styles';

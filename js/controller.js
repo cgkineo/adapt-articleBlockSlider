@@ -61,13 +61,13 @@ class SliderControlsController extends Backbone.Controller {
     if (!isSliderModel(sliderModel)) return;
     const sliderId = getSliderId(sliderModel);
     const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
-    if (AdaptBranchingSubset) {
-      // Reset branching if one exists
-      await AdaptBranchingSubset.reset({
-        /** Note: not compatible with bookmarking < v3.2.0 */
-        removeViews: true
-      });
-    }
+    if (!AdaptBranchingSubset) return;
+    // TODO: this behaviour should be in branching
+    // Reset branching if one exists
+    await AdaptBranchingSubset.reset({
+      /** Note: not compatible with bookmarking < v3.2.0 */
+      removeViews: true
+    });
   }
 
   onAssessmentReset(state) {

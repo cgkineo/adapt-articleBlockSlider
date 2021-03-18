@@ -31,6 +31,7 @@ export default class SliderControlsModel extends ComponentModel {
     const sliderModel = getSliderModel(this);
     const sliderConfig = getSliderConfig(sliderModel);
     const children = getSliderChildren(this);
+    if (!children.length) return [];
     const sliderCurrentIndex = getSliderIndex(this);
     const block = children[sliderCurrentIndex];
     const data = _.flatten(Object.entries(this.get('_buttons')).filter(([key, buttonConfig]) => buttonConfig._isAvailable).map(([key, buttonConfig]) => {

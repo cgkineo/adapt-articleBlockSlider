@@ -9,7 +9,8 @@ import {
   getSliderConfig,
   getSliderModel,
   getSliderChildren,
-  setSliderIndex
+  setSliderIndex,
+  getSliderId
 } from './models';
 import {
   updateSliderStyles,
@@ -24,6 +25,7 @@ class SliderControlsController extends Backbone.Controller {
       'change:_isInteractionComplete': this.onInteractionComplete
     });
     this.listenTo(Adapt, {
+      'assessments:preReset': this.onAssessmentPreReset,
       'assessments:reset': this.onAssessmentReset,
       'device:change': this.updateAllArticleStyles,
       'articleView:postRender': this.updateArticleStyling,
@@ -52,6 +54,20 @@ class SliderControlsController extends Backbone.Controller {
     const isAutoNext = (hasQuestions && config._autoQuestionNext);
     if (!isAutoNext) return;
     animateMoveSliderIndexBy(sliderModel, 1);
+  }
+
+  async onAssessmentPreReset(state) {
+    const sliderModel = Adapt.findById(state.articleId);
+    if (!isSliderModel(sliderModel)) return;
+    const sliderId = getSliderId(sliderModel);
+    const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
+    if (AdaptBranchingSubset) {
+      // Reset branching if one exists
+      await AdaptBranchingSubset.reset({
+        /** Note: not compatible with bookmarking < v3.2.0 */
+        removeViews: true
+      });
+    }
   }
 
   onAssessmentReset(state) {

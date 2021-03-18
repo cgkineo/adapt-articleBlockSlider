@@ -163,16 +163,16 @@ export default class SliderControlsView extends ComponentView {
     await startSliderReset(sliderModel);
     // Perform relevant reset, (assessment +/ branching) / normal
     const AdaptAssessment = Adapt.assessment && Adapt.assessment._assessments.find(model => model.get('_id') === sliderId);
+    const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
     if (AdaptAssessment) {
       // Reset an assessment if one exists
+      // Reset branching in controller
       await new Promise(resolve => {
         AdaptAssessment.reset(true, resolve);
       });
       // Stop holding the height as the new view will be different
       sliderModel.set('_isSliderHeightFixed', false);
-    }
-    const AdaptBranchingSubset = Adapt.branching && Adapt.branching.getSubsetByModelId(sliderId);
-    if (AdaptBranchingSubset) {
+    } else if (AdaptBranchingSubset) {
       // Reset branching if one exists
       await AdaptBranchingSubset.reset({
         /** Note: not compatible with bookmarking < v3.2.0 */

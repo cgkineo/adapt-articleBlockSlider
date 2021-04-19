@@ -75,7 +75,7 @@ define([
     },
 
     _blockSliderRender: function() {
-      Adapt.trigger(this.constructor.type + 'View:preRender', this);
+      Adapt.trigger(this.constructor.type + 'View:preRender view:render', this);
 
       this._blockSliderConfigureVariables();
 

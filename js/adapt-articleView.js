@@ -3,20 +3,6 @@ define([
   'core/js/views/articleView'
 ], function(Adapt, AdaptArticleView) {
 
-  function debounce(callback, timeout) {
-
-    var handle = null;
-    var debounced = function debounced() {
-      clearTimeout(handle);
-      handle = setTimeout(callback, timeout);
-    };
-    debounced.cancel = function cancelDebounce() {
-      clearTimeout(handle);
-    };
-    return debounced;
-
-  }
-
   var BlockSliderView = {
 
     _isReady: false,

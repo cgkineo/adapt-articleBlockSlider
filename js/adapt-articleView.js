@@ -438,7 +438,7 @@ define([
 
       var block = model.get('_type') === 'block' ? model : model.findAncestor('blocks');
       if (!block) return;
-      this.model.getChildren().find((item, index) => {
+      this.model.getChildren().models.find((item, index) => {
         if (item.get('_id') !== block.get('_id')) return;
         _.defer(() => this._blockSliderMoveIndex(index, false));
         return true;

@@ -60,7 +60,7 @@ define([
 
       var duration = this.model.get("_articleBlockSlider")._slideAnimationDuration || 200;
 
-      this._blockSliderHideOthers = debounce(this._blockSliderHideOthers.bind(this), duration);
+      this._blockSliderHideOthers = _.debounce(this._blockSliderHideOthers.bind(this), duration);
 
     },
 

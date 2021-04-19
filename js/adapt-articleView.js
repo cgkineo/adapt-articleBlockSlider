@@ -436,9 +436,7 @@ define([
       var model = Adapt.findById(id);
       if (!model) return;
 
-      var block;
-      if (model.get("_type") == "block") block = model;
-      else block = model.findAncestor("blocks");
+      var block = model.get('_type') === 'block' ? model : model.findAncestor('blocks');
       if (!block) return;
 
       var children = this.model.getChildren();

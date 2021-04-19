@@ -438,16 +438,11 @@ define([
 
       var block = model.get('_type') === 'block' ? model : model.findAncestor('blocks');
       if (!block) return;
-
-      var children = this.model.getChildren();
-      for (var i = 0, item; item = children.models[i++];) {
-        if (item.get("_id") === block.get("_id")) {
-          _.defer(function() {
-            this._blockSliderMoveIndex(i-1, false);
-          }.bind(this));
-          return;
-        }
-      }
+      this.model.getChildren().find((item, index) => {
+        if (item.get('_id') !== block.get('_id')) return;
+        _.defer(() => this._blockSliderMoveIndex(index, false));
+        return true;
+      });
     },
 
     _onBlockSliderPageScrolledTo: function() {

@@ -85,7 +85,7 @@ define([
     },
 
     _blockSliderConfigureVariables: function() {
-      var blocks = this.model.getChildren().models;
+      var blocks = this.model.getChildren().models.filter(model => model.isTypeGroup('block'));
       var totalBlocks = blocks.length;
       var itemButtons = [];
 

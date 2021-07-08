@@ -279,14 +279,14 @@ define([
     _blockSliderShowAll: function() {
       this._blockSliderHideOthers.cancel();
 
-      this.model.getChildren().models.forEach(function(block) {
+      this.model.getChildren().models.filter(model => model.isTypeGroup('block')).forEach(function(block) {
         this._blockSliderSetVisible(block, true);
       }.bind(this));
     },
 
     _blockSliderHideOthers: function() {
       var currentIndex = this.model.get('_currentBlock');
-      this.model.getChildren().models.forEach(function(block, index) {
+      this.model.getChildren().models.filter(model => model.isTypeGroup('block')).forEach(function(block, index) {
         var makeVisible = (index === currentIndex);
         this._blockSliderSetVisible(block, makeVisible);
       }.bind(this));
@@ -438,7 +438,7 @@ define([
 
       var block = model.get('_type') === 'block' ? model : model.findAncestor('blocks');
       if (!block) return;
-      this.model.getChildren().models.find((item, index) => {
+      this.model.getChildren().models.filter(model => model.isTypeGroup('block')).find((item, index) => {
         if (item.get('_id') !== block.get('_id')) return;
         _.defer(() => this._blockSliderMoveIndex(index, false));
         return true;

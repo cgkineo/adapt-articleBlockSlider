@@ -2,6 +2,8 @@
 
 Article Block Slider has been deprecated and is no longer suppported by Kineo. The repo will remain for a while so anyone can fork and continue development if they wish. We encorage the community to do this.
 
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
+
 # adapt-articleBlockSlider
 
 **Article Block Slider** is a Kineo *presentation extension*.

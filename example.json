@@ -4,7 +4,7 @@
         "_isDisabledWhenAccessibilityActive": false,
         "_slideAnimationDuration": 600,
         "_heightAnimationDuration": 300,
-        "_isEnabledOnScreenSizes": "large",
+        "_isEnabledOnScreenSizes": "medium",
         "_hasTabs": false,
         "_hasArrows": true,
         "_startIndex": 0,

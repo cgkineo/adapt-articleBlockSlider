@@ -62,7 +62,7 @@
                 "_isEnabledOnScreenSizes": {
                   "type": "string",
                   "required": false,
-                  "default": "large",
+                  "default": "medium",
                   "title": "Enabled On Screen Sizes",
                   "inputType": "Text",
                   "validators": [],

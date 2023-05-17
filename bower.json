@@ -5,7 +5,7 @@
     "url": "git://github.com/cgkineo/adapt-articleBlockSlider.git"
   },
   "version": "3.1.1",
-  "framework": ">=5.10",
+  "framework": ">=5.31.4",
   "homepage": "https://github.com/cgkineo/adapt-articleBlockSlider",
   "issues": "https://github.com/cgkineo/adapt-articleBlockSlider/issues/",
   "extension": "articleBlockSlider",

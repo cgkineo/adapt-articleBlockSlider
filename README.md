@@ -1,3 +1,5 @@
+# ⛔️ DEPRECATED
+
 # adapt-articleBlockSlider
 
 **Article Block Slider** is a Kineo *presentation extension*.
